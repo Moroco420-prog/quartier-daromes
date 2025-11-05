@@ -1,0 +1,174 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Catégories - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin -->
+<section class="py-4" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); border-bottom: 3px solid #1a1a1a;">
+    <div class="container-fluid text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-tags"></i> Catégories
+                </h2>
+                <p class="mb-0 opacity-75">Gestion des catégories de produits</p>
+            </div>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="bi bi-plus-circle"></i> Nouvelle Catégorie
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <div class="row">
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header border-bottom" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                    <h5 class="mb-0 fw-bold" style="color: #17a2b8;">
+                        <i class="bi bi-list-task"></i> Liste des Catégories ({{ categories|length }})
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Type</th>
+                                    <th>Ordre</th>
+                                    <th>Actif</th>
+                                    <th>Menu</th>
+                                    <th>Produits</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cat in categories %}
+                                <tr>
+                                    <td><code>{{ cat.id }}</code></td>
+                                    <td>
+                                        <strong>{{ cat.name }}</strong>
+                                        {% if cat.description %}
+                                        <br><small class="text-muted">{{ cat.description[:50] }}...</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if cat.category_type %}
+                                        <span class="badge bg-info">{{ cat.category_type }}</span>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="badge bg-secondary">{{ cat.display_order }}</span></td>
+                                    <td>
+                                        {% if cat.is_active %}
+                                        <span class="badge bg-success">Oui</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Non</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if cat.show_in_menu %}
+                                        <i class="bi bi-check-circle text-success"></i>
+                                        {% else %}
+                                        <i class="bi bi-x-circle text-secondary"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge" style="background-color: #17a2b8;">
+                                            {{ cat.products|length if cat.products else 0 }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('edit_category', id=cat.id) }}" class="btn btn-outline-primary" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" action="{{ url_for('delete_category', id=cat.id) }}" style="display:inline;" onsubmit="return confirm('Supprimer cette catégorie ?');">
+                                                <button type="submit" class="btn btn-outline-danger" title="Supprimer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                                        <p class="text-muted mt-2">Aucune catégorie</p>
+                                        <button class="btn btn-sm" style="background-color: #17a2b8; color: white;" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                            <i class="bi bi-plus-circle"></i> Créer une catégorie
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Catégorie -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle"></i> Nouvelle Catégorie
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_category') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nom <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" name="category_type">
+                            <option value="">-- Aucun --</option>
+                            <option value="genre">Genre</option>
+                            <option value="famille">Famille Olfactive</option>
+                            <option value="format">Format</option>
+                            <option value="occasion">Occasion</option>
+                            <option value="saison">Saison</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ordre d'affichage</label>
+                        <input type="number" class="form-control" name="display_order" value="0">
+                    </div>
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" name="is_active" id="is_active" checked>
+                        <label class="form-check-label" for="is_active">Catégorie active</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="show_in_menu" id="show_in_menu" checked>
+                        <label class="form-check-label" for="show_in_menu">Afficher dans le menu</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn" style="background-color: #17a2b8; color: white;">
+                        <i class="bi bi-check-circle"></i> Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

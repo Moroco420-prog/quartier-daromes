@@ -1,0 +1,58 @@
+# Robots.txt pour Quartier d'Arômes
+# Site e-commerce de parfumerie
+# https://quartierdaromes.com
+
+# Autoriser tous les bots légitimes
+User-agent: *
+Allow: /
+
+# Chemins à ne pas indexer
+Disallow: /admin/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /profile/
+Disallow: /orders/
+Disallow: /logout
+Disallow: /static/uploads/temp/
+Disallow: /*.pdf$
+Disallow: /search?*
+
+# Autoriser l'accès aux fichiers statiques importants
+Allow: /static/css/
+Allow: /static/js/
+Allow: /static/images/
+Allow: /static/uploads/*.jpg
+Allow: /static/uploads/*.png
+Allow: /static/uploads/*.webp
+
+# Googlebot spécifique
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Google Images
+User-agent: Googlebot-Image
+Allow: /static/uploads/
+Allow: /static/images/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Bots à bloquer
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap
+Sitemap: https://quartierdaromes.com/sitemap.xml

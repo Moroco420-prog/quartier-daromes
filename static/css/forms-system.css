@@ -1,0 +1,740 @@
+/**
+ * QUARTIER D'ARÔMES - SYSTÈME DE FORMULAIRES
+ * Espacements optimisés, validation inline, UX améliorée
+ */
+
+/* ========================================
+   1. RESET & BASE
+   ======================================== */
+
+input,
+textarea,
+select {
+  /* Reset navigateur */
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  
+  /* Apparence */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* ========================================
+   2. GROUPES DE FORMULAIRES - ESPACEMENTS
+   ======================================== */
+
+.form-group {
+  margin-bottom: var(--spacing-xl); /* 32px - Plus respirant */
+  position: relative;
+}
+
+.form-group-sm {
+  margin-bottom: var(--spacing-lg); /* 24px */
+}
+
+.form-group-lg {
+  margin-bottom: var(--spacing-2xl); /* 48px */
+}
+
+/* Dernier élément sans marge */
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   3. LABELS AMÉLIORÉS
+   ======================================== */
+
+.form-label {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm); /* 8px - Plus d'air */
+  letter-spacing: 0.02em;
+  line-height: var(--line-height-normal);
+}
+
+/* Label grande */
+.form-label-lg {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Label petite */
+.form-label-sm {
+  font-size: var(--font-size-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* ========================================
+   4. CHAMPS OBLIGATOIRES - SIGNALISATION SUBTILE
+   ======================================== */
+
+/* Astérisque léger */
+.form-label.required::after {
+  content: ' *';
+  color: var(--danger);
+  font-weight: var(--font-weight-normal);
+  opacity: 0.7;
+  margin-left: 2px;
+  font-size: 0.9em;
+}
+
+/* Icône alternative */
+.form-label.required-icon::before {
+  content: '\F26A'; /* Bootstrap icon asterisk */
+  font-family: 'bootstrap-icons';
+  color: var(--danger);
+  font-size: 0.75em;
+  margin-right: var(--spacing-xs);
+  opacity: 0.6;
+  vertical-align: super;
+}
+
+/* Badge "Requis" */
+.form-label .badge-required {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 0.65em;
+  font-weight: var(--font-weight-semibold);
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+  border-radius: var(--radius-sm);
+  margin-left: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Icône info optionnel */
+.form-label .label-optional {
+  font-size: 0.75em;
+  color: var(--text-muted);
+  font-weight: var(--font-weight-normal);
+  margin-left: var(--spacing-xs);
+}
+
+/* ========================================
+   5. CHAMPS DE FORMULAIRE - DESIGN
+   ======================================== */
+
+.form-control,
+.form-select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg); /* 16px 24px - Plus respirant */
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--primary-white);
+  background-clip: padding-box;
+  border: 2px solid var(--secondary-gray-light);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), 
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast);
+  min-height: 48px; /* Hauteur confortable */
+}
+
+/* Placeholder */
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Focus - Mise en valeur */
+.form-control:focus,
+.form-select:focus {
+  color: var(--text-primary);
+  background-color: var(--primary-white);
+  border-color: var(--primary-gold);
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(196, 148, 47, 0.1);
+}
+
+/* Hover */
+.form-control:hover:not(:disabled):not(:focus),
+.form-select:hover:not(:disabled):not(:focus) {
+  border-color: var(--secondary-gray);
+}
+
+/* Disabled */
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--secondary-gray-light);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   6. TAILLES DE CHAMPS
+   ======================================== */
+
+.form-control-sm {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  min-height: 36px;
+}
+
+.form-control-lg {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  min-height: 56px;
+}
+
+/* ========================================
+   7. TEXTAREA
+   ======================================== */
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+  line-height: var(--line-height-relaxed);
+}
+
+textarea.form-control-sm {
+  min-height: 80px;
+}
+
+textarea.form-control-lg {
+  min-height: 160px;
+}
+
+/* ========================================
+   8. SELECT PERSONNALISÉ
+   ======================================== */
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-lg) center;
+  background-size: 16px 12px;
+  padding-right: calc(var(--spacing-xl) + 16px);
+}
+
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23C4942F' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+/* ========================================
+   9. VALIDATION - ÉTATS
+   ======================================== */
+
+/* Valid - Succès */
+.form-control.is-valid,
+.form-select.is-valid {
+  border-color: var(--success);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%2328a745' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-lg) center;
+  background-size: 20px 20px;
+  padding-right: calc(var(--spacing-xl) + 20px);
+}
+
+.form-control.is-valid:focus,
+.form-select.is-valid:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15);
+}
+
+/* Invalid - Erreur */
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--danger);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23dc3545' d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-lg) center;
+  background-size: 20px 20px;
+  padding-right: calc(var(--spacing-xl) + 20px);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15);
+}
+
+/* ========================================
+   10. MESSAGES DE FEEDBACK - INLINE
+   ======================================== */
+
+.form-text {
+  display: block;
+  margin-top: var(--spacing-sm); /* 8px - Plus d'air */
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  line-height: var(--line-height-normal);
+}
+
+/* Message d'aide avec icône */
+.form-help {
+  display: flex;
+  align-items: start;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(108, 117, 125, 0.05);
+  border-left: 3px solid var(--info);
+  border-radius: var(--radius-sm);
+}
+
+.form-help i {
+  color: var(--info);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Message de succès */
+.valid-feedback {
+  display: none;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--success);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(40, 167, 69, 0.1);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-sm);
+}
+
+.valid-feedback i {
+  margin-right: var(--spacing-xs);
+}
+
+.is-valid ~ .valid-feedback {
+  display: block;
+}
+
+/* Message d'erreur - Inline et visible */
+.invalid-feedback {
+  display: none;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--danger);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(220, 53, 69, 0.1);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-sm);
+  animation: slideDown 0.3s ease-out;
+}
+
+.invalid-feedback i {
+  margin-right: var(--spacing-xs);
+}
+
+.is-invalid ~ .invalid-feedback {
+  display: block;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   11. CHECKBOXES & RADIOS PERSONNALISÉS
+   ======================================== */
+
+.form-check {
+  display: block;
+  min-height: 24px;
+  padding-left: 32px;
+  margin-bottom: var(--spacing-md);
+  position: relative;
+}
+
+.form-check-input {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 2px solid var(--secondary-gray);
+  background-color: var(--primary-white);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.form-check-input[type="checkbox"] {
+  border-radius: var(--radius-sm);
+}
+
+.form-check-input[type="radio"] {
+  border-radius: var(--radius-full);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-gold);
+  border-color: var(--primary-gold);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 4px rgba(196, 148, 47, 0.15);
+}
+
+.form-check-label {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: var(--line-height-relaxed);
+}
+
+/* ========================================
+   12. INPUT GROUPS (Addons)
+   ======================================== */
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+}
+
+.input-group-text {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--secondary-gray-light);
+  border: 2px solid var(--secondary-gray-light);
+  border-radius: var(--radius-md);
+}
+
+.input-group > :not(:first-child):not(.dropdown-menu) {
+  margin-left: -2px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.input-group > :not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* ========================================
+   13. FLOATING LABELS
+   ======================================== */
+
+.form-floating {
+  position: relative;
+}
+
+.form-floating > .form-control {
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-sm);
+  height: calc(3.5rem + 2px);
+}
+
+.form-floating > label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: var(--spacing-lg) var(--spacing-lg);
+  pointer-events: none;
+  border: 2px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* ========================================
+   14. COMPTEUR DE CARACTÈRES
+   ======================================== */
+
+.form-counter {
+  position: relative;
+}
+
+.char-count {
+  position: absolute;
+  bottom: var(--spacing-sm);
+  right: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.char-count.warn {
+  color: var(--warning);
+  font-weight: var(--font-weight-semibold);
+}
+
+.char-count.danger {
+  color: var(--danger);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ========================================
+   15. UPLOAD DE FICHIERS
+   ======================================== */
+
+.form-file-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.form-file-input input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.form-file-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--primary-white);
+  border: 2px dashed var(--secondary-gray-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.form-file-label:hover {
+  border-color: var(--primary-gold);
+  background: rgba(196, 148, 47, 0.05);
+}
+
+.form-file-label i {
+  font-size: 1.5em;
+  color: var(--primary-gold);
+}
+
+.form-file-text {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.form-file-text.has-file {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   16. RANGE SLIDER
+   ======================================== */
+
+.form-range {
+  width: 100%;
+  height: 24px;
+  padding: 0;
+  background-color: transparent;
+  appearance: none;
+}
+
+.form-range::-webkit-slider-track {
+  height: 6px;
+  background: var(--secondary-gray-light);
+  border-radius: var(--radius-full);
+}
+
+.form-range::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  background: var(--primary-gold);
+  border: 2px solid var(--primary-white);
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  appearance: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.form-range::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(196, 148, 47, 0.4);
+}
+
+/* ========================================
+   17. LAYOUTS DE FORMULAIRE
+   ======================================== */
+
+/* Formulaire horizontal */
+.form-horizontal .form-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.form-horizontal .form-label {
+  flex: 0 0 200px;
+  margin-bottom: 0;
+  text-align: right;
+}
+
+.form-horizontal .form-control {
+  flex: 1;
+}
+
+/* Formulaire inline */
+.form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.form-inline .form-group {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* Formulaire en grille */
+.form-grid {
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+.form-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.form-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ========================================
+   18. RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .form-horizontal .form-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form-horizontal .form-label {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-control,
+  .form-select {
+    font-size: 16px; /* Évite zoom iOS */
+  }
+}
+
+/* ========================================
+   19. UTILITAIRES
+   ======================================== */
+
+/* Label en ligne avec champ */
+.form-label-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Groupe de boutons dans formulaire */
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  padding-top: var(--spacing-xl);
+  margin-top: var(--spacing-2xl);
+  border-top: 1px solid var(--secondary-gray-light);
+}
+
+.form-actions-center {
+  justify-content: center;
+}
+
+.form-actions-start {
+  justify-content: flex-start;
+}
+
+/* Séparateur dans formulaire */
+.form-divider {
+  margin: var(--spacing-2xl) 0;
+  border: 0;
+  border-top: 2px solid var(--secondary-gray-light);
+}
+
+.form-divider-text {
+  position: relative;
+  margin: var(--spacing-2xl) 0;
+  text-align: center;
+}
+
+.form-divider-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--secondary-gray-light);
+}
+
+.form-divider-text span {
+  position: relative;
+  padding: 0 var(--spacing-md);
+  background: var(--primary-white);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   20. DARK MODE (optionnel)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .form-control,
+  .form-select {
+    background-color: #2d2d2d;
+    border-color: #404040;
+    color: #f0f0f0;
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    background-color: #2d2d2d;
+    border-color: var(--primary-gold);
+  }
+}

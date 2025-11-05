@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-animated">
+    <div class="container">
+        <div class="row align-items-center" style="min-height: 400px;">
+            <div class="col-lg-7 text-white">
+                <h1 class="display-5 fw-bold mb-3">Bienvenue chez <span style="color: #C4942F;">Quartier d'Arômes</span></h1>
+                <p class="fs-5 mb-4">Collection exclusive de parfums de luxe</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('collections') }}" class="btn btn-warning">Voir Collections</a>
+                    <a href="{{ url_for('decants') }}" class="btn btn-outline-light">Décants</a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-hero-animated" style="width: 220px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <i class="bi bi-shield-check" style="font-size: 2rem; color: #C4942F;"></i>
+                <h5 class="mt-2">Authenticité Garantie</h5>
+                <p class="small text-muted">Produits 100% authentiques</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <i class="bi bi-truck" style="font-size: 2rem; color: #C4942F;"></i>
+                <h5 class="mt-2">Livraison Rapide</h5>
+                <p class="small text-muted">24-48h partout au Maroc</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <i class="bi bi-droplet" style="font-size: 2rem; color: #C4942F;"></i>
+                <h5 class="mt-2">Décants</h5>
+                <p class="small text-muted">Testez avant d'acheter</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Catégories -->
+<!-- Marques Populaires -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h3 class="text-center mb-4 fw-bold" style="color: #C4942F;">
+            <i class="bi bi-award-fill"></i> Nos Marques
+        </h3>
+        
+        <!-- Carousel des marques -->
+        <div class="brands-carousel-container position-relative">
+            <div class="brands-carousel d-flex gap-3 overflow-auto pb-3" id="brandsCarousel">
+                {% if brands %}
+                    {% for brand in brands %}
+                    <div class="brand-item flex-shrink-0">
+                        <a href="{{ url_for('collections', brand=brand.name) }}" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm h-100 brand-card">
+                                <div class="card-body text-center py-4">
+                                    {% if brand.logo_url %}
+                                    <div class="brand-logo mb-3" style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <img src="{{ url_for('static', filename=brand.logo_url) }}" alt="{{ brand.name }}" 
+                                             style="max-height: 60px; max-width: 100%; object-fit: contain;"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                        <div style="display: none;">
+                                            <h5 class="mb-0 fw-bold" style="color: #C4942F;">{{ brand.name }}</h5>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="brand-logo mb-3" style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <h5 class="mb-0 fw-bold" style="color: #C4942F;">{{ brand.name }}</h5>
+                                    </div>
+                                    {% endif %}
+                                    {% if brand.country %}
+                                    <p class="text-muted small mb-0">
+                                        <i class="bi bi-geo-alt"></i> {{ brand.country }}
+                                    </p>
+                                    {% else %}
+                                    <p class="text-muted small mb-0">Marque de parfums</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5 w-100">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="text-muted mt-2">Aucune marque disponible pour le moment</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Flèches de navigation (optionnelles) -->
+            <button class="carousel-nav carousel-nav-left" id="prevBrand" style="display: none;">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="carousel-nav carousel-nav-right" id="nextBrand" style="display: none;">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('collections') }}" class="btn" style="background-color: #C4942F; color: white;">
+                <i class="bi bi-grid-3x3-gap"></i> Voir Toutes les Marques
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Carousel des marques */
+.brands-carousel-container {
+    position: relative;
+}
+
+.brands-carousel {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scroll-behavior: smooth;
+}
+
+.brands-carousel::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+.brand-item {
+    min-width: 200px;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.brand-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 140px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 1rem;
+}
+
+.brand-logo {
+    height: 60px !important;
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.brand-logo img {
+    max-height: 60px !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+}
+
+.brand-logo h5 {
+    font-size: 1rem !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+}
+
+.brand-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+
+/* Flèches de navigation (cachées par défaut) */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(196, 148, 47, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-nav:hover {
+    background: #C4942F;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav-left {
+    left: -20px;
+}
+
+.carousel-nav-right {
+    right: -20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .brand-item {
+        min-width: 160px;
+        width: 160px;
+        flex-shrink: 0;
+    }
+    
+    .brand-card {
+        height: 120px;
+        width: 100%;
+    }
+    
+    .brand-card .card-body {
+        padding: 0.75rem;
+    }
+    
+    .brand-logo {
+        height: 50px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .brand-logo img {
+        max-height: 50px !important;
+    }
+    
+    .brand-logo h5 {
+        font-size: 0.9rem !important;
+    }
+    
+    .carousel-nav {
+        display: none !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('brandsCarousel');
+    const prevBtn = document.getElementById('prevBrand');
+    const nextBtn = document.getElementById('nextBrand');
+    
+    if (!carousel) return;
+    
+    // Vérifier si le défilement est nécessaire
+    function checkScrollNeed() {
+        const needsScroll = carousel.scrollWidth > carousel.clientWidth;
+        if (needsScroll) {
+            prevBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
+        }
+    }
+    
+    // Navigation avec les flèches
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: -220, // largeur d'un item + gap
+                behavior: 'smooth'
+            });
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: 220,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Défilement automatique au survol (optionnel)
+    let autoScrollInterval;
+    
+    carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoScrollInterval);
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+        // Auto-scroll lent (optionnel)
+        // autoScrollInterval = setInterval(() => {
+        //     if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
+        //         carousel.scrollLeft = 0;
+        //     } else {
+        //         carousel.scrollBy({ left: 1, behavior: 'smooth' });
+        //     }
+        // }, 50);
+    });
+    
+    // Vérifier au chargement et au redimensionnement
+    checkScrollNeed();
+    window.addEventListener('resize', checkScrollNeed);
+    
+    // Support tactile pour mobile
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    carousel.addEventListener('mousedown', (e) => {
+        isDown = true;
+        carousel.classList.add('active');
+        startX = e.pageX - carousel.offsetLeft;
+        scrollLeft = carousel.scrollLeft;
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+        isDown = false;
+        carousel.classList.remove('active');
+    });
+    
+    carousel.addEventListener('mouseup', () => {
+        isDown = false;
+        carousel.classList.remove('active');
+    });
+    
+    carousel.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - carousel.offsetLeft;
+        const walk = (x - startX) * 2;
+        carousel.scrollLeft = scrollLeft - walk;
+    });
+});
+</script>
+
+<!-- Best Sellers Carousel -->
+{% if best_sellers %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold mb-0" style="color: #C4942F;">
+                <i class="bi bi-trophy-fill"></i> Best Sellers
+            </h3>
+            <p class="text-muted small mb-0">Déplacez la souris à gauche ou à droite pour naviguer</p>
+        </div>
+        <div class="product-slider" id="bestSellersCarousel" style="display: flex; gap: 1.5rem; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; position: relative; cursor: pointer; padding: 10px 0;">
+            {% for product in best_sellers %}
+            <div class="product-item fade-in" style="min-width: 300px; flex-shrink: 0;">
+                {% include 'components/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+// Navigation automatique Best Sellers par détection de position de souris
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('bestSellersCarousel');
+    if (!carousel) {
+        console.log('⚠️ Carousel Best Sellers non trouvé');
+        return;
+    }
+    
+    console.log('✅ Carousel Best Sellers trouvé, navigation automatique activée');
+    
+    let scrollInterval = null;
+    const scrollSpeed = 5; // Pixels par frame (augmenté pour plus de réactivité)
+    const edgeZone = 0.25; // 25% de chaque côté (agrandi pour plus de facilité)
+    
+    // Ajouter un indicateur visuel des zones (optionnel, à retirer si pas voulu)
+    carousel.style.transition = 'opacity 0.3s';
+    
+    carousel.addEventListener('mousemove', function(e) {
+        const rect = carousel.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const carouselWidth = rect.width;
+        const leftEdge = carouselWidth * edgeZone;
+        const rightEdge = carouselWidth * (1 - edgeZone);
+        
+        // Arrêter le défilement précédent
+        if (scrollInterval) {
+            clearInterval(scrollInterval);
+            scrollInterval = null;
+        }
+        
+        // Zone gauche - défiler vers la gauche
+        if (mouseX < leftEdge) {
+            carousel.style.cursor = 'w-resize';
+            scrollInterval = setInterval(() => {
+                if (carousel.scrollLeft > 0) {
+                    carousel.scrollLeft -= scrollSpeed;
+                }
+            }, 16); // ~60fps
+            console.log('⬅️ Défilement gauche');
+        }
+        // Zone droite - défiler vers la droite
+        else if (mouseX > rightEdge) {
+            carousel.style.cursor = 'e-resize';
+            scrollInterval = setInterval(() => {
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                if (carousel.scrollLeft < maxScroll) {
+                    carousel.scrollLeft += scrollSpeed;
+                }
+            }, 16); // ~60fps
+            console.log('➡️ Défilement droite');
+        }
+        // Zone centrale - pas de défilement
+        else {
+            carousel.style.cursor = 'default';
+        }
+    });
+    
+    // Arrêter le défilement quand la souris quitte le carousel
+    carousel.addEventListener('mouseleave', function() {
+        if (scrollInterval) {
+            clearInterval(scrollInterval);
+            scrollInterval = null;
+        }
+        carousel.style.cursor = 'pointer';
+        console.log('⏸️ Défilement arrêté');
+    });
+    
+    // Log au premier survol
+    carousel.addEventListener('mouseenter', function() {
+        console.log('🖱️ Souris sur Best Sellers - Déplacez à gauche/droite pour naviguer');
+    }, { once: true });
+});
+</script>
+{% endif %}
+
+<!-- Produits Vedettes -->
+<section class="py-5">
+    <div class="container">
+        <h3 class="text-center mb-4 fw-bold">
+            <i class="bi bi-star text-warning"></i> Nos Produits Vedettes
+        </h3>
+        <div class="row">
+            {% for product in newest_products %}
+            <div class="col-md-6 col-lg-3 mb-4 product-col fade-in">
+                {% include 'components/product_card.html' %}
+            </div>
+            {% endfor %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Aucun produit en vedette pour le moment.</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('collections') }}" class="btn btn-warning">Voir Toutes les Collections</a>
+        </div>
+    </div>
+</section>
+
+<style>
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+}
+.product-slider {
+    scrollbar-width: thin;
+    scrollbar-color: #C4942F #f8f9fa;
+}
+.product-slider::-webkit-scrollbar {
+    height: 8px;
+}
+.product-slider::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+.product-slider::-webkit-scrollbar-thumb {
+    background: #C4942F;
+    border-radius: 4px;
+}
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+// Auto-scroll pour les carrousels
+document.addEventListener('DOMContentLoaded', function() {
+    autoScrollCarousel('bestSellersCarousel', 5000);
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Commande {{ order.order_number }} - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-receipt fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Commande {{ order.order_number }}</h1>
+                        <p class="mb-0 text-white-50">Passée le {{ order.created_at.strftime('%d/%m/%Y à %H:%M') if order.created_at else 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                {% if order.status == 'pending' %}
+                    <span class="badge rounded-pill px-4 py-3 fs-5" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #333;">
+                        ⏳ En attente
+                    </span>
+                {% elif order.status == 'processing' %}
+                    <span class="badge rounded-pill px-4 py-3 fs-5" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); color: white;">
+                        ⚙️ En traitement
+                    </span>
+                {% elif order.status == 'shipped' %}
+                    <span class="badge rounded-pill px-4 py-3 fs-5" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white;">
+                        📦 Expédiée
+                    </span>
+                {% elif order.status == 'delivered' %}
+                    <span class="badge rounded-pill px-4 py-3 fs-5" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); color: white;">
+                        ✅ Livrée
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary rounded-pill px-4 py-3 fs-5">{{ order.status }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Colonne gauche -->
+        <div class="col-md-8 mb-4">
+            <!-- Carte Commande -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-box-seam" style="color: #C4942F;"></i> Articles Commandés
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for item in order.order_items %}
+                    <div class="d-flex align-items-center mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                        <div style="width: 100px; height: 100px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                            {% if item.product.image_url %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ item.product.image_url) }}" 
+                                     style="width: 100%; height: 100%; object-fit: contain; background: #f8f9fa; padding: 8px;" 
+                                     alt="{{ item.product.name }}"
+                                     onerror="this.src='{{ url_for('static', filename='images/placeholder.png') }}'; this.style.objectFit='contain'; this.style.background='#f8f9fa';">
+                            {% else %}
+                                <div class="bg-light text-center d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                                    <i class="bi bi-image text-muted fs-3"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="mb-2 fw-bold" style="color: #2c3e50;">{{ item.product.name }}</h6>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-award" style="color: #C4942F;"></i> <strong>{{ item.product.brand if item.product.brand else 'Marque Premium' }}</strong>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-light text-dark px-3 py-2">
+                                        <i class="bi bi-cart-fill"></i> Quantité: <strong>{{ item.quantity }}</strong>
+                                    </span>
+                                    <span class="ms-2 text-muted small">{{ item.price }} DH / unité</span>
+                                </div>
+                                <span class="fw-bold fs-5" style="color: #C4942F;">{{ item.price * item.quantity }} DH</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Carte Livraison -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-truck" style="color: #C4942F;"></i> Informations de Livraison
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded" style="background: #f8f9fa;">
+                                <p class="mb-2">
+                                    <i class="bi bi-calendar3" style="color: #C4942F;"></i> <strong>Date de commande</strong>
+                                </p>
+                                <p class="mb-0 text-muted">{{ order.created_at.strftime('%d/%m/%Y à %H:%M') if order.created_at else 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded" style="background: #f8f9fa;">
+                                <p class="mb-2">
+                                    <i class="bi bi-telephone" style="color: #C4942F;"></i> <strong>Téléphone</strong>
+                                </p>
+                                <p class="mb-0 text-muted">{{ order.phone or 'Non spécifié' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="p-3 rounded" style="background: #f8f9fa;">
+                                <p class="mb-2">
+                                    <i class="bi bi-geo-alt" style="color: #C4942F;"></i> <strong>Adresse de livraison</strong>
+                                </p>
+                                <p class="mb-0 text-muted">{{ order.shipping_address or current_user.address or 'Non spécifiée' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne droite - Résumé -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-lg sticky-top" style="top: 100px; border-left: 4px solid #C4942F !important;">
+                <div class="card-header" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); color: white; border: none;">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-calculator"></i> Récapitulatif
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        {% set shipping_fee = 30 if order.total_amount < 200 else 0 %}
+                        {% set final_total = order.total_amount + shipping_fee %}
+                        
+                        <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Sous-total produits:</span>
+                            <span class="fw-semibold">{{ order.total_amount }} DH</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Livraison:</span>
+                            {% if shipping_fee == 0 %}
+                            <span class="badge bg-success px-3 py-2">
+                                <i class="bi bi-truck"></i> Gratuite
+                            </span>
+                            <small class="text-success d-block mt-1">✓ Commande ≥ 200 DH</small>
+                            {% else %}
+                            <span class="fw-semibold">{{ shipping_fee }} DH</span>
+                            <small class="text-muted d-block mt-1">Gratuit à partir de 200 DH</small>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe8cc 100%);">
+                            <strong class="fs-5">Total TTC:</strong>
+                            <strong class="fs-3" style="color: #C4942F;">{{ final_total }} DH</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-3">
+                        <a href="{{ url_for('orders') }}" class="btn btn-lg" style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); color: white; border: none;">
+                            <i class="bi bi-arrow-left me-2"></i>Mes Commandes
+                        </a>
+                        {% if order.status == 'delivered' %}
+                        <button class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: white; border: none;" onclick="window.open('https://wa.me/212708505157?text=Bonjour, je souhaite commander à nouveau les produits de la commande {{ order.order_number }}')">
+                            <i class="bi bi-whatsapp me-2"></i>Commander à nouveau
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

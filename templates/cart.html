@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block title %}Panier - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Panier -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-white">
+        <h1 class="h3 fw-bold mb-0">
+            <i class="bi bi-cart3 text-warning"></i> Mon Panier
+        </h1>
+        <p class="small mb-0">Vos articles sélectionnés</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Articles du panier -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-bag-check text-warning"></i> Articles ({{ cart_items|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="cart-item-row border-bottom pb-4 mb-4" data-price="{{ item.product.price }}" data-item-id="{{ item.id }}">
+                        <div class="row align-items-center g-3">
+                            <!-- Image Produit -->
+                            <div class="col-12 col-md-5 col-lg-4">
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="flex-shrink-0">
+                                        {% if item.product.image_url %}
+                                            <img src="{{ url_for('static', filename='uploads/' ~ item.product.image_url) }}" 
+                                                 class="rounded shadow-sm" 
+                                                 style="width: 120px; height: 120px; object-fit: cover; border: 2px solid #f0f0f0;" 
+                                                 alt="{{ item.product.name }}"
+                                                 onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/product-placeholder.svg') }}'">
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='images/product-placeholder.svg') }}" 
+                                                 class="rounded shadow-sm" 
+                                                 style="width: 120px; height: 120px; object-fit: cover; border: 2px solid #f0f0f0;" 
+                                                 alt="{{ item.product.name }}">
+                                        {% endif %}
+                                    </a>
+                                    <div class="ms-3 flex-grow-1">
+                                        <h6 class="mb-2 fw-bold">
+                                            <a href="{{ url_for('product_detail', product_id=item.product.id) }}" 
+                                               class="text-decoration-none text-dark hover-primary">
+                                                {{ item.product.name }}
+                                            </a>
+                                        </h6>
+                                        <p class="text-muted small mb-2">
+                                            <i class="bi bi-award text-warning"></i> 
+                                            <strong>{{ item.product.brand or 'Marque Premium' }}</strong>
+                                        </p>
+                                        <div class="d-flex gap-2 align-items-center">
+                                            <span class="badge" style="background: #C4942F; font-size: 0.85rem;">{{ item.product.size or '100ml' }}</span>
+                                            {% if item.product.product_type == 'decant' %}
+                                            <span class="badge bg-info">Décant</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Prix unitaire -->
+                            <div class="col-6 col-md-2 text-center">
+                                <small class="text-muted d-block mb-1">Prix unitaire</small>
+                                <span class="fw-bold" style="color: #C4942F; font-size: 1.1rem;">{{ item.product.price }} DH</span>
+                            </div>
+                            
+                            <!-- Quantité -->
+                            <div class="col-6 col-md-2 text-center">
+                                <small class="text-muted d-block mb-2">Quantité</small>
+                                <div class="input-group input-group-lg justify-content-center" style="max-width: 140px; margin: 0 auto;">
+                                    <button class="btn btn-outline-secondary qty-minus" 
+                                            type="button" 
+                                            data-item-id="{{ item.id }}"
+                                            style="border-radius: 8px 0 0 8px; font-size: 1.2rem; padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <input type="number" 
+                                           class="form-control text-center quantity-input fw-bold" 
+                                           value="{{ item.quantity }}" 
+                                           min="1" 
+                                           max="99" 
+                                           data-item-id="{{ item.id }}" 
+                                           data-price="{{ item.product.price }}"
+                                           style="font-size: 1.1rem; width: 60px; border-left: 0; border-right: 0;">
+                                    <button class="btn btn-outline-secondary qty-plus" 
+                                            type="button" 
+                                            data-item-id="{{ item.id }}"
+                                            style="border-radius: 0 8px 8px 0; font-size: 1.2rem; padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Sous-total -->
+                            <div class="col-6 col-md-2 text-center">
+                                <small class="text-muted d-block mb-1">Sous-total</small>
+                                <span class="fw-bold item-subtotal" 
+                                      data-item-id="{{ item.id }}"
+                                      style="color: #C4942F; font-size: 1.2rem;">
+                                    {{ (item.product.price * item.quantity) }} DH
+                                </span>
+                            </div>
+                            
+                            <!-- Bouton Supprimer -->
+                            <div class="col-6 col-md-1 text-center">
+                                <form action="{{ url_for('remove_from_cart', item_id=item.id) }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                    <button type="submit" 
+                                            class="btn btn-outline-danger btn-lg" 
+                                            onclick="return confirm('Supprimer cet article ?')"
+                                            style="border-radius: 10px; padding: 0.6rem 1rem;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-calculator text-warning"></i> Résumé
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Indicateur de mise à jour -->
+                    <div class="alert alert-info d-none" id="updateIndicator" style="padding: 0.5rem; font-size: 0.85rem;">
+                        <i class="bi bi-arrow-repeat spin"></i> Mise à jour...
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Sous-total ({{ cart_items|length }} articles):</span>
+                        <span class="fw-bold" id="cartSubtotal">{{ total }} DH</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted"><i class="bi bi-truck"></i> Livraison:</span>
+                        <span class="badge bg-success">GRATUITE</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3" style="font-size: 1.2rem;">
+                        <strong>Total à payer:</strong>
+                        <strong class="text-warning" id="cartTotal" style="font-size: 1.5rem;">{{ total }} DH</strong>
+                    </div>
+                    
+                    <!-- Message d'économie -->
+                    <div class="alert alert-success" style="padding: 0.5rem; font-size: 0.85rem;">
+                        <i class="bi bi-gift-fill"></i> Vous économisez les frais de livraison !
+                    </div>
+                    
+                    {% if not current_user.is_authenticated %}
+                    <div class="alert alert-info alert-sm mb-3" role="alert">
+                        <i class="bi bi-info-circle"></i> 
+                        <small>Connectez-vous ou créez un compte pour finaliser votre commande</small>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('checkout') }}" class="btn btn-warning btn-lg">
+                            Procéder au paiement
+                        </a>
+                        <a href="{{ url_for('collections') }}" class="btn btn-outline-secondary">
+                            Continuer les achats
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">Code promo</h6>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Entrez votre code">
+                        <button class="btn btn-outline-secondary" type="button">Appliquer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
+        <h3>Votre panier est vide</h3>
+        <p class="text-muted">Découvrez nos collections et ajoutez vos parfums préférés</p>
+        <a href="{{ url_for('collections') }}" class="btn btn-warning btn-lg mt-3">
+            Découvrir nos produits
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Mise à jour automatique AJAX du panier
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    const qtyMinusButtons = document.querySelectorAll('.qty-minus');
+    const qtyPlusButtons = document.querySelectorAll('.qty-plus');
+    
+    // Obtenir le token CSRF
+    const csrfToken = '{{ csrf_token() }}';
+    
+    // Afficher l'indicateur de mise à jour
+    function showUpdateIndicator() {
+        const indicator = document.getElementById('updateIndicator');
+        if (indicator) {
+            indicator.classList.remove('d-none');
+        }
+    }
+    
+    function hideUpdateIndicator() {
+        const indicator = document.getElementById('updateIndicator');
+        if (indicator) {
+            setTimeout(() => {
+                indicator.classList.add('d-none');
+            }, 500);
+        }
+    }
+    
+    // Fonction pour mettre à jour la quantité
+    function updateQuantity(itemId, newQuantity) {
+        showUpdateIndicator();
+        
+        fetch('/api/cart/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                quantity: newQuantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mettre à jour l'affichage
+                updateCartDisplay();
+                hideUpdateIndicator();
+                
+                // Feedback visuel
+                const row = document.querySelector(`.cart-item-row[data-item-id="${itemId}"]`);
+                if (row) {
+                    row.style.backgroundColor = '#d4edda';
+                    setTimeout(() => {
+                        row.style.backgroundColor = '';
+                    }, 500);
+                }
+            } else {
+                hideUpdateIndicator();
+                showNotification('Erreur lors de la mise à jour', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            location.reload();
+        });
+    }
+    
+    // Notification toast
+    function showNotification(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type === 'error' ? 'danger' : 'success'} position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideInRight 0.3s;';
+        toast.innerHTML = `<i class="bi bi-${type === 'error' ? 'x-circle' : 'check-circle'}"></i> ${message}`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+    
+    // Fonction pour recalculer l'affichage
+    function updateCartDisplay() {
+        let total = 0;
+        let itemCount = 0;
+        
+        document.querySelectorAll('.cart-item-row').forEach(row => {
+            const price = parseFloat(row.dataset.price);
+            const itemId = row.dataset.itemId;
+            const quantityInput = row.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+            const quantity = parseInt(quantityInput.value);
+            const subtotal = price * quantity;
+            
+            // Mettre à jour le sous-total de l'item avec animation
+            const subtotalElement = row.querySelector(`.item-subtotal[data-item-id="${itemId}"]`);
+            subtotalElement.textContent = subtotal.toFixed(0) + ' DH';
+            
+            total += subtotal;
+            itemCount += quantity;
+        });
+        
+        // Mettre à jour le sous-total
+        const subtotalEl = document.getElementById('cartSubtotal');
+        if (subtotalEl) {
+            subtotalEl.textContent = total.toFixed(0) + ' DH';
+        }
+        
+        // Mettre à jour le total principal
+        const totalEl = document.getElementById('cartTotal');
+        if (totalEl) {
+            totalEl.textContent = total.toFixed(0) + ' DH';
+            // Animation du total
+            totalEl.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                totalEl.style.transform = 'scale(1)';
+            }, 200);
+        }
+        
+        // Mettre à jour le nombre d'articles
+        const itemsText = document.querySelector('.card-header h5');
+        if (itemsText && itemsText.textContent.includes('Articles')) {
+            itemsText.innerHTML = `<i class="bi bi-bag-check text-warning"></i> Articles (${itemCount})`;
+        }
+    }
+    
+    // Boutons moins
+    qtyMinusButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+            let currentValue = parseInt(input.value);
+            
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+                updateQuantity(itemId, currentValue - 1);
+            }
+        });
+    });
+    
+    // Boutons plus
+    qtyPlusButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+            let currentValue = parseInt(input.value);
+            const maxValue = parseInt(input.max) || 99;
+            
+            if (currentValue < maxValue) {
+                input.value = currentValue + 1;
+                updateQuantity(itemId, currentValue + 1);
+            }
+        });
+    });
+    
+    // Changement manuel de quantité
+    quantityInputs.forEach(input => {
+        let timeoutId;
+        input.addEventListener('input', function() {
+            clearTimeout(timeoutId);
+            const itemId = this.dataset.itemId;
+            const newQuantity = parseInt(this.value);
+            
+            if (newQuantity >= 1 && newQuantity <= 99) {
+                // Délai de 500ms avant de lancer la requête AJAX
+                timeoutId = setTimeout(() => {
+                    updateQuantity(itemId, newQuantity);
+                }, 500);
+            }
+        });
+    });
+});
+</script>
+
+<style>
+/* Styles personnalisés pour le panier */
+.cart-item-row {
+    transition: all 0.3s ease;
+}
+
+.cart-item-row:hover {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem !important;
+}
+
+.hover-primary:hover {
+    color: #C4942F !important;
+}
+
+.qty-minus,
+.qty-plus {
+    transition: all 0.2s ease;
+}
+
+.qty-minus:hover,
+.qty-plus:hover {
+    background: #C4942F !important;
+    border-color: #C4942F !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+.quantity-input {
+    font-weight: 600;
+}
+
+.quantity-input:focus {
+    border-color: #C4942F;
+    box-shadow: 0 0 0 0.2rem rgba(196, 148, 47, 0.25);
+}
+
+.btn-outline-danger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .cart-item-row img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .input-group {
+        max-width: 130px !important;
+    }
+    
+    .qty-minus,
+    .qty-plus {
+        padding: 0.4rem 0.6rem !important;
+    }
+}
+</style>
+
+{% endblock %}

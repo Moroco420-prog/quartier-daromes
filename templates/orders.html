@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Mes Commandes - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Orders -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-center text-white">
+        <h1 class="h3 fw-bold mb-2">
+            <i class="bi bi-bag-check text-warning"></i> Mes Commandes
+        </h1>
+        <p class="small">Suivez l'état de vos commandes</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-box fs-3 text-warning"></i>
+                            <h5 class="mt-2 mb-0">{{ orders|length }}</h5>
+                            <small class="text-muted">Total commandes</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-clock-history fs-3 text-info"></i>
+                            <h5 class="mt-2 mb-0">{{ orders|selectattr('status', 'equalto', 'pending')|list|length }}</h5>
+                            <small class="text-muted">En attente</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-truck fs-3 text-primary"></i>
+                            <h5 class="mt-2 mb-0">{{ orders|selectattr('status', 'equalto', 'shipped')|list|length }}</h5>
+                            <small class="text-muted">En livraison</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-check-circle fs-3 text-success"></i>
+                            <h5 class="mt-2 mb-0">{{ orders|selectattr('status', 'equalto', 'delivered')|list|length }}</h5>
+                            <small class="text-muted">Livrées</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            {% if orders %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead style="background-color: #f8f9fa;">
+                <tr>
+                    <th>N° Commande</th>
+                    <th>Date</th>
+                    <th>Montant Total</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') if order.created_at else 'N/A' }}</td>
+                    <td>{{ order.total_amount }} DH</td>
+                    <td>
+                        {% if order.status == 'pending' %}
+                            <span class="badge bg-warning">En attente</span>
+                        {% elif order.status == 'processing' %}
+                            <span class="badge bg-info">En traitement</span>
+                        {% elif order.status == 'shipped' %}
+                            <span class="badge bg-primary">Expédiée</span>
+                        {% elif order.status == 'delivered' %}
+                            <span class="badge bg-success">Livrée</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-dark">
+                            Voir détails
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Vous n'avez pas encore de commandes.
+        <a href="{{ url_for('collections') }}" class="alert-link">Découvrir nos produits</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

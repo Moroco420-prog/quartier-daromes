@@ -1,0 +1,255 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Ajouter un Produit - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin -->
+<section class="py-4" style="background: linear-gradient(135deg, #28a745 0%, #20873a 100%); border-bottom: 3px solid #1a1a1a;">
+    <div class="container-fluid text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-plus-circle"></i> Ajouter un Produit
+                </h2>
+                <p class="mb-0 opacity-75">Créer un nouveau produit dans le catalogue</p>
+            </div>
+            <a href="{{ url_for('admin_products') }}" class="btn btn-light">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informations du Produit</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        
+                        <!-- Nom du Produit -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                <i class="bi bi-tag"></i> Nom du Produit *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="Ex: Sauvage Eau de Toilette" 
+                                   required>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="bi bi-file-text"></i> Description
+                            </label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="4" 
+                                      placeholder="Décrivez les notes olfactives, la famille, etc."></textarea>
+                        </div>
+
+                        <!-- Marque -->
+                        <div class="mb-3">
+                            <label for="brand" class="form-label">
+                                <i class="bi bi-award"></i> Marque *
+                            </label>
+                            <select class="form-select" id="brand" name="brand" required>
+                                <option value="">Choisir une marque...</option>
+                                {% for brand in brands %}
+                                <option value="{{ brand }}">{{ brand }}</option>
+                                {% endfor %}
+                                <option value="__new__">➕ Nouvelle marque...</option>
+                            </select>
+                        </div>
+
+                        <!-- Nouvelle Marque (caché par défaut) -->
+                        <div class="mb-3" id="new-brand-field" style="display: none;">
+                            <label for="new_brand" class="form-label">
+                                <i class="bi bi-plus-circle"></i> Nom de la nouvelle marque
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="new_brand" 
+                                   name="new_brand" 
+                                   placeholder="Ex: Chanel, Dior...">
+                        </div>
+
+                        <!-- Catégorie et Type -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="category_id" class="form-label">
+                                    <i class="bi bi-collection"></i> Catégorie *
+                                </label>
+                                <select class="form-select" id="category_id" name="category_id" required>
+                                    <option value="">Choisir une catégorie...</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="is_decant" class="form-label">
+                                    <i class="bi bi-droplet"></i> Type de Produit *
+                                </label>
+                                <select class="form-select" id="is_decant" name="is_decant" required>
+                                    <option value="0">Flacon Complet</option>
+                                    <option value="1">Décant</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Prix et Stock -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="price" class="form-label">
+                                    <i class="bi bi-currency-dollar"></i> Prix (DH) *
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="price" 
+                                       name="price" 
+                                       step="0.01" 
+                                       min="0" 
+                                       placeholder="0.00" 
+                                       required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="stock" class="form-label">
+                                    <i class="bi bi-box-seam"></i> Stock *
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="stock" 
+                                       name="stock" 
+                                       min="0" 
+                                       value="0" 
+                                       required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="size" class="form-label">
+                                    <i class="bi bi-rulers"></i> Taille
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="size" 
+                                       name="size" 
+                                       placeholder="Ex: 100ml, 50ml, 5ml">
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            <label for="image" class="form-label">
+                                <i class="bi bi-image"></i> Image du Produit
+                            </label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="image" 
+                                   name="image" 
+                                   accept="image/*"
+                                   onchange="previewImage(event)">
+                            <div class="form-text">
+                                Formats acceptés: JPG, PNG, GIF, WEBP (max 5 Mo)
+                            </div>
+                            
+                            <!-- Prévisualisation de l'image -->
+                            <div id="imagePreview" class="mt-3" style="display: none;">
+                                <p class="small text-muted mb-2">Prévisualisation :</p>
+                                <img id="previewImg" 
+                                     src="" 
+                                     alt="Prévisualisation" 
+                                     style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid #dee2e6;">
+                            </div>
+                        </div>
+
+                        <!-- Produit Vedette -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="is_featured" 
+                                       name="is_featured" 
+                                       value="1">
+                                <label class="form-check-label" for="is_featured">
+                                    <i class="bi bi-star-fill text-warning"></i> Produit Vedette (affiché en page d'accueil)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{{ url_for('admin_products') }}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Ajouter le Produit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Aide -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="text-muted"><i class="bi bi-lightbulb"></i> Conseils</h6>
+                    <ul class="small text-muted mb-0">
+                        <li>Remplissez tous les champs marqués d'un astérisque (*)</li>
+                        <li>Utilisez des noms de produits clairs et descriptifs</li>
+                        <li>Les images s'affichent mieux en format carré (500x500px recommandé)</li>
+                        <li>Les produits vedettes apparaissent en page d'accueil</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Afficher/masquer le champ "nouvelle marque"
+document.getElementById('brand').addEventListener('change', function() {
+    const newBrandField = document.getElementById('new-brand-field');
+    const newBrandInput = document.getElementById('new_brand');
+    
+    if (this.value === '__new__') {
+        newBrandField.style.display = 'block';
+        newBrandInput.required = true;
+    } else {
+        newBrandField.style.display = 'none';
+        newBrandInput.required = false;
+        newBrandInput.value = '';
+    }
+});
+
+// Prévisualiser l'image sélectionnée
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    
+    if (file) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

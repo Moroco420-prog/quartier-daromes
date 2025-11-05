@@ -1,0 +1,800 @@
+{%  extends "admin/base_admin.html" %}
+
+{% block title %}Dashboard Admin - Quartier d'Arômes{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Admin avec Actions Rapides -->
+<section class="py-4" style="background: white; border-bottom: 1px solid #e0e0e0;">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-1" style="color: #1a1a1a;">
+                    <i class="bi bi-speedometer2" style="color: #C4942F;"></i> Dashboard
+                </h2>
+                <p class="text-muted mb-0 small">Vue d'ensemble de votre activité</p>
+            </div>
+            
+            <!-- Actions Rapides -->
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin_add_product') }}" class="btn btn-sm" style="background: #C4942F; color: white; border-radius: 8px; padding: 0.5rem 1rem;">
+                    <i class="bi bi-plus-circle"></i> Nouveau Produit
+                </a>
+                <button class="btn btn-sm btn-outline-secondary" onclick="location.reload()" style="border-radius: 8px;">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+            <!-- Filtres Temporels et Notifications -->
+            <div class="row mb-3">
+                <!-- Notifications/Alertes -->
+                <div class="col-md-12 text-end">
+                    <div class="dropdown d-inline-block">
+                        <button class="btn btn-warning btn-sm dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-bell-fill"></i> Alertes
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ alerts_count|default(0) }}
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
+                            {% if stock_alerts %}
+                            <li><h6 class="dropdown-header"><i class="bi bi-exclamation-triangle"></i> Stock Critique</h6></li>
+                            {% for product in stock_alerts %}
+                            <li><a class="dropdown-item small" href="{{ url_for('admin_products') }}">
+                                {{ product.name }} - Stock: {{ product.stock }}
+                            </a></li>
+                            {% endfor %}
+                            <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                            
+                            {% if pending_orders > 5 %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin_orders') }}">
+                                <i class="bi bi-cart-x text-warning"></i> {{ pending_orders }} commandes en attente
+                            </a></li>
+                            {% endif %}
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-center text-muted small" href="#">Voir toutes les alertes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Cards Principales - Design Moderne -->
+            <div class="row mb-4 g-4">
+                <!-- Revenus -->
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                        <div class="stat-icon">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">REVENUS</p>
+                            <h3 class="stat-value">{{ '{:,.0f}'.format(stats.total_revenue) }} DH</h3>
+                            <p class="stat-subtitle">{{ period_label|default('30 derniers jours') }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Commandes -->
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #C4942F 0%, #d4a74f 100%);">
+                        <div class="stat-icon">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">COMMANDES</p>
+                            <h3 class="stat-value">{{ stats.period_orders }}</h3>
+                            <p class="stat-subtitle">{{ stats.pending_orders }} en attente</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Produits -->
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);">
+                        <div class="stat-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">PRODUITS</p>
+                            <h3 class="stat-value">{{ stats.active_products }}</h3>
+                            <p class="stat-subtitle">{{ stats.total_products }} au total</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clients -->
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #563d7c 100%);">
+                        <div class="stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">CLIENTS</p>
+                            <h3 class="stat-value">{{ stats.total_users|default(0) }}</h3>
+                            <p class="stat-subtitle">Utilisateurs inscrits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Secondaires - Design Épuré -->
+            <div class="row mb-4 g-3">
+                <div class="col-md-3">
+                    <div class="mini-stat-card">
+                        <div class="mini-stat-icon" style="background: rgba(196, 148, 47, 0.1); color: #C4942F;">
+                            <i class="bi bi-bag-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="mini-stat-value">{{ '{:,.0f}'.format(stats.avg_order_value) }} DH</h4>
+                            <p class="mini-stat-label">Panier Moyen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mini-stat-card">
+                        <div class="mini-stat-icon" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <div>
+                            <h4 class="mini-stat-value">{{ stats.conversion_rate|default(0)|round(1) }}%</h4>
+                            <p class="mini-stat-label">Taux de Conversion</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mini-stat-card">
+                        <div class="mini-stat-icon" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <div>
+                            <h4 class="mini-stat-value">{{ stats.avg_rating|default(0)|round(1) }}/5</h4>
+                            <p class="mini-stat-label">Note Moyenne</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mini-stat-card">
+                        <div class="mini-stat-icon" style="background: rgba(23, 162, 184, 0.1); color: #17a2b8;">
+                            <i class="bi bi-chat-left-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="mini-stat-value">{{ stats.total_reviews }}</h4>
+                            <p class="mini-stat-label">Avis Produits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Graphiques -->
+            <div class="row mb-4 g-3">
+                <!-- Évolution Chiffre d'Affaires -->
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> Évolution du Chiffre d'Affaires</h5>
+                        </div>
+                        <div class="card-body" style="min-height: 250px;">
+                            {% if sales_by_day and sales_by_day|length > 0 %}
+                            <canvas id="revenueChart" height="80"></canvas>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-graph-up fs-1 text-muted"></i>
+                                <p class="text-muted mt-3">Aucune donnée de vente disponible</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top Catégories -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Ventes par Catégorie</h5>
+                        </div>
+                        <div class="card-body" style="min-height: 250px;">
+                            <canvas id="categoriesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Marques et Commandes par Statut -->
+            <div class="row mb-4 g-3">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0"><i class="bi bi-award"></i> Performance des Marques</h5>
+                        </div>
+                        <div class="card-body" style="min-height: 200px;">
+                            <canvas id="brandsChart" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Commandes par Statut</h5>
+                        </div>
+                        <div class="card-body" style="min-height: 200px;">
+                            {% if orders_by_status and orders_by_status|length > 0 %}
+                            <canvas id="ordersStatusChart" height="120"></canvas>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-bar-chart fs-1 text-muted"></i>
+                                <p class="text-muted mt-2">Aucune commande</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tableaux Détaillés -->
+            <div class="row mb-4 g-3">
+                <!-- Top Produits Vendus -->
+                <div class="col-md-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom d-flex justify-content-between">
+                            <h5 class="mb-0"><i class="bi bi-trophy"></i> Produits les Plus Vendus</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('topProducts')">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th>Ventes</th>
+                                            <th>Revenus</th>
+                                            <th>Stock</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product, sales, quantity in top_products|default([]) %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ product.name }}</strong><br>
+                                                <small class="text-muted">{{ product.brand if product.brand else '-' }}</small>
+                                            </td>
+                                            <td><span class="badge bg-success">{{ quantity }} unités</span></td>
+                                            <td>{{ '{:,.0f}'.format(product.price * quantity) }} DH</td>
+                                            <td>
+                                                {% if product.stock < 10 %}
+                                                <span class="badge bg-danger">{{ product.stock }}</span>
+                                                {% else %}
+                                                <span class="badge bg-success">{{ product.stock }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4">
+                                                <i class="bi bi-inbox fs-2 text-muted"></i>
+                                                <p class="text-muted mt-2 mb-0">Aucun produit vendu</p>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Commandes Récentes Détaillées -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-cart-check"></i> Commandes Récentes</h5>
+                    <div>
+                        <input type="text" class="form-control form-control-sm" id="searchOrders" placeholder="Rechercher...">
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table id="ordersTable" class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Client</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Paiement</th>
+                                    <th>Livraison</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if recent_orders and recent_orders|length > 0 %}
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.customer.username if order.customer else 'N/A' }}</td>
+                                    <td><strong>{{ '{:,.0f}'.format(order.total_amount) }} DH</strong></td>
+                                    <td>
+                                        {% if order.status == 'pending' %}
+                                        <span class="badge bg-warning">En attente</span>
+                                        {% elif order.status == 'processing' %}
+                                        <span class="badge bg-info">En traitement</span>
+                                        {% elif order.status == 'shipped' %}
+                                        <span class="badge bg-primary">Expédié</span>
+                                        {% elif order.status == 'delivered' %}
+                                        <span class="badge bg-success">Livré</span>
+                                        {% elif order.status == 'cancelled' %}
+                                        <span class="badge bg-danger">Annulé</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">{{ order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.payment_status == 'paid' %}
+                                        <i class="bi bi-check-circle-fill text-success"></i> Payé
+                                        {% else %}
+                                        <i class="bi bi-exclamation-circle-fill text-danger"></i> Non payé
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ order.shipping_method|default('Standard') }}</small>
+                                    </td>
+                                    <td><small>{{ order.created_at.strftime('%d/%m/%Y') if order.created_at else '-' }}</small></td>
+                                    <td>
+                                        <a href="{{ url_for('admin_orders') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <i class="bi bi-cart-x fs-1 text-muted"></i>
+                                        <p class="text-muted mt-3 mb-0">Aucune commande récente</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+</div>
+
+<!-- Modals Actions Rapides - Routes non implémentées, commentées pour éviter les erreurs
+<!-- Modal Nouvelle Promotion -->
+{# Modals désactivés - Routes non implémentées
+<div class="modal fade" id="newPromoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #C4942F; color: white;">
+                <h5 class="modal-title"><i class="bi bi-tag"></i> Créer une Promotion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="#">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Code Promo</label>
+                        <input type="text" class="form-control" name="code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Réduction (%)</label>
+                        <input type="number" class="form-control" name="discount" min="1" max="100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date d'expiration</label>
+                        <input type="date" class="form-control" name="expiry_date">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+Modal Newsletter
+<div class="modal fade" id="sendNewsletterModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #C4942F; color: white;">
+                <h5 class="modal-title"><i class="bi bi-envelope-plus"></i> Envoyer Newsletter</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="#">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Destinataires</label>
+                        <select class="form-select" name="recipients">
+                            <option value="all">Tous les utilisateurs</option>
+                            <option value="active">Utilisateurs actifs</option>
+                            <option value="vip">Utilisateurs VIP</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sujet</label>
+                        <input type="text" class="form-control" name="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" name="message" rows="6" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+#}
+
+<!-- Switch Thème Clair/Sombre -->
+<button id="themeToggle" class="btn btn-sm position-fixed bottom-0 end-0 m-3 shadow" style="z-index: 1000;">
+    <i class="bi bi-moon-fill"></i>
+</button>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<script>
+// Données pour les graphiques
+const salesData = {{ sales_by_day|tojson if sales_by_day else '[]'|safe }};
+const categoriesData = {{ top_categories|tojson if top_categories else '[]'|safe }};
+const brandsData = {{ top_brands|tojson if top_brands else '[]'|safe }};
+const ordersStatus = {{ orders_by_status|tojson if orders_by_status else '[]'|safe }};
+
+// Graphique Évolution CA
+const revenueCtx = document.getElementById('revenueChart');
+if (revenueCtx) {
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: salesData.map(d => d.date),
+            datasets: [{
+                label: 'Chiffre d\'Affaires (DH)',
+                data: salesData.map(d => d.revenue),
+                borderColor: '#C4942F',
+                backgroundColor: 'rgba(196, 148, 47, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {display: true}
+            },
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+}
+
+// Graphique Catégories
+const categoriesCtx = document.getElementById('categoriesChart');
+if (categoriesCtx) {
+    new Chart(categoriesCtx, {
+        type: 'doughnut',
+        data: {
+            labels: categoriesData.map(c => c.name || c[0]),
+            datasets: [{
+                data: categoriesData.map(c => c.sales || c[1]),
+                backgroundColor: ['#C4942F', '#28a745', '#17a2b8', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {position: 'bottom'}
+            }
+        }
+    });
+}
+
+// Graphique Marques
+const brandsCtx = document.getElementById('brandsChart');
+if (brandsCtx && brandsData.length) {
+    new Chart(brandsCtx, {
+        type: 'bar',
+        data: {
+            labels: brandsData.map(b => b.name || b[0]),
+            datasets: [{
+                label: 'Ventes',
+                data: brandsData.map(b => b.sales || b[1]),
+                backgroundColor: '#C4942F'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+}
+
+// Graphique Statut Commandes
+const statusCtx = document.getElementById('ordersStatusChart');
+if (statusCtx && ordersStatus.length) {
+    new Chart(statusCtx, {
+        type: 'bar',
+        data: {
+            labels: ordersStatus.map(s => s.status || s[0]),
+            datasets: [{
+                label: 'Nombre',
+                data: ordersStatus.map(s => s.count || s[1]),
+                backgroundColor: ['#ffc107', '#17a2b8', '#007bff', '#28a745', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+                x: {beginAtZero: true}
+            }
+        }
+    });
+}
+
+// Recherche Commandes
+document.getElementById('searchOrders')?.addEventListener('input', function(e) {
+    const search = e.target.value.toLowerCase();
+    document.querySelectorAll('#ordersTable tbody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(search) ? '' : 'none';
+    });
+});
+
+// Refresh Dashboard
+document.getElementById('refreshDashboard')?.addEventListener('click', () => {
+    location.reload();
+});
+
+// Thème Clair/Sombre
+const themeToggle = document.getElementById('themeToggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+if (currentTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    themeToggle.innerHTML = '<i class="bi bi-sun-fill"></i>';
+}
+
+themeToggle?.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    themeToggle.innerHTML = theme === 'dark' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-fill"></i>';
+});
+
+// Filtres Période
+document.querySelectorAll('input[name="period"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        window.location.href = `?period=${this.value}`;
+    });
+});
+</script>
+
+<style>
+/* ========== STATS CARDS MODERNES ========== */
+.stat-card {
+    border-radius: 15px;
+    padding: 1.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.stat-content {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.stat-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+    opacity: 0.8;
+}
+
+/* ========== MINI STATS CARDS ========== */
+.mini-stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+}
+
+.mini-stat-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.mini-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.mini-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #1a1a1a;
+}
+
+.mini-stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* ========== GRAPHIQUES & TABLES ========== */
+.card {
+    border-radius: 12px;
+    border: none;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1rem 1.5rem;
+}
+
+.table-responsive {
+    border-radius: 0 0 12px 12px;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.row > [class*='col-'] {
+    animation: fadeIn 0.5s ease-out backwards;
+}
+
+.row > [class*='col-']:nth-child(1) { animation-delay: 0.1s; }
+.row > [class*='col-']:nth-child(2) { animation-delay: 0.2s; }
+.row > [class*='col-']:nth-child(3) { animation-delay: 0.3s; }
+.row > [class*='col-']:nth-child(4) { animation-delay: 0.4s; }
+
+/* ========== BADGES ========== */
+.badge {
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+    }
+    
+    .mini-stat-card {
+        padding: 1rem;
+    }
+    
+    .mini-stat-value {
+        font-size: 1.25rem;
+    }
+}
+
+/* ========== SIDEBAR ACTIF ========== */
+.list-group-item-action.active {
+    background-color: #C4942F !important;
+    border-color: #C4942F !important;
+    color: white !important;
+}
+
+/* ========== THÈME SOMBRE ========== */
+.dark-theme {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-theme .card {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-theme .mini-stat-card {
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d !important;
+}
+
+.dark-theme .mini-stat-value {
+    color: white !important;
+}
+
+.dark-theme .table {
+    color: #e0e0e0 !important;
+}
+
+.dark-theme .table-light {
+    background-color: #3d3d3d !important;
+    color: #e0e0e0 !important;
+}
+</style>
+
+    </div>
+    
+    <!-- Bootstrap 5 JS -->
+{% endblock %}

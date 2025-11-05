@@ -1,0 +1,40 @@
+/* ========================================
+   QUARTIER D'ARÔMES - FICHIER CSS PRINCIPAL
+   Version: 2.0 - Organisation optimisée
+   
+   Ce fichier organise l'importation de tous les CSS
+   dans le bon ordre pour éviter les conflits
+   ======================================== */
+
+/* 1. Variables et configuration de base */
+@import url('style.css');
+
+/* 2. Système de design (layouts, grilles, etc.) */
+@import url('design-system.css');
+@import url('layout-system.css');
+
+/* 3. Composants UI */
+@import url('custom-buttons.css');
+@import url('forms-system.css');
+@import url('images-media.css');
+
+/* 4. Animations et transitions */
+@import url('animations.css');
+@import url('animations-feedback.css');
+
+/* 5. Styles spécifiques */
+@import url('luxury-design.css');
+@import url('admin-tables.css');
+@import url('admin-dark-mode.css');
+
+/* 6. Responsive et mobile (toujours en dernier) */
+@import url('mobile.css');
+
+/* ========================================
+   NOTES D'UTILISATION:
+   
+   - Inclure uniquement main.css dans vos templates HTML
+   - Ne pas inclure les autres fichiers CSS séparément
+   - L'ordre d'importation est important pour la cascade CSS
+   - Les styles mobile doivent toujours être en dernier
+   ======================================== */

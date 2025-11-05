@@ -1,0 +1,379 @@
+/* ========================================
+   BOUTONS PROFESSIONNELS - QUARTIER D'ARÔMES
+   Version: 3.0 - Simple et élégant
+   ======================================== */
+
+/* BASE GLOBALE POUR TOUS LES BOUTONS */
+.btn {
+    padding: 0.7rem 1.5rem !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    border: 2px solid transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+    letter-spacing: 0.3px !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+}
+
+/* ========================================
+   BOUTONS PRINCIPAUX (Doré #C4942F)
+   ======================================== */
+.btn-primary,
+.btn-warning,
+.btn-cta {
+    background: #C4942F !important;
+    border-color: #C4942F !important;
+    color: white !important;
+}
+
+.btn-primary:hover,
+.btn-warning:hover,
+.btn-cta:hover {
+    background: #A67D26 !important;
+    border-color: #A67D26 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(196, 148, 47, 0.4), 0 0 20px rgba(196, 148, 47, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* BOUTONS SECONDAIRES (Outline Doré) */
+.btn-outline-warning,
+.btn-outline-primary {
+    background: white !important;
+    border-color: #C4942F !important;
+    color: #C4942F !important;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-primary:hover {
+    background: #C4942F !important;
+    border-color: #C4942F !important;
+    color: white !important;
+    box-shadow: 0 3px 10px rgba(196, 148, 47, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* BOUTONS FAVORIS (Rouge) */
+.btn-outline-danger,
+.btn-danger {
+    background: white !important;
+    border-color: #dc3545 !important;
+    color: #dc3545 !important;
+}
+
+.btn-outline-danger:hover,
+.btn-danger:hover {
+    background: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+/* BOUTONS NEUTRES */
+.btn-outline-secondary,
+.btn-secondary {
+    background: white !important;
+    border-color: #6c757d !important;
+    color: #6c757d !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-secondary:hover {
+    background: #5a6268 !important;
+    border-color: #545b62 !important;
+    color: white !important;
+    box-shadow: 0 3px 8px rgba(108, 117, 125, 0.2) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* BOUTONS SOMBRES */
+.btn-dark,
+.btn-outline-dark {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    color: white !important;
+}
+
+.btn-dark:hover,
+.btn-outline-dark:hover {
+    background: #000000 !important;
+    border-color: #000000 !important;
+    color: white !important;
+}
+
+/* BOUTONS CLAIRS */
+.btn-light,
+.btn-outline-light {
+    background: white !important;
+    border-color: #e9ecef !important;
+    color: #212529 !important;
+}
+
+.btn-light:hover,
+.btn-outline-light:hover {
+    background: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    color: #212529 !important;
+}
+
+/* BOUTONS INFO */
+.btn-info,
+.btn-outline-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #27b2c8 100%) !important;
+    border-color: #17a2b8 !important;
+    color: white !important;
+}
+
+.btn-info:hover,
+.btn-outline-info:hover {
+    background: linear-gradient(135deg, #138496 0%, #17a2b8 100%) !important;
+    border-color: #138496 !important;
+    color: white !important;
+}
+
+/* BOUTONS SUCCESS */
+.btn-success,
+.btn-outline-success {
+    background: linear-gradient(135deg, #28a745 0%, #34ce57 100%) !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+.btn-success:hover,
+.btn-outline-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #28a745 100%) !important;
+    border-color: #218838 !important;
+    color: white !important;
+}
+
+/* ========================================
+   ICÔNES DANS LES BOUTONS
+   ======================================== */
+.btn i,
+.btn svg {
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+/* ========================================
+   TAILLES DE BOUTONS
+   ======================================== */
+.btn-sm {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem !important;
+    min-height: 36px !important;
+    border-radius: 6px !important;
+}
+
+.btn-lg {
+    padding: 0.9rem 1.8rem !important;
+    font-size: 1.05rem !important;
+    min-height: 52px !important;
+    border-radius: 10px !important;
+}
+
+/* ========================================
+   PROTECTION CONTRE CHANGEMENTS AU CLIC
+   ======================================== */
+
+/* Empêcher les changements de taille au clic */
+.btn:active,
+.btn:focus,
+.btn:hover,
+.btn.active,
+.btn:focus-visible {
+    transform: none !important;
+    outline: none !important;
+}
+
+/* Pas d'animation de scale au clic */
+.btn:active {
+    transform: translateY(0) !important;
+}
+
+/* ========================================
+   DÉSACTIVATION ANIMATIONS & TRANSFORMS
+   ======================================== */
+
+/* Pas d'animations sur les boutons */
+.btn,
+.btn *,
+.btn::before,
+.btn::after,
+.btn:active,
+.btn:focus,
+.btn:hover {
+    animation: none !important;
+    transform: none !important;
+}
+
+/* ========================================
+   BOUTONS ICÔNES (Cartes produits)
+   ======================================== */
+.btn-action {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    min-height: auto !important;
+}
+
+.btn-action:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transform: translateY(-1px) !important;
+    transition: all 0.15s ease !important;
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE & TABLETTE
+   ======================================== */
+
+/* Tablettes */
+@media (max-width: 992px) {
+    .btn {
+        padding: 0.65rem 1.3rem !important;
+        font-size: 0.93rem !important;
+    }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+    .btn {
+        padding: 0.6rem 1.1rem !important;
+        font-size: 0.9rem !important;
+        min-height: 42px !important;
+    }
+    
+    .btn-sm {
+        padding: 0.45rem 0.85rem !important;
+        font-size: 0.82rem !important;
+        min-height: 34px !important;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.4rem !important;
+        font-size: 1rem !important;
+        min-height: 48px !important;
+    }
+    
+    .btn-action {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* Petits mobiles */
+@media (max-width: 480px) {
+    .btn {
+        padding: 0.55rem 0.95rem !important;
+        font-size: 0.88rem !important;
+    }
+}
+
+/* ========================================
+   ÉTATS DÉSACTIVÉS
+   ======================================== */
+
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* ========================================
+   GROUPES DE BOUTONS
+   ======================================== */
+
+.btn-group .btn {
+    border-radius: 0 !important;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+/* ========================================
+   CORRECTIONS SPÉCIFIQUES
+   ======================================== */
+
+/* Boutons du header (navbar) */
+.navbar .btn {
+    padding: 0.5rem 0.7rem !important;
+    min-height: auto !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 6px !important;
+    font-size: 0.95rem !important;
+}
+
+.navbar .btn:hover {
+    background: rgba(196, 148, 47, 0.12) !important;
+    box-shadow: none !important;
+}
+
+/* Badge sur boutons */
+.btn .badge {
+    padding: 0.25em 0.5em !important;
+    font-size: 0.75em !important;
+    margin-left: 0.3rem !important;
+}
+
+/* Formulaires */
+form.d-inline .btn,
+form.w-100 .btn {
+    margin: 0 !important;
+}
+
+/* Cartes produits */
+.card-footer .btn {
+    margin-top: 0.5rem !important;
+}
+
+.card .btn.w-100 {
+    margin-top: 0.75rem !important;
+}
+
+/* ========================================
+   FOCUS & ACCESSIBILITÉ
+   ======================================== */
+
+.btn:focus,
+.btn:focus-visible {
+    outline: 2px solid rgba(196, 148, 47, 0.5) !important;
+    outline-offset: 2px !important;
+}
+
+/* ========================================
+   COMPATIBILITÉ NAVIGATEURS
+   ======================================== */
+
+.btn {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+/* ========================================
+   FIN - BOUTONS OPTIMISÉS V3.0
+   ======================================== */

@@ -1,0 +1,181 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Gestion Catégories - Admin{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-3 col-lg-2">
+            <div class="list-group">
+                <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a href="{{ url_for('admin_products') }}" class="list-group-item list-group-item-action"><i class="bi bi-box"></i> Produits</a>
+                <a href="{{ url_for('admin_categories') }}" class="list-group-item list-group-item-action active"><i class="bi bi-tags"></i> Catégories</a>
+                <a href="{{ url_for('admin_orders') }}" class="list-group-item list-group-item-action"><i class="bi bi-cart-check"></i> Commandes</a>
+                <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action"><i class="bi bi-people"></i> Utilisateurs</a>
+                <a href="{{ url_for('admin_messages') }}" class="list-group-item list-group-item-action"><i class="bi bi-envelope"></i> Messages</a>
+            </div>
+        </div>
+        <div class="col-md-9 col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">
+                    <i class="bi bi-tags text-warning"></i> Gestion des Catégories
+                </h1>
+                <span class="badge bg-warning fs-6">{{ categories|length }} catégories</span>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-plus-circle text-warning"></i> Ajouter une Catégorie
+                            </h5>
+                            <form method="POST" action="{{ url_for('admin_categories') }}" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nom *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required 
+                                           placeholder="Ex: Oriental, Boisé, Floral...">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="2"
+                                              placeholder="Description de la catégorie..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="category_type" class="form-label">Type de Catégorie *</label>
+                                    <select class="form-select" id="category_type" name="category_type" required>
+                                        <option value="">Choisir un type...</option>
+                                        <option value="genre">Genre (Homme/Femme/Unisexe)</option>
+                                        <option value="famille">Famille Olfactive</option>
+                                        <option value="format">Format (Complet/Décant)</option>
+                                        <option value="occasion">Occasion</option>
+                                        <option value="saison">Saison</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image de la catégorie (optionnel)</label>
+                                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                    <small class="text-muted">Si aucune image n'est fournie, une icône automatique sera utilisée</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="display_order" class="form-label">Ordre d'affichage</label>
+                                    <input type="number" class="form-control" id="display_order" name="display_order" 
+                                           value="0" min="0" placeholder="0">
+                                    <small class="text-muted">Plus le nombre est petit, plus la catégorie apparaît en premier</small>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                                    <label class="form-check-label" for="is_active">
+                                        Catégorie active
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="show_in_menu" name="show_in_menu" checked>
+                                    <label class="form-check-label" for="show_in_menu">
+                                        Afficher dans le menu
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="bi bi-plus-circle"></i> Ajouter la Catégorie
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-list-ul text-warning"></i> Liste des Catégories
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Ordre</th>
+                                            <th>Image</th>
+                                            <th>Nom</th>
+                                            <th>Type</th>
+                                            <th>Produits</th>
+                                            <th>Statut</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for category in categories %}
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ category.display_order or 0 }}</span>
+                                            </td>
+                                            <td>
+                                                {% if category.image_url %}
+                                                    <img src="{{ url_for('static', filename=category.image_url) }}" 
+                                                         alt="{{ category.name }}" 
+                                                         class="rounded-circle" 
+                                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                                {% else %}
+                                                    <i class="bi bi-image text-muted fs-4"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <strong>{{ category.name }}</strong>
+                                                {% if category.show_in_menu %}
+                                                    <i class="bi bi-eye text-success" title="Visible dans le menu"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if category.category_type == 'genre' %}
+                                                    <span class="badge bg-primary">Genre</span>
+                                                {% elif category.category_type == 'famille' %}
+                                                    <span class="badge bg-info">Famille</span>
+                                                {% elif category.category_type == 'format' %}
+                                                    <span class="badge bg-warning">Format</span>
+                                                {% elif category.category_type == 'occasion' %}
+                                                    <span class="badge bg-success">Occasion</span>
+                                                {% elif category.category_type == 'saison' %}
+                                                    <span class="badge bg-secondary">Saison</span>
+                                                {% else %}
+                                                    <span class="badge bg-light text-dark">Autre</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-dark">{{ category.products|length }} produits</span>
+                                            </td>
+                                            <td>
+                                                {% if category.is_active %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('admin_edit_category', category_id=category.id) }}" 
+                                                   class="btn btn-sm btn-outline-primary" 
+                                                   title="Modifier">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <form action="{{ url_for('admin_delete_category', category_id=category.id) }}" 
+                                                      method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Supprimer cette catégorie et tous ses produits associés ?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="bi bi-inbox fs-1"></i>
+                                                <p>Aucune catégorie créée</p>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

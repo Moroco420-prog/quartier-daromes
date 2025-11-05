@@ -1,0 +1,176 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Gestion Commandes - Admin{% endblock %}
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-cart-check fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Gestion des Commandes</h1>
+                        <p class="mb-0 text-white-50">Suivez et gérez toutes les commandes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('export_orders_excel') }}" class="btn btn-lg btn-light shadow-sm">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>Exporter CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <!-- Tableau des commandes -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-grid-3x3-gap text-warning"></i> Liste des Commandes
+                </h5>
+                <span class="badge bg-primary rounded-pill py-2 px-3">{{ orders|length }} commandes</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); color: white;">
+                        <tr>
+                            <th class="px-3">N° Commande</th>
+                            <th>Client</th>
+                            <th>Contact</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Paiement</th>
+                            <th>Statut</th>
+                            <th class="text-end px-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class="border-bottom" style="transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                                    <td><strong class="text-primary">{{ order.order_number }}</strong></td>
+                                    <td>
+                                        <strong>{{ order.customer.username if order.customer else 'N/A' }}</strong><br>
+                                        <small class="text-muted">{{ order.customer.email if order.customer else '' }}</small>
+                                    </td>
+                                    <td>
+                                        <small>📞 {{ order.phone or 'N/A' }}</small><br>
+                                        {% if order.phone %}
+                                        <a href="https://wa.me/{{ order.phone.replace('+', '').replace(' ', '') }}?text=Bonjour! Votre commande {{ order.order_number }} est prête." 
+                                           class="btn btn-success btn-sm mt-1" target="_blank">
+                                            <i class="bi bi-whatsapp"></i> WhatsApp
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ order.created_at.strftime('%d/%m/%Y') }}<br>
+                                        <small class="text-muted">{{ order.created_at.strftime('%H:%M') }}</small>
+                                    </td>
+                                    <td><strong class="text-warning">{{ order.total_amount }} DH</strong></td>
+                                    <td>
+                                        {% if order.payment_method == 'whatsapp' %}
+                                        <span class="badge bg-success">📱 WhatsApp</span>
+                                        {% elif order.payment_method == 'delivery' %}
+                                        <span class="badge bg-info">🚚 À la livraison</span>
+                                        {% elif order.payment_method == 'transfer' %}
+                                        <span class="badge bg-primary">🏦 Virement</span>
+                                        {% elif order.payment_method == 'cash' %}
+                                        <span class="badge bg-secondary">💵 Espèces</span>
+                                        {% else %}
+                                        <span class="badge bg-light text-dark">{{ order.payment_method or 'N/A' }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="POST" action="{{ url_for('admin_update_order', order_id=order.id) }}" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                <option value="pending" {% if order.status=='pending' %}selected{% endif %}>⏳ En attente</option>
+                                                <option value="processing" {% if order.status=='processing' %}selected{% endif %}>⚙️ En cours</option>
+                                                <option value="shipped" {% if order.status=='shipped' %}selected{% endif %}>📦 Expédiée</option>
+                                                <option value="delivered" {% if order.status=='delivered' %}selected{% endif %}>✅ Livrée</option>
+                                                <option value="cancelled" {% if order.status=='cancelled' %}selected{% endif %}>❌ Annulée</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <!-- Bouton Voir -->
+                                            <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" 
+                                               class="btn btn-sm btn-outline-info rounded-start" 
+                                               title="Voir détails de la commande"
+                                               style="padding: 0.5rem 0.75rem;">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                            
+                                            <!-- Bouton Accepter/Valider (si en attente) -->
+                                            {% if order.status == 'pending' %}
+                                            <form method="POST" action="{{ url_for('admin_accept_order', order_id=order.id) }}" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-success" 
+                                                        title="Accepter la commande"
+                                                        onclick="return confirm('Accepter cette commande ?');">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                            
+                                            <!-- Bouton Supprimer -->
+                                            <form method="POST" action="{{ url_for('admin_delete_order', order_id=order.id) }}" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-outline-danger" 
+                                                        title="Supprimer la commande"
+                                                        onclick="return confirm('⚠️ Supprimer définitivement cette commande ?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <div class="py-5">
+                                    <div class="mb-4">
+                                        <i class="bi bi-inbox" style="font-size: 5rem; color: #dee2e6;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-3">Aucune commande pour le moment</h5>
+                                    <p class="text-muted mb-4">Les commandes client apparaîtront ici</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr {
+    border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+    border-left-color: #C4942F;
+}
+
+.btn-group .btn {
+    border-width: 2px;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

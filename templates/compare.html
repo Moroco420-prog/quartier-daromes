@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}Comparateur de Produits - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); border-bottom: 3px solid #C4942F;">
+    <div class="container text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="display-6 fw-bold mb-2">
+                    <i class="bi bi-arrow-left-right text-warning"></i> Comparateur de Produits
+                </h1>
+                <p class="mb-0">Comparez {{ products|length }} produits côte à côte</p>
+            </div>
+            <a href="{{ url_for('collections') }}" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left"></i> Retour aux produits
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Tableau de comparaison -->
+<section class="py-5">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-bordered comparison-table">
+                <!-- Images des produits -->
+                <tr class="product-images">
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-image"></i> Produit
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        <div class="product-card">
+                            {% if product.image_url %}
+                            <img src="{{ url_for('static', filename=product.image_url) }}" 
+                                 alt="{{ product.name }}" 
+                                 class="img-fluid rounded shadow-sm mb-3"
+                                 style="max-height: 200px; object-fit: cover;">
+                            {% else %}
+                            <div class="no-image-placeholder mb-3">
+                                <i class="bi bi-image fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <h5 class="fw-bold">{{ product.name }}</h5>
+                            <p class="text-muted small mb-2">{{ product.brand }}</p>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" 
+                               class="btn btn-sm btn-outline-warning">
+                                Voir détails
+                            </a>
+                        </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Prix -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-tag-fill text-warning"></i> Prix
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        <span class="fs-4 fw-bold text-warning">{{ product.price }} DH</span>
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Taille -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-rulers"></i> Taille / Format
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        <span class="badge bg-secondary fs-6">
+                            {{ product.size if product.size else 'Non spécifié' }}
+                        </span>
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Type -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-box-seam"></i> Type
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        {% if product.product_type == 'decant' %}
+                        <span class="badge bg-info">Décant</span>
+                        {% elif product.product_type == 'collection' %}
+                        <span class="badge bg-success">Collection</span>
+                        {% else %}
+                        <span class="badge bg-primary">Parfum Complet</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Catégorie -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-bookmark-fill"></i> Catégorie
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        {% if product.category %}
+                        <span class="badge bg-dark">{{ product.category.name }}</span>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Note moyenne -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-star-fill text-warning"></i> Note moyenne
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        {% if product.avg_rating > 0 %}
+                        <div class="mb-2">
+                            <span class="fs-3 fw-bold text-warning">{{ product.avg_rating|round(1) }}</span>
+                            <span class="text-muted">/5</span>
+                        </div>
+                        <div class="stars-display">
+                            {% for i in range(5) %}
+                                {% if i < product.avg_rating|round %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                <i class="bi bi-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            ({{ product.review_count }} avis)
+                        </small>
+                        {% else %}
+                        <span class="text-muted">Pas encore d'avis</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Stock -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-boxes"></i> Disponibilité
+                    </th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        {% if product.stock > 10 %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> En stock ({{ product.stock }})
+                        </span>
+                        {% elif product.stock > 0 %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="bi bi-exclamation-triangle"></i> Stock limité ({{ product.stock }})
+                        </span>
+                        {% else %}
+                        <span class="badge bg-danger">
+                            <i class="bi bi-x-circle"></i> Rupture de stock
+                        </span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Description -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-file-text"></i> Description
+                    </th>
+                    {% for product in products %}
+                    <td class="product-column">
+                        <div class="description-cell">
+                            {{ product.description[:200] if product.description else 'Aucune description disponible' }}
+                            {% if product.description and product.description|length > 200 %}...{% endif %}
+                        </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Avis clients (top 3) -->
+                <tr>
+                    <th class="criteria-column sticky-left bg-light">
+                        <i class="bi bi-chat-dots"></i> Derniers avis
+                    </th>
+                    {% for product in products %}
+                    <td class="product-column">
+                        {% if product.reviews_list %}
+                        <div class="reviews-cell">
+                            {% for review in product.reviews_list %}
+                            <div class="review-item mb-2 p-2 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <small class="fw-bold">{{ review.user.username if review.user else 'Anonyme' }}</small>
+                                    <div class="stars-small">
+                                        {% for i in range(review.rating) %}
+                                        <i class="bi bi-star-fill text-warning" style="font-size: 10px;"></i>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <p class="small text-muted mb-0">
+                                    {{ review.comment[:100] if review.comment else '' }}
+                                    {% if review.comment and review.comment|length > 100 %}...{% endif %}
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <span class="text-muted small">Aucun avis</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                <!-- Actions -->
+                <tr class="actions-row">
+                    <th class="criteria-column sticky-left bg-light"></th>
+                    {% for product in products %}
+                    <td class="text-center product-column">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" 
+                               class="btn btn-warning">
+                                <i class="bi bi-eye"></i> Voir le produit
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm remove-from-compare" 
+                                    data-product-id="{{ product.id }}">
+                                <i class="bi bi-x-circle"></i> Retirer
+                            </button>
+                        </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('collections') }}" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left"></i> Ajouter d'autres produits
+            </a>
+            <button class="btn btn-danger" onclick="clearComparison()">
+                <i class="bi bi-trash"></i> Vider la comparaison
+            </button>
+        </div>
+    </div>
+</section>
+
+<style>
+.comparison-table {
+    font-size: 14px;
+    background: white;
+}
+
+.comparison-table th,
+.comparison-table td {
+    vertical-align: middle;
+    padding: 20px;
+}
+
+.criteria-column {
+    font-weight: 600;
+    min-width: 180px;
+    background: #f8f9fa !important;
+}
+
+.sticky-left {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.product-column {
+    min-width: 300px;
+}
+
+.product-card {
+    padding: 15px;
+}
+
+.no-image-placeholder {
+    height: 200px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.description-cell {
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.reviews-cell {
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.review-item {
+    font-size: 12px;
+}
+
+.actions-row {
+    background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .criteria-column {
+        min-width: 120px;
+        font-size: 12px;
+    }
+    
+    .product-column {
+        min-width: 250px;
+    }
+}
+</style>
+
+<script>
+// Retirer un produit de la comparaison
+document.querySelectorAll('.remove-from-compare').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const productId = this.dataset.productId;
+        removeFromComparison(productId);
+        location.reload();
+    });
+});
+
+function clearComparison() {
+    if (confirm('Voulez-vous vraiment vider la comparaison ?')) {
+        localStorage.removeItem('compareProducts');
+        window.location.href = '{{ url_for("collections") }}';
+    }
+}
+
+function removeFromComparison(productId) {
+    let compareList = JSON.parse(localStorage.getItem('compareProducts') || '[]');
+    compareList = compareList.filter(id => id != productId);
+    localStorage.setItem('compareProducts', JSON.stringify(compareList));
+}
+</script>
+
+{% endblock %}

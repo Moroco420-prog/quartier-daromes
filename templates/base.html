@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quartier d'Arômes - Parfumerie de Luxe{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block meta_description %}Découvrez notre collection exclusive de parfums de luxe et décants rares. Livraison rapide, authenticité garantie. Quartier d'Arômes - Votre parfumerie premium.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}parfum, parfumerie, luxe, décants, creed, dior, chanel, tom ford, parfum homme, parfum femme, fragrance{% endblock %}">
+    <meta name="author" content="Quartier d'Arômes">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{% block canonical_url %}https://quartierdaromes.com{{ request.path }}{% endblock %}">
+    
+    <!-- Langue fixe en français -->
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="https://quartierdaromes.com{{ request.path }}">
+    <meta property="og:title" content="{% block og_title %}Quartier d'Arômes - Parfumerie de Luxe{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Collection exclusive de parfums de luxe et décants. Authenticité garantie, livraison rapide.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://quartierdaromes.com{{ url_for('static', filename='images/og-image.jpg') }}{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Quartier d'Arômes">
+    <meta property="og:locale" content="fr_FR">
+    
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://quartierdaromes.com{{ request.path }}">
+    <meta property="twitter:title" content="{% block twitter_title %}Quartier d'Arômes - Parfumerie de Luxe{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Collection exclusive de parfums de luxe et décants.{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}https://quartierdaromes.com{{ url_for('static', filename='images/og-image.jpg') }}{% endblock %}">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "PerfumeStore",
+        "name": "Quartier d'Arômes",
+        "description": "Parfumerie de luxe proposant une sélection exclusive de fragrances et décants",
+        "url": "https://quartierdaromes.com",
+        "logo": "https://quartierdaromes.com{{ url_for('static', filename='images/logo.png') }}",
+        "priceRange": "50DH - 3000DH",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "MA"
+        },
+        "sameAs": [
+            "https://www.instagram.com/quartier_daromes/",
+            "https://www.facebook.com/quartierdaromes"
+        ]
+    }
+    </script>
+    {% block structured_data %}{% endblock %}
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX', {
+            'page_path': {{ request.path|tojson|safe }},
+            'page_title': {{ self.title()|tojson|safe }}
+        });
+    </script>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Design System - Variables CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-variables.css') }}">
+    
+    <!-- Fichier CSS principal - Inclut tous les autres CSS dans le bon ordre -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Favicons / Manifest -->
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- AOS - Animate On Scroll Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid px-4">
+            <!-- Bouton Menu à gauche -->
+            <button class="btn btn-dark border-0 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuSidebar">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <!-- Logo et nom centrés -->
+            <a class="navbar-brand position-absolute start-50 translate-middle-x fw-bold d-flex align-items-center" href="http://127.0.0.1:5000">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Quartier d'Arômes" class="logo me-2">
+                <span class="d-none d-md-inline">Quartier d'Arômes</span>
+            </a>
+            
+            <!-- Boutons à droite -->
+            <div class="d-flex align-items-center gap-1 ms-auto">
+                <!-- Bouton Recherche -->
+                <button class="btn btn-dark border-0" type="button" data-bs-toggle="modal" data-bs-target="#searchModal">
+                    <i class="bi bi-search"></i>
+                </button>
+                
+                <!-- Bouton Favoris - CACHÉ -->
+                <a href="http://127.0.0.1:5000/wishlist" class="btn btn-dark border-0 position-relative" style="display: none;">
+                    <i class="bi bi-heart"></i>
+                    {% if current_user.is_authenticated and wishlist_count|default(0) > 0 %}
+                        <span class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            {{ wishlist_count|default(0) }}
+                        </span>
+                    {% endif %}
+                </a>
+                
+                <!-- Bouton Panier -->
+                <a href="http://127.0.0.1:5000/cart" class="btn btn-dark border-0 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    {% if cart_count|default(0) > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.6rem;">
+                            {{ cart_count|default(0) }}
+                        </span>
+                    {% endif %}
+                </a>
+                
+                <!-- Boutons Notifications et Utilisateur - SUPPRIMÉS -->
+                <!-- Interface simplifiée pour les clients -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Sidebar (Offcanvas) -->
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="menuSidebar">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Quartier d'Arômes" class="logo me-2">
+                Menu
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Catégories en ligne -->
+            <div class="mb-4">
+                <h6 class="text-uppercase text-warning fw-bold mb-3">Catégories</h6>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="http://127.0.0.1:5000/collections?category=Homme" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-gender-male"></i> Homme
+                    </a>
+                    <a href="http://127.0.0.1:5000/collections?category=Femme" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-gender-female"></i> Femme
+                    </a>
+                    <a href="http://127.0.0.1:5000/collections?category=Unisexe" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-gender-ambiguous"></i> Unisexe
+                    </a>
+                </div>
+            </div>
+
+            <!-- Types de produits -->
+            <div class="mb-4">
+                <h6 class="text-uppercase text-warning fw-bold mb-3">Types de Produits</h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50" href="http://127.0.0.1:5000/collections?format=collection">
+                            <i class="bi bi-stars"></i> Collections Spéciales
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50" href="http://127.0.0.1:5000/collections?format=complet">
+                            <i class="bi bi-box-seam"></i> Parfums Complets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50" href="http://127.0.0.1:5000/collections?format=decant">
+                            <i class="bi bi-droplet-fill"></i> Décants
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <hr class="border-secondary my-3">
+
+            <!-- Pages principales -->
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="http://127.0.0.1:5000">
+                        <i class="bi bi-house"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="http://127.0.0.1:5000/blog">
+                        <i class="bi bi-journal-richtext"></i> Blog & Actualités
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="http://127.0.0.1:5000/contact">
+                        <i class="bi bi-envelope"></i> Contact
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="http://127.0.0.1:5000/about">
+                        <i class="bi bi-info-circle"></i> À Propos
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal de Recherche Simplifié -->
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+                <div class="modal-header border-0 pb-2">
+                    <h5 class="modal-title fw-bold" style="color: #1a1a1a;">
+                        <i class="bi bi-search" style="color: #C4942F;"></i> Rechercher
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0 pb-4">
+                    <form action="http://127.0.0.1:5000/collections" method="GET">
+                        <div class="input-group input-group-lg mb-3">
+                            <input type="text" 
+                                   name="search" 
+                                   class="form-control" 
+                                   placeholder="Nom du parfum, marque..." 
+                                   style="border: 2px solid #e0e0e0; border-radius: 10px 0 0 10px; padding: 0.75rem 1rem;"
+                                   autofocus>
+                            <button class="btn" 
+                                    type="submit" 
+                                    style="background: #C4942F; color: white; border: none; border-radius: 0 10px 10px 0; padding: 0.75rem 1.5rem; font-weight: 600;">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Recherches populaires (discrètes) -->
+                    <div class="text-center">
+                        <small class="text-muted d-block mb-2">Recherches populaires</small>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <a href="http://127.0.0.1:5000/collections?search=Dior" 
+                               class="badge rounded-pill search-badge">Dior</a>
+                            <a href="http://127.0.0.1:5000/collections?search=Chanel" 
+                               class="badge rounded-pill search-badge">Chanel</a>
+                            <a href="http://127.0.0.1:5000/collections?search=Tom+Ford" 
+                               class="badge rounded-pill search-badge">Tom Ford</a>
+                            <a href="http://127.0.0.1:5000/collections?search=Creed" 
+                               class="badge rounded-pill search-badge">Creed</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+    /* Badges recherche populaire */
+    .search-badge {
+        background: #f8f9fa;
+        color: #6c757d;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+    
+    .search-badge:hover {
+        background: #C4942F;
+        color: white;
+        border-color: #C4942F;
+        transform: translateY(-2px);
+    }
+    
+    /* Input recherche focus */
+    #searchModal .form-control:focus {
+        border-color: #C4942F;
+        box-shadow: 0 0 0 0.2rem rgba(196, 148, 47, 0.25);
+    }
+    </style>
+
+    <!-- Messages Flash -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Contenu principal -->
+    <main class="min-vh-100" style="padding-top: 56px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="d-flex align-items-center">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Quartier d'Arômes" class="logo me-2">
+                        Quartier d'Arômes
+                    </h5>
+                    <p>Votre destination pour les parfums de luxe et les fragrances exclusives.</p>
+                    <p class="mb-1"><i class="bi bi-geo-alt"></i> <strong>Adresse Fès</strong> : oued Fès</p>
+                    <p class="mb-3"><i class="bi bi-telephone"></i> <a href="tel:+212708505157" class="text-white text-decoration-none">+212 708-505157</a></p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/quartier_daromes/" target="_blank" rel="noopener" class="text-white me-3">
+                            <i class="bi bi-instagram fs-4"></i>
+                        </a>
+                        <a href="#" class="text-white me-3"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white me-3"><i class="bi bi-twitter fs-4"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Liens Rapides</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="http://127.0.0.1:5000/collections" class="text-white-50">Nos Collections</a></li>
+                        <li><a href="http://127.0.0.1:5000/decants" class="text-white-50">Décants</a></li>
+                        <li><a href="http://127.0.0.1:5000/contact" class="text-white-50">Contact</a></li>
+                        <li><a href="http://127.0.0.1:5000/about" class="text-white-50">À Propos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Newsletter</h5>
+                    <p>Inscrivez-vous pour recevoir nos dernières offres</p>
+                    <form class="d-flex">
+                        <input type="email" class="form-control me-2" placeholder="Votre email">
+                        <button class="btn btn-warning" type="submit">S'inscrire</button>
+                    </form>
+                    <div class="mt-3">
+                        <a href="https://www.instagram.com/quartier_daromes/" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-instagram"></i> Suivez-nous @quartier_daromes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-white">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Quartier d'Arômes. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Barre de Navigation Mobile (affichée uniquement sur mobile) -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-container">
+            <a href="http://127.0.0.1:5000" class="mobile-nav-item {% if request.endpoint == 'index' %}active{% endif %}">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="http://127.0.0.1:5000/collections" class="mobile-nav-item {% if request.endpoint == 'collections' %}active{% endif %}">
+                <i class="bi bi-search"></i>
+                <span>Recherche</span>
+            </a>
+            <a href="http://127.0.0.1:5000/cart" class="mobile-nav-item {% if request.endpoint == 'cart' %}active{% endif %}">
+                <i class="bi bi-cart-fill"></i>
+                <span>Panier</span>
+                {% if cart_count|default(0) > 0 %}
+                    <span class="mobile-nav-badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+        </div>
+    </nav>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS - Animate On Scroll -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialiser AOS avec configuration luxe
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 100,
+            delay: 50
+        });
+    </script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Advanced Animations JS -->
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <!-- Smart Search JS -->
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <!-- Cart Notifications & Dynamic Calculator -->
+    <script src="{{ url_for('static', filename='js/cart-notifications.js') }}"></script>
+    
+    <!-- 🎨 AMÉLIORATIONS UX/UI AVANCÉES -->
+    
+    <!-- Toast Notifications System -->
+    <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    
+    <!-- Mode Sombre/Clair avec Toggle -->
+    <script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+    
+    <!-- Lazy Loading Images -->
+    <script src="{{ url_for('static', filename='js/lazy-load.js') }}"></script>
+    
+    <!-- Filtrage Instantané AJAX -->
+    <script src="{{ url_for('static', filename='js/instant-filters.js') }}"></script>
+    
+    <!-- Animations Panier & Wishlist -->
+    <script src="{{ url_for('static', filename='js/cart-wishlist-animations.js') }}"></script>
+    
+    <!-- Animations CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    
+    <!-- Script de Scroll Reveal pour animations au scroll -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Observer pour les animations au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+        
+        // Observer tous les éléments avec la classe scroll-reveal
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            scrollObserver.observe(el);
+        });
+        
+        // Convertir les images existantes en lazy-load
+        // (Pour les nouvelles pages, utilisez directement data-src dans le HTML)
+        if (window.lazyLoader) {
+            // Les images avec class="lazy" seront automatiquement converties
+            const lazyImages = document.querySelectorAll('img.lazy:not([data-src])');
+            lazyImages.forEach(img => {
+                if (img.src && !img.dataset.src) {
+                    img.dataset.src = img.src;
+                    img.src = window.lazyLoader.options.placeholderSrc;
+                }
+            });
+        }
+    });
+    </script>
+    
+    <!-- Toast Notifications & Animations System -->
+    <script src="{{ url_for('static', filename='js/toast-notifications.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

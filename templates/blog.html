@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - Quartier d'Arômes{% endblock %}
+
+{% block meta_description %}Découvrez nos conseils, nouveautés et tendances parfumerie sur le blog Quartier d'Arômes. Guides d'achat, critiques et actualités parfums.{% endblock %}
+
+{% block content %}
+<!-- Hero Section Blog -->
+<section class="py-5" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); border-bottom: 3px solid #C4942F;">
+    <div class="container text-white text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-journal-richtext text-warning"></i> Blog
+        </h1>
+        <p class="fs-5 mb-0">Conseils, Nouveautés et Tendances Parfumerie</p>
+    </div>
+</section>
+
+<!-- Catégories et Recherche -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Catégories -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="btn-group" role="group">
+                    <a href="{{ url_for('blog') }}" class="btn btn-sm {% if not current_category %}btn-warning{% else %}btn-outline-secondary{% endif %}">
+                        Tous
+                    </a>
+                    <a href="{{ url_for('blog', category='nouveautés') }}" class="btn btn-sm {% if current_category == 'nouveautés' %}btn-warning{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-stars"></i> Nouveautés
+                    </a>
+                    <a href="{{ url_for('blog', category='conseils') }}" class="btn btn-sm {% if current_category == 'conseils' %}btn-warning{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-lightbulb"></i> Conseils
+                    </a>
+                    <a href="{{ url_for('blog', category='tendances') }}" class="btn btn-sm {% if current_category == 'tendances' %}btn-warning{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-graph-up"></i> Tendances
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Compteur d'articles -->
+            <div class="col-md-6 text-end">
+                <span class="text-muted">
+                    <i class="bi bi-file-text"></i> {{ pagination.total }} article{{ 's' if pagination.total > 1 else '' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Articles de blog -->
+<section class="py-5">
+    <div class="container">
+        {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-md-6 col-lg-4 mb-4 fade-in">
+                <article class="card h-100 border-0 shadow-sm hover-lift">
+                    <!-- Image -->
+                    {% if post.image_url %}
+                    <a href="{{ url_for('blog_post', slug=post.slug) }}">
+                        <img src="{{ url_for('static', filename=post.image_url) }}" 
+                             class="card-img-top" 
+                             alt="{{ post.title }}" 
+                             style="height: 200px; object-fit: cover;">
+                    </a>
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                        <i class="bi bi-image fs-1 text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Badge Catégorie -->
+                    <div class="position-absolute top-0 start-0 m-2">
+                        {% if post.blog_category == 'nouveautés' %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-stars"></i> Nouveautés
+                        </span>
+                        {% elif post.blog_category == 'conseils' %}
+                        <span class="badge bg-info">
+                            <i class="bi bi-lightbulb"></i> Conseils
+                        </span>
+                        {% elif post.blog_category == 'tendances' %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="bi bi-graph-up"></i> Tendances
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <!-- Titre -->
+                        <h5 class="card-title">
+                            <a href="{{ url_for('blog_post', slug=post.slug) }}" class="text-dark text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        
+                        <!-- Extrait -->
+                        <p class="card-text text-muted small mb-3">
+                            {{ post.excerpt[:120] if post.excerpt else post.content[:120] }}...
+                        </p>
+                        
+                        <!-- Meta -->
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center text-muted small">
+                                <span>
+                                    <i class="bi bi-calendar3"></i> 
+                                    {{ post.created_at.strftime('%d/%m/%Y') }}
+                                </span>
+                                <span>
+                                    <i class="bi bi-eye"></i> 
+                                    {{ post.views }} vues
+                                </span>
+                            </div>
+                            <a href="{{ url_for('blog_post', slug=post.slug) }}" class="btn btn-sm btn-warning w-100 mt-3">
+                                Lire l'article <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+        <nav aria-label="Navigation blog" class="mt-5">
+            <ul class="pagination justify-content-center">
+                <!-- Précédent -->
+                <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                    <a class="page-link" href="{% if pagination.has_prev %}{{ url_for('blog', page=pagination.prev_num, category=current_category) }}{% else %}#{% endif %}">
+                        <i class="bi bi-chevron-left"></i> Précédent
+                    </a>
+                </li>
+                
+                <!-- Numéros de pages -->
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('blog', page=page_num, category=current_category) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Suivant -->
+                <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if pagination.has_next %}{{ url_for('blog', page=pagination.next_num, category=current_category) }}{% else %}#{% endif %}">
+                        Suivant <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <!-- Aucun article -->
+        <div class="text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <h3 class="text-muted">Aucun article trouvé</h3>
+            <p class="text-muted">
+                {% if current_category %}
+                Aucun article dans la catégorie "{{ current_category }}"
+                {% else %}
+                Aucun article de blog n'est disponible pour le moment.
+                {% endif %}
+            </p>
+            <a href="{{ url_for('blog') }}" class="btn btn-warning mt-3">
+                <i class="bi bi-arrow-left"></i> Retour au blog
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+}
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+{% endblock %}

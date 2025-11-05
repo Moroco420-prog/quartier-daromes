@@ -1,0 +1,821 @@
+/**
+ * QUARTIER D'ARÔMES - ANIMATIONS & FEEDBACK VISUEL
+ * Animations légères, toast notifications, transitions douces
+ */
+
+/* ========================================
+   1. ANIMATIONS DE BASE
+   ======================================== */
+
+/* Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Fade In Down */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-down {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+/* Scale In */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Slide In Right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Slide In Left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* ========================================
+   2. ANIMATIONS AJOUT AU PANIER
+   ======================================== */
+
+/* Animation "flying to cart" */
+@keyframes flyToCart {
+  0% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.5) translate(30px, -30px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2) translate(60px, -60px);
+  }
+}
+
+.fly-to-cart {
+  animation: flyToCart 0.6s ease-in-out;
+}
+
+/* Pulse du badge panier */
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+.badge-pulse {
+  animation: badgePulse 0.4s ease-out;
+}
+
+/* Shake pour attirer l'attention */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+/* Bounce pour confirmation */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-7px);
+  }
+}
+
+.bounce {
+  animation: bounce 0.6s;
+}
+
+/* ========================================
+   3. ANIMATIONS SUPPRESSION
+   ======================================== */
+
+/* Slide Out Right (suppression) */
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.slide-out-right {
+  animation: slideOutRight 0.3s ease-in forwards;
+}
+
+/* Fade Out avec Scale */
+@keyframes fadeOutScale {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.fade-out-scale {
+  animation: fadeOutScale 0.3s ease-in forwards;
+}
+
+/* Collapse (height animation) */
+@keyframes collapse {
+  from {
+    opacity: 1;
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.collapse-animation {
+  animation: collapse 0.4s ease-in forwards;
+  overflow: hidden;
+}
+
+/* ========================================
+   4. ANIMATIONS CHARGEMENT
+   ======================================== */
+
+/* Spinner rotatif */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(196, 148, 47, 0.2);
+  border-top-color: var(--primary-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 6px;
+}
+
+/* Dots pulsants */
+@keyframes dotPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.loading-dots span {
+  width: 12px;
+  height: 12px;
+  background: var(--primary-gold);
+  border-radius: 50%;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  height: 24px;
+  margin-bottom: 12px;
+  width: 60%;
+}
+
+.skeleton-image {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+}
+
+/* Progress bar */
+@keyframes progressBar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-bar-loading {
+  position: relative;
+  overflow: hidden;
+  background: var(--secondary-gray-light);
+  height: 4px;
+  border-radius: var(--radius-full);
+}
+
+.progress-bar-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary-gold),
+    transparent
+  );
+  animation: progressBar 1.5s infinite;
+}
+
+/* ========================================
+   5. TOAST NOTIFICATIONS
+   ======================================== */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 400px;
+}
+
+.toast {
+  background: var(--primary-white);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: start;
+  gap: var(--spacing-md);
+  min-width: 320px;
+  border-left: 4px solid;
+  animation: slideInRight 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Variantes de toast */
+.toast.success {
+  border-left-color: var(--success);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.05) 0%, var(--primary-white) 100%);
+}
+
+.toast.error {
+  border-left-color: var(--danger);
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, var(--primary-white) 100%);
+}
+
+.toast.warning {
+  border-left-color: var(--warning);
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, var(--primary-white) 100%);
+}
+
+.toast.info {
+  border-left-color: var(--info);
+  background: linear-gradient(135deg, rgba(23, 162, 184, 0.05) 0%, var(--primary-white) 100%);
+}
+
+/* Icône du toast */
+.toast-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.toast.success .toast-icon {
+  background: rgba(40, 167, 69, 0.15);
+  color: var(--success);
+}
+
+.toast.error .toast-icon {
+  background: rgba(220, 53, 69, 0.15);
+  color: var(--danger);
+}
+
+.toast.warning .toast-icon {
+  background: rgba(255, 193, 7, 0.15);
+  color: #856404;
+}
+
+.toast.info .toast-icon {
+  background: rgba(23, 162, 184, 0.15);
+  color: var(--info);
+}
+
+/* Contenu du toast */
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.toast-message {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Bouton fermer */
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+/* Progress bar du toast */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: currentColor;
+  opacity: 0.3;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  animation: toastProgress 5s linear forwards;
+}
+
+@keyframes toastProgress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Animation de sortie */
+@keyframes slideOutRight {
+  to {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+
+.toast.removing {
+  animation: slideOutRight 0.3s ease-in forwards;
+}
+
+/* ========================================
+   6. TRANSITIONS ENTRE PAGES
+   ======================================== */
+
+/* Fade transition */
+.page-transition {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Slide transition */
+.page-slide-in {
+  animation: slideInRight 0.4s ease-out;
+}
+
+/* Content wrapper pour transitions */
+.content-wrapper {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Stagger children (cascade) */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+
+/* ========================================
+   7. TRANSITIONS ONGLETS
+   ======================================== */
+
+/* Tabs content fade */
+.tab-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tab-content-slide {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* Tab indicators */
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background: var(--primary-gold);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+/* ========================================
+   8. MICRO-INTERACTIONS
+   ======================================== */
+
+/* Hover lift */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hover scale */
+.hover-scale {
+  transition: transform var(--transition-base);
+}
+
+.hover-scale:hover {
+  transform: none !important;
+}
+
+/* Hover glow */
+.hover-glow {
+  transition: box-shadow var(--transition-base);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(196, 148, 47, 0.4);
+}
+
+/* Press effect - DÉSACTIVÉ */
+.press-effect:active {
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ========================================
+   9. ANIMATIONS SPÉCIFIQUES E-COMMERCE
+   ======================================== */
+
+/* Animation ajout favoris */
+@keyframes heartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(0.9);
+  }
+  20%, 40%, 50% {
+    transform: scale(1.1);
+  }
+}
+
+.heart-beat {
+  animation: heartBeat 0.8s;
+}
+
+/* Animation quantité changée */
+@keyframes quantityChange {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+    color: var(--primary-gold);
+  }
+}
+
+.quantity-change {
+  animation: quantityChange 0.3s;
+}
+
+/* Animation prix mis à jour */
+@keyframes priceUpdate {
+  0% {
+    background: rgba(196, 148, 47, 0.3);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.price-update {
+  animation: priceUpdate 0.8s;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* ========================================
+   10. ANIMATIONS FORMULAIRES
+   ======================================== */
+
+/* Label float animation */
+.form-floating label {
+  transition: all 0.2s ease-out;
+}
+
+/* Input focus ripple */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.input-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(196, 148, 47, 0.3);
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.input-ripple:focus::after {
+  animation: ripple 0.6s;
+}
+
+/* ========================================
+   11. ANIMATIONS MODALS
+   ======================================== */
+
+/* Modal backdrop fade */
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-backdrop {
+  animation: backdropFadeIn 0.15s ease-out;
+}
+
+/* Modal content scale */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content {
+  animation: modalScaleIn 0.3s ease-out;
+}
+
+/* ========================================
+   12. ANIMATIONS DROPDOWN
+   ======================================== */
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu {
+  animation: dropdownSlide 0.2s ease-out;
+}
+
+/* ========================================
+   13. UTILITIES
+   ======================================== */
+
+/* Delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* Durations */
+.duration-fast { animation-duration: 0.15s; }
+.duration-normal { animation-duration: 0.3s; }
+.duration-slow { animation-duration: 0.5s; }
+
+/* Animation fill modes */
+.fill-forwards { animation-fill-mode: forwards; }
+.fill-backwards { animation-fill-mode: backwards; }
+.fill-both { animation-fill-mode: both; }
+
+/* Pause animation */
+.animation-paused {
+  animation-play-state: paused;
+}
+
+/* ========================================
+   14. REDUCE MOTION (Accessibilité)
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .toast {
+    animation: none;
+  }
+  
+  .spinner {
+    animation: none;
+    border: 4px solid var(--primary-gold);
+  }
+}
+
+/* ========================================
+   15. PERFORMANCE OPTIMIZATION
+   ======================================== */
+
+/* Will-change pour optimisation GPU */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation */
+.animated {
+  will-change: auto;
+}
+
+/* Force hardware acceleration */
+.gpu-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

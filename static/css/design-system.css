@@ -1,0 +1,666 @@
+/**
+ * QUARTIER D'ARÔMES - SYSTÈME DE DESIGN GLOBAL
+ * Version 2.0 - Design amélioré et cohérent
+ * Applique sur Client + Admin
+ */
+
+/* ========================================
+   1. VARIABLES CSS (Design Tokens)
+   ======================================== */
+
+:root {
+  /* Couleurs principales */
+  --primary-gold: #C4942F;
+  --primary-gold-dark: #a67c26;
+  --primary-gold-light: #d4a847;
+  --primary-black: #1a1a1a;
+  --primary-white: #ffffff;
+  
+  /* Couleurs secondaires */
+  --secondary-gray: #6c757d;
+  --secondary-gray-light: #e9ecef;
+  --secondary-gray-dark: #495057;
+  
+  /* Couleurs texte */
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-muted: #adb5bd;
+  --text-light: #dee2e6;
+  
+  /* Couleurs de statut */
+  --success: #28a745;
+  --danger: #dc3545;
+  --warning: #ffc107;
+  --info: #17a2b8;
+  
+  /* Typographie */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-headings: "Segoe UI", system-ui, -apple-system, sans-serif;
+  
+  /* Tailles de police - Échelle modulaire (1.250) */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  
+  /* Titres - Échelle harmonieuse */
+  --font-size-h1: 2.5rem;       /* 40px */
+  --font-size-h2: 2rem;         /* 32px */
+  --font-size-h3: 1.75rem;      /* 28px */
+  --font-size-h4: 1.5rem;       /* 24px */
+  --font-size-h5: 1.25rem;      /* 20px */
+  --font-size-h6: 1rem;         /* 16px */
+  
+  /* Poids de police */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Hauteurs de ligne */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+  
+  /* Espacements - Échelle 8pt */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+  
+  /* Rayons de bordure */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-gold: 0 4px 15px rgba(196, 148, 47, 0.3);
+  --shadow-gold-lg: 0 8px 25px rgba(196, 148, 47, 0.4);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+}
+
+/* ========================================
+   2. TYPOGRAPHIE GLOBALE
+   ======================================== */
+
+/* Corps de texte */
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Titres - Hiérarchie claire */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-family-headings);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  letter-spacing: -0.02em;
+}
+
+h1, .h1 {
+  font-size: var(--font-size-h1);
+  margin-bottom: var(--spacing-lg);
+}
+
+h2, .h2 {
+  font-size: var(--font-size-h2);
+  margin-bottom: var(--spacing-lg);
+}
+
+h3, .h3 {
+  font-size: var(--font-size-h3);
+}
+
+h4, .h4 {
+  font-size: var(--font-size-h4);
+}
+
+h5, .h5 {
+  font-size: var(--font-size-h5);
+}
+
+h6, .h6 {
+  font-size: var(--font-size-h6);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Paragraphes */
+p {
+  margin-bottom: var(--spacing-md);
+  line-height: var(--line-height-relaxed);
+  color: var(--text-primary);
+}
+
+p.lead {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-relaxed);
+  color: var(--text-secondary);
+}
+
+/* Texte secondaire et muted */
+.text-secondary {
+  color: var(--text-secondary) !important;
+  font-size: var(--font-size-sm);
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+  font-size: var(--font-size-sm);
+}
+
+small, .small {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* Listes */
+ul, ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+li {
+  margin-bottom: var(--spacing-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Liens */
+a {
+  color: var(--primary-gold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-gold-dark);
+  text-decoration: none;
+}
+
+a:focus {
+  outline: 2px solid var(--primary-gold);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   3. ESPACEMENTS AMÉLIORÉS
+   ======================================== */
+
+/* Sections */
+section {
+  padding: var(--spacing-3xl) 0;
+}
+
+section.py-5 {
+  padding: var(--spacing-3xl) 0;
+}
+
+section.py-4 {
+  padding: var(--spacing-2xl) 0;
+}
+
+/* Conteneurs */
+.container,
+.container-fluid {
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+}
+
+/* Cards - Plus d'air */
+.card {
+  margin-bottom: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--secondary-gray-light);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--secondary-gray-light);
+  background-color: var(--primary-white);
+}
+
+.card-body {
+  padding: var(--spacing-xl);
+}
+
+.card-footer {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid var(--secondary-gray-light);
+  background-color: var(--secondary-gray-light);
+}
+
+/* Espacement entre éléments */
+.mb-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.mb-block {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.mb-element {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mb-item {
+  margin-bottom: var(--spacing-md);
+}
+
+/* Padding utilitaires */
+.p-section {
+  padding: var(--spacing-3xl);
+}
+
+.p-block {
+  padding: var(--spacing-2xl);
+}
+
+.p-element {
+  padding: var(--spacing-lg);
+}
+
+/* ========================================
+   4. COMPOSANTS AMÉLIORÉS
+   ======================================== */
+
+/* Boutons - Design cohérent */
+.btn {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
+  letter-spacing: 0.01em;
+}
+
+.btn-lg {
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+}
+
+.btn-sm {
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+/* Bouton primaire doré */
+.btn-primary,
+.btn-gold {
+  background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
+  color: var(--primary-white);
+  border-color: var(--primary-gold);
+  box-shadow: 0 2px 4px rgba(196, 148, 47, 0.2);
+}
+
+.btn-primary:hover,
+.btn-gold:hover {
+  background: linear-gradient(135deg, var(--primary-gold-dark) 0%, var(--primary-gold) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(196, 148, 47, 0.3);
+}
+
+/* Formulaires - Meilleure lisibilité */
+.form-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+}
+
+.form-control,
+.form-select {
+  padding: var(--spacing-md);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  border: 2px solid var(--secondary-gray-light);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 3px rgba(196, 148, 47, 0.1);
+}
+
+.form-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--spacing-xs);
+  line-height: var(--line-height-normal);
+}
+
+/* Tableaux - Plus lisibles */
+.table {
+  margin-bottom: var(--spacing-xl);
+}
+
+.table thead th {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 2px solid var(--secondary-gray-light);
+}
+
+.table tbody td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  vertical-align: middle;
+  color: var(--text-primary);
+  line-height: var(--line-height-relaxed);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(196, 148, 47, 0.05);
+}
+
+/* Badges - Contraste amélioré */
+.badge {
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-sm);
+}
+
+/* Alerts - Meilleure lisibilité */
+.alert {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+}
+
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-left-color: var(--success);
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-left-color: var(--danger);
+  color: #721c24;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-left-color: var(--warning);
+  color: #856404;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1);
+  border-left-color: var(--info);
+  color: #0c5460;
+}
+
+/* ========================================
+   5. SECTIONS SPÉCIFIQUES
+   ======================================== */
+
+/* Hero sections */
+.hero-section {
+  padding: var(--spacing-3xl) 0;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
+  line-height: var(--line-height-tight);
+}
+
+.hero-section p.lead {
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Grilles de produits */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.product-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.product-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.product-price {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-gold);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Stats cards */
+.stat-card {
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  background: var(--primary-white);
+  border: 1px solid var(--secondary-gray-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-gold);
+  line-height: 1;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   6. RESPONSIVE TYPOGRAPHY
+   ======================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --font-size-h1: 2rem;
+    --font-size-h2: 1.75rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+    --spacing-3xl: 2.5rem;
+    --spacing-2xl: 2rem;
+  }
+  
+  .container,
+  .container-fluid {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+  
+  .card-body {
+    padding: var(--spacing-lg);
+  }
+  
+  section {
+    padding: var(--spacing-2xl) 0;
+  }
+}
+
+@media (max-width: 576px) {
+  :root {
+    --font-size-h1: 1.75rem;
+    --font-size-h2: 1.5rem;
+    --font-size-h3: 1.25rem;
+    --spacing-3xl: 2rem;
+    --spacing-2xl: 1.5rem;
+  }
+}
+
+/* ========================================
+   7. UTILITAIRES
+   ======================================== */
+
+/* Espacement responsive */
+.spacing-responsive {
+  padding: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  .spacing-responsive {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Texte responsive */
+.text-responsive {
+  font-size: clamp(var(--font-size-base), 2vw, var(--font-size-lg));
+}
+
+/* Séparateurs visuels */
+.divider {
+  height: 1px;
+  background: var(--secondary-gray-light);
+  margin: var(--spacing-2xl) 0;
+}
+
+.divider-thick {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+  margin: var(--spacing-2xl) 0;
+}
+
+/* Accessibilité */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible pour accessibilité */
+*:focus-visible {
+  outline: 2px solid var(--primary-gold);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   8. ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideIn var(--transition-base) ease-out;
+}
+
+/* ========================================
+   9. PRINT STYLES
+   ======================================== */
+
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a, a:visited {
+    text-decoration: underline;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+}

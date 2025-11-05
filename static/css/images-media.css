@@ -1,0 +1,765 @@
+/**
+ * QUARTIER D'ARÔMES - SYSTÈME IMAGES & MÉDIAS
+ * Ratios uniformes, ombres modernes, responsive optimisé
+ */
+
+/* ========================================
+   1. IMAGES PRODUITS - RATIOS UNIFORMES
+   ======================================== */
+
+/* Container image avec ratio fixe */
+.product-image {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Ratio 1:1 (carré) */
+  overflow: hidden;
+  background: var(--secondary-gray-light);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.product-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--transition-base);
+}
+
+.product-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Variantes de ratio */
+.product-image-square {
+  padding-top: 100%; /* 1:1 */
+}
+
+.product-image-portrait {
+  padding-top: 133.33%; /* 3:4 */
+}
+
+.product-image-landscape {
+  padding-top: 75%; /* 4:3 */
+}
+
+.product-image-wide {
+  padding-top: 56.25%; /* 16:9 */
+}
+
+/* ========================================
+   2. BANNIÈRES - RATIOS STANDARDISÉS
+   ======================================== */
+
+.banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Banner hero (grande) */
+.banner-hero {
+  padding-top: 40%; /* Ratio 5:2 */
+  min-height: 400px;
+}
+
+.banner-hero img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Banner section */
+.banner-section {
+  padding-top: 50%; /* Ratio 2:1 */
+  min-height: 300px;
+}
+
+.banner-section img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Banner card */
+.banner-card {
+  padding-top: 66.67%; /* Ratio 3:2 */
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.banner-card img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========================================
+   3. OMBRES MODERNES
+   ======================================== */
+
+/* Ombre légère */
+.img-shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Ombre moyenne */
+.img-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Ombre prononcée */
+.img-shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Ombre dorée (pour mise en avant) */
+.img-shadow-gold {
+  box-shadow: 0 4px 16px rgba(196, 148, 47, 0.25);
+}
+
+/* Ombre au hover */
+.img-hover-shadow {
+  transition: box-shadow var(--transition-base);
+}
+
+.img-hover-shadow:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   4. BORDURES ARRONDIES
+   ======================================== */
+
+/* Bordures selon niveau */
+.img-rounded-sm {
+  border-radius: var(--radius-sm); /* 4px */
+}
+
+.img-rounded {
+  border-radius: var(--radius-md); /* 8px */
+}
+
+.img-rounded-lg {
+  border-radius: var(--radius-lg); /* 12px */
+}
+
+.img-rounded-xl {
+  border-radius: var(--radius-xl); /* 16px */
+}
+
+.img-rounded-full {
+  border-radius: var(--radius-full); /* 50% */
+}
+
+/* Coin supérieur arrondi */
+.img-rounded-top {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* Coin inférieur arrondi */
+.img-rounded-bottom {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* ========================================
+   5. AVATARS & THUMBNAILS
+   ======================================== */
+
+/* Avatar utilisateur */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 2px solid var(--primary-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+}
+
+.avatar-xl {
+  width: 96px;
+  height: 96px;
+}
+
+/* Thumbnail (miniature) */
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--secondary-gray-light);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.thumbnail:hover {
+  border-color: var(--primary-gold);
+  box-shadow: 0 2px 8px rgba(196, 148, 47, 0.3);
+  transform: scale(1.05);
+}
+
+.thumbnail.active {
+  border-color: var(--primary-gold);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(196, 148, 47, 0.2);
+}
+
+/* ========================================
+   6. GALERIE D'IMAGES
+   ======================================== */
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.image-gallery-item {
+  position: relative;
+  padding-top: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.image-gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.image-gallery-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay sur hover */
+.image-gallery-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background var(--transition-fast);
+}
+
+.image-gallery-item:hover::after {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   7. CARROUSEL D'IMAGES
+   ======================================== */
+
+.image-carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.image-carousel-inner {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-carousel-item {
+  min-width: 100%;
+  position: relative;
+}
+
+.image-carousel-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Contrôles carrousel */
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all var(--transition-fast);
+  z-index: 10;
+}
+
+.carousel-control:hover {
+  background: var(--primary-white);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-control-prev {
+  left: 16px;
+}
+
+.carousel-control-next {
+  right: 16px;
+}
+
+/* Indicateurs */
+.carousel-indicators {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.carousel-indicator {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.carousel-indicator.active {
+  background: var(--primary-white);
+  width: 24px;
+}
+
+/* ========================================
+   8. ZOOM D'IMAGE
+   ======================================== */
+
+.image-zoom {
+  position: relative;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.image-zoom img {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-zoom:hover img {
+  transform: scale(1.2);
+}
+
+/* Lightbox */
+.image-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.image-lightbox.active {
+  display: flex;
+}
+
+.image-lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--primary-white);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================
+   9. PLACEHOLDER & LAZY LOADING
+   ======================================== */
+
+/* Placeholder pendant chargement */
+.image-placeholder {
+  background: linear-gradient(
+    90deg,
+    var(--secondary-gray-light) 25%,
+    #e0e0e0 50%,
+    var(--secondary-gray-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Image lazy (avant chargement) */
+img.lazy {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+img.lazy.loaded {
+  opacity: 1;
+}
+
+/* Blur up (technique progressive) */
+img.blur-up {
+  filter: blur(20px);
+  transition: filter 0.3s;
+}
+
+img.blur-up.loaded {
+  filter: blur(0);
+}
+
+/* ========================================
+   10. ICÔNES MÉDIAS
+   ======================================== */
+
+.media-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--primary-gold);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.media-container:hover .media-icon {
+  opacity: 1;
+}
+
+/* Badge sur image */
+.image-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  background: var(--primary-gold);
+  color: var(--primary-white);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.image-badge.new {
+  background: var(--success);
+}
+
+.image-badge.promo {
+  background: var(--danger);
+}
+
+.image-badge.sold-out {
+  background: var(--secondary-gray);
+}
+
+/* ========================================
+   11. RESPONSIVE - TABLETTE
+   ======================================== */
+
+@media (max-width: 992px) {
+  .banner-hero {
+    padding-top: 50%;
+    min-height: 300px;
+  }
+  
+  .banner-section {
+    padding-top: 60%;
+    min-height: 250px;
+  }
+  
+  .image-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+  }
+  
+  .carousel-control {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-control-prev {
+    left: 8px;
+  }
+  
+  .carousel-control-next {
+    right: 8px;
+  }
+}
+
+/* ========================================
+   12. RESPONSIVE - MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* Produits en grille 2 colonnes */
+  .product-image {
+    border-radius: var(--radius-md);
+  }
+  
+  /* Bannières plus hautes sur mobile */
+  .banner-hero {
+    padding-top: 75%;
+    min-height: 250px;
+  }
+  
+  .banner-section {
+    padding-top: 75%;
+    min-height: 200px;
+  }
+  
+  /* Galerie 2 colonnes */
+  .image-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  /* Thumbnails plus petites */
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Avatars adaptés */
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .avatar-lg {
+    width: 56px;
+    height: 56px;
+  }
+  
+  /* Contrôles carrousel réduits */
+  .carousel-control {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  /* Lightbox plein écran */
+  .image-lightbox {
+    padding: 20px;
+  }
+  
+  .lightbox-close {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Galerie 1 colonne sur très petit écran */
+  .image-gallery {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Banner card full width */
+  .banner-card {
+    padding-top: 75%;
+  }
+  
+  /* Image badges plus petits */
+  .image-badge {
+    padding: 4px 8px;
+    font-size: var(--font-size-xs);
+    top: 8px;
+    right: 8px;
+  }
+}
+
+/* ========================================
+   13. PRINT (Impression)
+   ======================================== */
+
+@media print {
+  .product-image,
+  .banner,
+  .image-gallery-item {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .carousel-control,
+  .carousel-indicators,
+  .lightbox-close {
+    display: none;
+  }
+}
+
+/* ========================================
+   14. UTILITAIRES IMAGES
+   ======================================== */
+
+/* Ratio custom via data-attribute */
+[data-ratio="1:1"] {
+  padding-top: 100%;
+}
+
+[data-ratio="4:3"] {
+  padding-top: 75%;
+}
+
+[data-ratio="16:9"] {
+  padding-top: 56.25%;
+}
+
+[data-ratio="21:9"] {
+  padding-top: 42.86%;
+}
+
+/* Object fit utilities */
+.img-cover {
+  object-fit: cover;
+}
+
+.img-contain {
+  object-fit: contain;
+}
+
+.img-fill {
+  object-fit: fill;
+}
+
+.img-scale-down {
+  object-fit: scale-down;
+}
+
+/* Object position */
+.img-center {
+  object-position: center;
+}
+
+.img-top {
+  object-position: top;
+}
+
+.img-bottom {
+  object-position: bottom;
+}
+
+/* Grayscale sur hover */
+.img-grayscale {
+  filter: grayscale(100%);
+  transition: filter var(--transition-base);
+}
+
+.img-grayscale:hover {
+  filter: grayscale(0%);
+}
+
+/* Opacity hover */
+.img-opacity-hover {
+  transition: opacity var(--transition-base);
+}
+
+.img-opacity-hover:hover {
+  opacity: 0.8;
+}
+
+/* ========================================
+   15. PERFORMANCE OPTIMIZATION
+   ======================================== */
+
+/* Will-change pour animations */
+.product-image img,
+.thumbnail,
+.image-gallery-item {
+  will-change: transform;
+}
+
+/* Après animation */
+.product-image img:hover,
+.thumbnail:hover,
+.image-gallery-item:hover {
+  will-change: auto;
+}
+
+/* Hardware acceleration */
+.image-carousel-inner,
+.image-lightbox img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

@@ -1,0 +1,519 @@
+<!-- Footer Enrichi - Quartier d'Arômes -->
+<footer class="footer-enhanced">
+    <!-- Section principale du footer -->
+    <div class="footer-main">
+        <div class="container-fluid">
+            <div class="row g-4">
+                <!-- Colonne 1: À propos -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h5 class="footer-title">
+                            <i class="bi bi-shop"></i> Quartier d'Arômes
+                        </h5>
+                        <p class="footer-desc">
+                            Votre destination de confiance pour les parfums de luxe. 
+                            Découvrez notre sélection exclusive de fragrances authentiques.
+                        </p>
+                        <!-- Réseaux sociaux -->
+                        <div class="social-links">
+                            <a href="https://facebook.com/quartierdaromes" target="_blank" class="social-link" title="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://instagram.com/quartierdaromes" target="_blank" class="social-link" title="Instagram">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://twitter.com/quartierdaromes" target="_blank" class="social-link" title="Twitter">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                            <a href="https://youtube.com/@quartierdaromes" target="_blank" class="social-link" title="YouTube">
+                                <i class="bi bi-youtube"></i>
+                            </a>
+                            <a href="https://wa.me/212708505157" target="_blank" class="social-link" title="WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne 2: Liens rapides -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5 class="footer-title">
+                            <i class="bi bi-link-45deg"></i> Liens Rapides
+                        </h5>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('index') }}"><i class="bi bi-chevron-right"></i> Accueil</a></li>
+                            <li><a href="{{ url_for('collections') }}"><i class="bi bi-chevron-right"></i> Collections</a></li>
+                            <li><a href="{{ url_for('blog') }}"><i class="bi bi-chevron-right"></i> Blog</a></li>
+                            <li><a href="{{ url_for('about') }}"><i class="bi bi-chevron-right"></i> À Propos</a></li>
+                            <li><a href="{{ url_for('contact') }}"><i class="bi bi-chevron-right"></i> Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Colonne 3: Catégories -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5 class="footer-title">
+                            <i class="bi bi-tags"></i> Catégories
+                        </h5>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('collections', category='Homme') }}"><i class="bi bi-chevron-right"></i> Parfums Homme</a></li>
+                            <li><a href="{{ url_for('collections', category='Femme') }}"><i class="bi bi-chevron-right"></i> Parfums Femme</a></li>
+                            <li><a href="{{ url_for('collections', category='Unisexe') }}"><i class="bi bi-chevron-right"></i> Unisexe</a></li>
+                            <li><a href="{{ url_for('collections', format='decant') }}"><i class="bi bi-chevron-right"></i> Décants</a></li>
+                            <li><a href="{{ url_for('collections', format='collection') }}"><i class="bi bi-chevron-right"></i> Collections</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Colonne 4: Informations -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5 class="footer-title">
+                            <i class="bi bi-info-circle"></i> Informations
+                        </h5>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Livraison</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Retours</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Paiement Sécurisé</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> CGV</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Politique de Confidentialité</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Colonne 5: Newsletter -->
+                <div class="col-lg-3 col-md-12">
+                    <div class="footer-section">
+                        <h5 class="footer-title">
+                            <i class="bi bi-envelope-heart"></i> Newsletter
+                        </h5>
+                        <p class="footer-newsletter-text">
+                            Recevez nos offres exclusives et nouveautés
+                        </p>
+                        <form class="footer-newsletter-form" action="{{ url_for('index') }}" method="POST">
+                            <div class="input-group">
+                                <input type="email" 
+                                       class="form-control" 
+                                       placeholder="Votre email..." 
+                                       name="newsletter_email" 
+                                       required>
+                                <button class="btn btn-gold" type="submit">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-shield-check"></i> Vos données sont protégées
+                            </small>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Séparateur -->
+    <div class="footer-divider"></div>
+
+    <!-- Section informations de contact -->
+    <div class="footer-contact">
+        <div class="container-fluid">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="footer-contact-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <div>
+                            <strong>Adresse</strong>
+                            <p>123 Boulevard Parfum, Casablanca, Maroc</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-contact-item">
+                        <i class="bi bi-telephone-fill"></i>
+                        <div>
+                            <strong>Téléphone</strong>
+                            <p>
+                                <a href="tel:+212708505157">+212 708 505 157</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-contact-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <div>
+                            <strong>Email</strong>
+                            <p>
+                                <a href="mailto:contact@quartierdaromes.com">contact@quartierdaromes.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Séparateur -->
+    <div class="footer-divider"></div>
+
+    <!-- Section méthodes de paiement -->
+    <div class="footer-payment">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="mb-2"><i class="bi bi-credit-card"></i> Méthodes de Paiement</h6>
+                    <div class="payment-methods">
+                        <span class="payment-icon" title="Paiement à la livraison">
+                            <i class="bi bi-truck"></i> Livraison
+                        </span>
+                        <span class="payment-icon" title="Virement bancaire">
+                            <i class="bi bi-bank"></i> Virement
+                        </span>
+                        <span class="payment-icon" title="WhatsApp">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </span>
+                        <span class="payment-icon" title="Espèces">
+                            <i class="bi bi-cash-coin"></i> Espèces
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <h6 class="mb-2"><i class="bi bi-shield-check"></i> Garanties</h6>
+                    <div class="guarantees">
+                        <span class="guarantee-badge">
+                            <i class="bi bi-patch-check-fill"></i> 100% Authentique
+                        </span>
+                        <span class="guarantee-badge">
+                            <i class="bi bi-arrow-return-left"></i> Retour 14j
+                        </span>
+                        <span class="guarantee-badge">
+                            <i class="bi bi-lock-fill"></i> Paiement Sécurisé
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">
+                        &copy; {{ current_year }} <strong>Quartier d'Arômes</strong>. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-meta-links">
+                        <a href="#">Mentions Légales</a>
+                        <span>•</span>
+                        <a href="#">CGV</a>
+                        <span>•</span>
+                        <a href="#">Confidentialité</a>
+                        <span>•</span>
+                        <a href="#">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badge retour en haut -->
+    <button class="back-to-top" id="backToTop" title="Retour en haut">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+</footer>
+
+<!-- CSS Footer -->
+<style>
+.footer-enhanced {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: rgba(255, 255, 255, 0.8);
+    position: relative;
+}
+
+.footer-main {
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+}
+
+.footer-section {
+    height: 100%;
+}
+
+.footer-title {
+    color: var(--primary-gold);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid rgba(196, 148, 47, 0.3);
+}
+
+.footer-title i {
+    margin-right: var(--spacing-sm);
+}
+
+.footer-desc {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-lg);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-links a:hover {
+    color: var(--primary-gold);
+    padding-left: var(--spacing-xs);
+}
+
+.footer-links i {
+    margin-right: var(--spacing-xs);
+    font-size: 0.8em;
+}
+
+/* Réseaux sociaux */
+.social-links {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-white);
+    transition: all var(--transition-base);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.social-link:hover {
+    background: var(--primary-gold);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(196, 148, 47, 0.3);
+    border-color: var(--primary-gold);
+}
+
+/* Newsletter */
+.footer-newsletter-text {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
+
+.footer-newsletter-form .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--primary-white);
+}
+
+.footer-newsletter-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-newsletter-form .form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-gold);
+    color: var(--primary-white);
+}
+
+.footer-newsletter-form .btn-gold {
+    background: var(--primary-gold);
+    border: none;
+}
+
+/* Divider */
+.footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(196, 148, 47, 0.3) 50%, 
+        transparent 100%
+    );
+    margin: var(--spacing-xl) 0;
+}
+
+/* Contact section */
+.footer-contact {
+    padding: var(--spacing-xl) 0;
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: start;
+    gap: var(--spacing-md);
+}
+
+.footer-contact-item i {
+    font-size: 1.5rem;
+    color: var(--primary-gold);
+    margin-top: 4px;
+}
+
+.footer-contact-item strong {
+    display: block;
+    color: var(--primary-gold);
+    margin-bottom: var(--spacing-xs);
+}
+
+.footer-contact-item p,
+.footer-contact-item a {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+.footer-contact-item a:hover {
+    color: var(--primary-gold);
+}
+
+/* Paiement */
+.footer-payment {
+    padding: var(--spacing-xl) 0;
+}
+
+.payment-methods,
+.guarantees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+}
+
+.payment-icon,
+.guarantee-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.payment-icon i,
+.guarantee-badge i {
+    color: var(--primary-gold);
+    margin-right: var(--spacing-xs);
+}
+
+/* Bottom */
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.3);
+    padding: var(--spacing-lg) 0;
+    font-size: var(--font-size-sm);
+}
+
+.footer-meta-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.footer-meta-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+
+.footer-meta-links a:hover {
+    color: var(--primary-gold);
+}
+
+.footer-meta-links span {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Back to top */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-full);
+    background: var(--primary-gold);
+    color: var(--primary-white);
+    border: none;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    z-index: 1000;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(196, 148, 47, 0.4);
+}
+
+@media (max-width: 768px) {
+    .footer-main {
+        padding: var(--spacing-2xl) 0 var(--spacing-lg);
+    }
+    
+    .payment-methods,
+    .guarantees {
+        justify-content: center;
+    }
+    
+    .footer-meta-links {
+        margin-top: var(--spacing-md);
+    }
+    
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+</style>
+
+<!-- Script Back to Top -->
+<script>
+// Bouton retour en haut
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
+
+backToTopBtn.addEventListener('click', function() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+</script>

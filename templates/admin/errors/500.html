@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Erreur Serveur - Admin - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
+        <i class="bi bi-exclamation-octagon text-danger" style="font-size: 5rem;"></i>
+        <h1 class="display-1 text-danger fw-bold">500</h1>
+        <h2 class="mb-4">Erreur Serveur</h2>
+        <p class="lead mb-4 text-muted">
+            Oops ! Une erreur s'est produite sur le serveur.<br>
+            L'équipe technique a été notifiée et travaille à résoudre ce problème.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-danger btn-lg">
+                <i class="bi bi-speedometer2"></i> Retour au Dashboard
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-dark btn-lg">
+                <i class="bi bi-arrow-left"></i> Page Précédente
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

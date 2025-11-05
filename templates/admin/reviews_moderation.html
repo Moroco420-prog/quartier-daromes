@@ -1,0 +1,289 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Modération des Avis - Admin{% endblock %}
+
+{% block content %}
+<!-- Header avec statistiques -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h4 mb-1">
+            <i class="bi bi-chat-square-text text-primary"></i> Modération des Avis
+        </h2>
+        <p class="text-muted small mb-0">Gérer et modérer les avis clients</p>
+    </div>
+</div>
+
+<!-- Statistiques Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total Avis</h6>
+                        <h3 class="mb-0">{{ stats.total }}</h3>
+                    </div>
+                    <div class="text-primary fs-2">
+                        <i class="bi bi-chat-square-text-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">En attente</h6>
+                        <h3 class="mb-0 text-warning">{{ stats.pending }}</h3>
+                    </div>
+                    <div class="text-warning fs-2">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Approuvés</h6>
+                        <h3 class="mb-0 text-success">{{ stats.approved }}</h3>
+                    </div>
+                    <div class="text-success fs-2">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Note Moyenne</h6>
+                        <h3 class="mb-0 text-warning">
+                            {{ "%.1f"|format(stats.avg_rating) }} 
+                            <small class="text-muted fs-6">/ 5</small>
+                        </h3>
+                    </div>
+                    <div class="text-warning fs-2">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Distribution des notes -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <h6 class="mb-3"><i class="bi bi-bar-chart-fill"></i> Distribution des Notes</h6>
+        <div class="row">
+            {% for i in range(5, 0, -1) %}
+            <div class="col">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="me-2">{{ i }} ⭐</span>
+                    <div class="progress flex-grow-1" style="height: 20px;">
+                        {% set count = stats['rating_' ~ i] %}
+                        {% set percentage = (count / stats.total * 100) if stats.total > 0 else 0 %}
+                        <div class="progress-bar bg-warning" style="width: {{ percentage }}%">
+                            {{ count }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Filtres -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label small">Statut</label>
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Tous</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>En attente</option>
+                    <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approuvés</option>
+                </select>
+            </div>
+            
+            <div class="col-md-4">
+                <label class="form-label small">Note</label>
+                <select name="rating" class="form-select" onchange="this.form.submit()">
+                    <option value="all" {% if rating_filter == 'all' %}selected{% endif %}>Toutes</option>
+                    <option value="5" {% if rating_filter == '5' %}selected{% endif %}>⭐⭐⭐⭐⭐ (5)</option>
+                    <option value="4" {% if rating_filter == '4' %}selected{% endif %}>⭐⭐⭐⭐ (4)</option>
+                    <option value="3" {% if rating_filter == '3' %}selected{% endif %}>⭐⭐⭐ (3)</option>
+                    <option value="2" {% if rating_filter == '2' %}selected{% endif %}>⭐⭐ (2)</option>
+                    <option value="1" {% if rating_filter == '1' %}selected{% endif %}>⭐ (1)</option>
+                </select>
+            </div>
+            
+            <div class="col-md-4 d-flex align-items-end">
+                <a href="{{ url_for('reviews_moderation') }}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des avis -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Produit</th>
+                        <th>Client</th>
+                        <th>Note</th>
+                        <th>Commentaire</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reviews.items %}
+                        {% for review in reviews.items %}
+                        <tr>
+                            <td>
+                                <small class="text-muted">
+                                    {{ review.created_at.strftime('%d/%m/%Y') }}<br>
+                                    {{ review.created_at.strftime('%H:%M') }}
+                                </small>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if review.product.image_url %}
+                                    <img src="{{ url_for('static', filename=review.product.image_url) }}" 
+                                         alt="{{ review.product.name }}" 
+                                         style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"
+                                         class="me-2">
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ review.product.name }}</strong><br>
+                                        <small class="text-muted">{{ review.product.brand.name if review.product.brand else 'N/A' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>{{ review.user.username }}</strong><br>
+                                <small class="text-muted">{{ review.user.email }}</small>
+                            </td>
+                            <td>
+                                <div class="text-warning">
+                                    {% for i in range(review.rating) %}
+                                    <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - review.rating) %}
+                                    <i class="bi bi-star text-muted"></i>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td style="max-width: 300px;">
+                                <small>{{ review.comment[:100] }}{% if review.comment|length > 100 %}...{% endif %}</small>
+                            </td>
+                            <td>
+                                {% if review.is_verified %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Approuvé
+                                </span>
+                                {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="bi bi-hourglass"></i> En attente
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <!-- Toggle vérification -->
+                                    <form action="{{ url_for('toggle_review_verification', id=review.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-primary" title="Basculer statut">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    {% if not review.is_verified %}
+                                    <!-- Approuver -->
+                                    <form action="{{ url_for('approve_review', id=review.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-success" title="Approuver">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    
+                                    <!-- Supprimer -->
+                                    <form action="{{ url_for('delete_review', id=review.id) }}" method="POST" class="d-inline" 
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?')">
+                                        <button type="submit" class="btn btn-outline-danger" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted"></i>
+                                <p class="text-muted mt-2">Aucun avis trouvé</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if reviews.pages > 1 %}
+    <div class="card-footer">
+        <nav>
+            <ul class="pagination pagination-sm mb-0 justify-content-center">
+                <li class="page-item {% if not reviews.has_prev %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('reviews_moderation', page=reviews.prev_num, status=status_filter, rating=rating_filter) if reviews.has_prev else '#' }}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                
+                {% for page_num in reviews.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == reviews.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('reviews_moderation', page=page_num, status=status_filter, rating=rating_filter) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                <li class="page-item {% if not reviews.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('reviews_moderation', page=reviews.next_num, status=status_filter, rating=rating_filter) if reviews.has_next else '#' }}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

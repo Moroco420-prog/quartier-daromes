@@ -1,0 +1,288 @@
+/* ========================================
+   ANIMATIONS OPTIMISÉES - QUARTIER D'ARÔMES
+   Version: 3.0 - Professionnel et fluide
+   ======================================== */
+
+/* ========================================
+   ANIMATIONS DE BASE ESSENTIELLES
+   ======================================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   CLASSES D'ANIMATION PROFESSIONNELLES
+   ======================================== */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.4s ease-out;
+}
+
+/* ========================================
+   EFFETS HOVER ÉLÉGANTS
+   ======================================== */
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* ========================================
+   BOUTONS - EFFETS DÉSACTIVÉS
+   Tous les effets sont gérés par custom-buttons.css
+   ======================================== */
+
+/* Pas d'animations sur les boutons */
+.btn,
+.btn *,
+.btn:hover,
+.btn:active,
+.btn:focus {
+    animation: none !important;
+    transform: none !important;
+}
+
+/* ========================================
+   CARTES PRODUITS OPTIMISÉES
+   ======================================== */
+
+.product-card {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.product-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.product-image-wrapper img {
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-image-wrapper img {
+    transform: scale(1.05);
+}
+
+/* ========================================
+   ANIMATIONS PANIER & WISHLIST - DÉSACTIVÉES
+   Animations trop lourdes et non professionnelles
+   ======================================== */
+
+/* Pas d'animations sur les actions panier/wishlist */
+.cart-add-animation,
+.heart-animation,
+.wishlist-heart.active {
+    animation: none !important;
+}
+
+/* ========================================
+   LOADING SKELETON
+   ======================================== */
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-text { height: 16px; margin-bottom: 8px; }
+.skeleton-title { height: 24px; margin-bottom: 12px; width: 60%; }
+.skeleton-image { height: 200px; width: 100%; }
+
+/* ========================================
+   FORMULAIRES - PAS DE SCALE AU FOCUS
+   ======================================== */
+
+.form-control:focus {
+    box-shadow: 0 0 0 4px rgba(196, 148, 47, 0.1);
+    transform: none !important;
+}
+
+/* ========================================
+   SCROLL ANIMATIONS SIMPLES
+   ======================================== */
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease-out;
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ========================================
+   MODALS & CAROUSEL
+   ======================================== */
+
+.modal.fade .modal-dialog {
+    transition: all 0.3s ease;
+}
+
+.carousel-item {
+    transition: transform 0.6s ease;
+}
+
+/* ========================================
+   RESPONSIVE & ACCESSIBILITÉ
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Réduire les effets hover sur mobile */
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    /* Accélérer les transitions sur mobile */
+    * {
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ========================================
+   MICRO-INTERACTIONS BADGES
+   ======================================== */
+
+/* Badge panier/wishlist hover */
+.badge {
+    transition: all 0.15s ease;
+}
+
+.badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Badge notification pulse subtil */
+@keyframes badge-pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 4px rgba(220, 53, 69, 0);
+    }
+}
+
+.badge.bg-danger,
+.badge.bg-warning {
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* Badge compteur panier header */
+.navbar .badge {
+    transition: all 0.15s ease;
+}
+
+.navbar .badge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Micro-glow sur badges spéciaux */
+.badge-glow {
+    box-shadow: 0 0 10px rgba(196, 148, 47, 0.3);
+    animation: subtle-glow 2s ease-in-out infinite;
+}
+
+@keyframes subtle-glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(196, 148, 47, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(196, 148, 47, 0.5);
+    }
+}
+
+/* Feature box icons hover */
+.feature-box i {
+    transition: all 0.2s ease;
+}
+
+.feature-box:hover i {
+    transform: scale(1.1);
+}
+
+/* Category circle hover subtil */
+.category-circle {
+    transition: all 0.2s ease;
+}
+
+.category-circle:hover {
+    box-shadow: 0 8px 25px rgba(196, 148, 47, 0.4), 0 0 30px rgba(196, 148, 47, 0.2);
+}
+
+/* ========================================
+   FIN DU FICHIER - ANIMATIONS OPTIMISÉES
+   ======================================== */

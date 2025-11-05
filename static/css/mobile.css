@@ -1,0 +1,398 @@
+/* ========================================
+   MOBILE UX OPTIMIZATION - QUARTIER D'ARÔMES
+   Version: 3.0 - Responsive optimisé
+   ======================================== */
+
+/* ========================================
+   NAVIGATION MOBILE FIXE
+   ======================================== */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    padding: 6px 0;
+    border-top: 2px solid #C4942F;
+}
+
+.mobile-nav-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    text-decoration: none;
+    font-size: 11px;
+    padding: 4px 8px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.mobile-nav-item i {
+    font-size: 22px;
+    margin-bottom: 2px;
+}
+
+.mobile-nav-item.active {
+    color: #C4942F;
+}
+
+.mobile-nav-item:hover {
+    color: #C4942F;
+    transform: translateY(-2px);
+}
+
+/* Badge panier */
+.mobile-nav-badge {
+    position: absolute;
+    top: -2px;
+    right: 6px;
+    background: #dc3545;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 5px;
+    font-size: 9px;
+    font-weight: bold;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Afficher sur mobile */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: block;
+    }
+    
+    body {
+        padding-bottom: 65px;
+    }
+}
+
+/* ========================================
+   OPTIMISATIONS MOBILES
+   ======================================== */
+
+@media (max-width: 576px) {
+    /* Typographie mobile */
+    h1 { font-size: 1.75rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    h3 { font-size: 1.25rem !important; }
+    .lead { font-size: 1rem !important; }
+    
+    /* Espacements optimisés */
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    
+    .py-5 {
+        padding-top: 2.5rem !important;
+        padding-bottom: 2.5rem !important;
+    }
+    
+    .mb-5 {
+        margin-bottom: 2rem !important;
+    }
+    
+    /* Boutons mobile - Géré par custom-buttons.css */
+    /* Voir custom-buttons.css pour les styles responsive */
+    
+    /* Cartes produits mobile */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .card-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Images produits mobile */
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+    
+    /* Formulaires - Taille 16px pour éviter zoom iPhone */
+    .form-control,
+    .form-select {
+        font-size: 16px !important;
+        padding: 0.7rem;
+    }
+    
+    /* Tableaux */
+    .table {
+        font-size: 13px;
+    }
+    
+    .table td,
+    .table th {
+        padding: 8px 4px;
+    }
+    
+    /* Navigation mobile */
+    .navbar-collapse {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    /* Sections mobile */
+    section[class*="py-"] {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    /* Grille produits */
+    .row > [class*="col-"] {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    /* Modals */
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    /* Footer mobile */
+    footer {
+        font-size: 0.85rem;
+        padding-bottom: 75px;
+    }
+}
+
+/* Tablettes (Portrait) */
+@media (min-width: 577px) and (max-width: 768px) {
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+    }
+}
+
+/* ========================================
+   TOUCH OPTIMIZATIONS
+   ======================================== */
+@media (hover: none) and (pointer: coarse) {
+    /* Zones tactiles recommandées (44px min) */
+    .btn,
+    .nav-link,
+    .list-group-item {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Désactiver hover sur tactile */
+    .card:hover,
+    .product-card:hover,
+    .hover-lift:hover {
+        transform: none;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+}
+
+/* ========================================
+   IMAGES RESPONSIVE
+   ======================================== */
+@media (max-width: 576px) {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* ========================================
+   PERFORMANCES MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    /* Animations plus rapides sur mobile */
+    * {
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ========================================
+   HEADER MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .navbar-brand img {
+        max-height: 32px;
+    }
+    
+    .navbar-toggler {
+        border: 2px solid #C4942F;
+        padding: 0.5rem;
+    }
+    
+    .navbar .bi {
+        font-size: 1.2rem;
+    }
+}
+
+/* ========================================
+   PANIER MOBILE
+   ======================================== */
+@media (max-width: 576px) {
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cart-item img {
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ========================================
+   CHECKOUT MOBILE
+   ======================================== */
+@media (max-width: 576px) {
+    .checkout-summary {
+        position: static;
+        margin-top: 1.5rem;
+    }
+}
+
+/* ========================================
+   PRODUCT DETAIL MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .product-gallery img {
+        max-height: 280px;
+        width: 100%;
+        object-fit: contain;
+    }
+    
+    .product-info {
+        margin-top: 1.5rem;
+    }
+}
+
+/* ========================================
+   ADMIN MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* ========================================
+   SCROLL SMOOTH
+   ======================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ========================================
+   SAFE AREA (iPhone X+)
+   ======================================== */
+@supports (padding: max(0px)) {
+    .mobile-bottom-nav {
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+    }
+    
+    body {
+        padding-bottom: max(65px, calc(65px + env(safe-area-inset-bottom)));
+    }
+}
+
+
+/* ========================================
+   ORIENTATION LANDSCAPE
+   ======================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+    .mobile-bottom-nav {
+        padding: 3px 0;
+    }
+    
+    .mobile-nav-item {
+        padding: 1px 4px;
+        font-size: 0.65rem;
+    }
+    
+    .mobile-nav-item i {
+        font-size: 1.1rem;
+    }
+}
+
+/* ========================================
+   DARK MODE SUPPORT
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+    .mobile-bottom-nav {
+        background: #1a1a1a;
+        border-top-color: #C4942F;
+    }
+    
+    .mobile-nav-item {
+        color: #ccc;
+    }
+    
+    .mobile-nav-item.active {
+        color: #C4942F;
+    }
+}
+
+/* ========================================
+   LOADING SKELETON
+   ======================================== */
+@media (max-width: 576px) {
+    .loading-skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s ease-in-out infinite;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+    .mobile-bottom-nav,
+    .navbar,
+    .btn,
+    footer {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   FIN - MOBILE OPTIMISÉ V3.0
+   ======================================== */

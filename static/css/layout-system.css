@@ -1,0 +1,564 @@
+/**
+ * QUARTIER D'ARÔMES - SYSTÈME DE LAYOUT
+ * Grilles cohérentes, sections visuelles, structure améliorée
+ */
+
+/* ========================================
+   1. GRILLES PRODUITS COHÉRENTES
+   ======================================== */
+
+/* Grid principale pour produits */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  align-items: stretch;
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Variantes de grille */
+.product-grid-2 {
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.product-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.product-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Card produit uniforme */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--primary-white);
+  border: 1px solid var(--secondary-gray-light);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-gold);
+}
+
+.product-card-image {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Ratio 1:1 */
+  overflow: hidden;
+  background: var(--secondary-gray-light);
+}
+
+.product-card-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-card-image img {
+  transform: scale(1.05);
+}
+
+.product-card-body {
+  flex: 1;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--secondary-gray-light);
+  background: rgba(196, 148, 47, 0.03);
+}
+
+/* Responsive grilles */
+@media (max-width: 1200px) {
+  .product-grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .product-grid-3,
+  .product-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid,
+  .product-grid-2,
+  .product-grid-3,
+  .product-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .product-grid,
+  .product-grid-2,
+  .product-grid-3,
+  .product-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================
+   2. GRILLES ADMIN / TABLEAUX
+   ======================================== */
+
+/* Grid pour dashboard cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.stats-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.stats-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.stats-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Tableaux alignés */
+.table-container {
+  background: var(--primary-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.table-container .table {
+  margin-bottom: 0;
+}
+
+.table thead {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.table thead th {
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(196, 148, 47, 0.05);
+}
+
+.table tbody td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--secondary-gray-light);
+}
+
+/* Responsive tableaux */
+@media (max-width: 768px) {
+  .stats-grid-2,
+  .stats-grid-3,
+  .stats-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid,
+  .stats-grid-2,
+  .stats-grid-3,
+  .stats-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================
+   3. SÉPARATION VISUELLE DES SECTIONS
+   ======================================== */
+
+/* Section avec bande colorée */
+.section-wrapper {
+  position: relative;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.section-colored {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: var(--spacing-3xl) 0;
+  position: relative;
+}
+
+.section-colored::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--primary-gold) 20%, 
+    var(--primary-gold) 80%, 
+    transparent 100%
+  );
+}
+
+/* Section alternée */
+.section-alternate:nth-child(even) {
+  background: var(--primary-white);
+}
+
+.section-alternate:nth-child(odd) {
+  background: #fafbfc;
+}
+
+/* Section avec ombre */
+.section-elevated {
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  padding: var(--spacing-3xl) 0;
+  margin: var(--spacing-2xl) 0;
+  background: var(--primary-white);
+}
+
+/* Séparateur visuel */
+.section-divider {
+  position: relative;
+  margin: var(--spacing-3xl) 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--secondary-gray-light) 20%, 
+    var(--secondary-gray-light) 80%, 
+    transparent 100%
+  );
+}
+
+.section-divider-gold {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--primary-gold) 30%, 
+    var(--primary-gold-light) 50%, 
+    var(--primary-gold) 70%, 
+    transparent 100%
+  );
+  height: 3px;
+}
+
+.section-divider-thick {
+  height: 40px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-top: 1px solid var(--secondary-gray-light);
+  border-bottom: 1px solid var(--secondary-gray-light);
+}
+
+/* Section header avec accent */
+.section-header {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 3px solid var(--primary-gold);
+}
+
+.section-header h2 {
+  margin-bottom: var(--spacing-sm);
+}
+
+.section-header p {
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* ========================================
+   4. CONTAINERS & WRAPPERS
+   ======================================== */
+
+/* Container large pour sections */
+.container-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Container étroit pour contenu */
+.container-narrow {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Wrapper avec padding vertical */
+.wrapper-padded {
+  padding: var(--spacing-3xl) 0;
+}
+
+.wrapper-padded-sm {
+  padding: var(--spacing-2xl) 0;
+}
+
+.wrapper-padded-lg {
+  padding: var(--spacing-3xl) 0;
+}
+
+/* ========================================
+   5. COMPOSANTS DE LAYOUT
+   ======================================== */
+
+/* Row avec gap cohérent */
+.row-gap {
+  gap: var(--spacing-lg);
+}
+
+.row-gap-sm {
+  gap: var(--spacing-md);
+}
+
+.row-gap-lg {
+  gap: var(--spacing-xl);
+}
+
+/* Flex layouts */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.flex-start {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+/* Responsive flex */
+@media (max-width: 768px) {
+  .flex-between,
+  .flex-center,
+  .flex-start {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ========================================
+   6. CARDS SYSTÈME
+   ======================================== */
+
+/* Card de base améliorée */
+.card-enhanced {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--secondary-gray-light);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  background: var(--primary-white);
+  transition: all var(--transition-base);
+}
+
+.card-enhanced:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-enhanced .card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 2px solid var(--secondary-gray-light);
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+.card-enhanced .card-body {
+  padding: var(--spacing-xl);
+}
+
+/* Card avec accent coloré */
+.card-accent-gold {
+  border-top: 4px solid var(--primary-gold);
+}
+
+.card-accent-success {
+  border-top: 4px solid var(--success);
+}
+
+.card-accent-danger {
+  border-top: 4px solid var(--danger);
+}
+
+.card-accent-info {
+  border-top: 4px solid var(--info);
+}
+
+/* ========================================
+   7. HERO SECTIONS
+   ======================================== */
+
+.hero-section {
+  position: relative;
+  padding: var(--spacing-3xl) 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: var(--primary-white);
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(196,148,47,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
+  line-height: var(--line-height-tight);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: var(--spacing-xl);
+  max-width: 600px;
+}
+
+/* ========================================
+   8. SIDEBAR LAYOUTS
+   ======================================== */
+
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--spacing-lg);
+}
+
+.sidebar-admin {
+  grid-template-columns: 250px 1fr;
+}
+
+@media (max-width: 992px) {
+  .layout-sidebar,
+  .sidebar-admin {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    position: static;
+  }
+}
+
+/* ========================================
+   9. SPACING UTILITIES
+   ======================================== */
+
+/* Marges verticales systématiques */
+.section-spacing {
+  margin-top: var(--spacing-3xl);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.section-spacing-sm {
+  margin-top: var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.section-spacing-lg {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+/* Gap pour containers flex/grid */
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+.gap-xl { gap: var(--spacing-xl); }
+
+/* ========================================
+   10. ANIMATIONS LAYOUT
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+
+/* ========================================
+   11. PRINT STYLES
+   ======================================== */
+
+@media print {
+  .hero-section,
+  .section-colored {
+    background: none !important;
+    color: black !important;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .card-enhanced {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}

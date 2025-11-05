@@ -1,0 +1,115 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Modifier Catégorie - Admin{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-3 col-lg-2">
+            <div class="list-group">
+                <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a href="{{ url_for('admin_products') }}" class="list-group-item list-group-item-action"><i class="bi bi-box"></i> Produits</a>
+                <a href="{{ url_for('admin_categories') }}" class="list-group-item list-group-item-action active"><i class="bi bi-tags"></i> Catégories</a>
+                <a href="{{ url_for('admin_orders') }}" class="list-group-item list-group-item-action"><i class="bi bi-cart-check"></i> Commandes</a>
+                <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action"><i class="bi bi-people"></i> Utilisateurs</a>
+                <a href="{{ url_for('admin_messages') }}" class="list-group-item list-group-item-action"><i class="bi bi-envelope"></i> Messages</a>
+            </div>
+        </div>
+        <div class="col-md-9 col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">
+                    <i class="bi bi-pencil text-warning"></i> Modifier la Catégorie
+                </h1>
+                <a href="{{ url_for('admin_categories') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('admin_edit_category', category_id=category.id) }}" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Nom *</label>
+                                        <input type="text" class="form-control" id="name" name="name" 
+                                               value="{{ category.name }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="category_type" class="form-label">Type *</label>
+                                        <select class="form-select" id="category_type" name="category_type" required>
+                                            <option value="genre" {% if category.category_type == 'genre' %}selected{% endif %}>Genre</option>
+                                            <option value="famille" {% if category.category_type == 'famille' %}selected{% endif %}>Famille Olfactive</option>
+                                            <option value="format" {% if category.category_type == 'format' %}selected{% endif %}>Format</option>
+                                            <option value="occasion" {% if category.category_type == 'occasion' %}selected{% endif %}>Occasion</option>
+                                            <option value="saison" {% if category.category_type == 'saison' %}selected{% endif %}>Saison</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3">{{ category.description }}</textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image de la catégorie</label>
+                                    {% if category.image_url %}
+                                    <div class="mb-2">
+                                        <img src="{{ url_for('static', filename=category.image_url) }}" 
+                                             alt="{{ category.name }}" 
+                                             class="rounded" 
+                                             style="width: 100px; height: 100px; object-fit: cover;">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" id="remove_image" name="remove_image">
+                                            <label class="form-check-label" for="remove_image">
+                                                Supprimer l'image actuelle
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                    <small class="text-muted">Laisser vide pour conserver l'image actuelle</small>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="display_order" class="form-label">Ordre d'affichage</label>
+                                        <input type="number" class="form-control" id="display_order" name="display_order" 
+                                               value="{{ category.display_order }}" min="0">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Options</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                                   {% if category.is_active %}checked{% endif %}>
+                                            <label class="form-check-label" for="is_active">
+                                                Catégorie active
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="show_in_menu" name="show_in_menu" 
+                                                   {% if category.show_in_menu %}checked{% endif %}>
+                                            <label class="form-check-label" for="show_in_menu">
+                                                Afficher dans le menu
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-warning btn-lg">
+                                        <i class="bi bi-check-circle"></i> Enregistrer les modifications
+                                    </button>
+                                    <a href="{{ url_for('admin_categories') }}" class="btn btn-outline-secondary">
+                                        Annuler
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

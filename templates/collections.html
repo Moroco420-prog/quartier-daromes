@@ -1,0 +1,769 @@
+{% extends "base.html" %}
+
+{% block title %}Collections - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); border-bottom: 3px solid #C4942F;">
+    <div class="container text-white text-center">
+        {% set category_name = request.args.get('category', '') %}
+        {% set format_type = request.args.get('format', '') %}
+        
+        <!-- Fil d'Ariane -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center bg-transparent mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}" class="text-warning text-decoration-none">
+                        <i class="bi bi-house-fill"></i> Accueil
+                    </a>
+                </li>
+                {% if category_name %}
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('collections', category=category_name) }}" class="text-warning text-decoration-none">
+                        {{ category_name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if format_type %}
+                <li class="breadcrumb-item active text-white" aria-current="page">
+                    {% if format_type == 'collection' %}
+                        Collections Spéciales
+                    {% elif format_type == 'complet' %}
+                        Parfums Complets
+                    {% elif format_type == 'decant' %}
+                        Décants
+                    {% endif %}
+                </li>
+                {% else %}
+                <li class="breadcrumb-item active text-white" aria-current="page">
+                    Tous les Produits
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <!-- Titre Principal -->
+        <h1 class="display-4 fw-bold mb-3">
+            {% if category_name and format_type %}
+                <!-- Catégorie + Format -->
+                {% if format_type == 'collection' %}
+                    <i class="bi bi-stars text-warning"></i> Collections {{ category_name }}
+                {% elif format_type == 'complet' %}
+                    <i class="bi bi-box-seam text-warning"></i> Parfums Complets {{ category_name }}
+                {% elif format_type == 'decant' %}
+                    <i class="bi bi-droplet-fill text-warning"></i> Décants {{ category_name }}
+                {% endif %}
+            {% elif category_name %}
+                <!-- Catégorie uniquement -->
+                <i class="bi bi-tag-fill text-warning"></i> {{ category_name }}
+            {% elif format_type %}
+                <!-- Format uniquement -->
+                {% if format_type == 'collection' %}
+                    <i class="bi bi-stars text-warning"></i> Collections Spéciales
+                {% elif format_type == 'complet' %}
+                    <i class="bi bi-box-seam text-warning"></i> Parfums Complets
+                {% elif format_type == 'decant' %}
+                    <i class="bi bi-droplet-fill text-warning"></i> Décants
+                {% endif %}
+            {% else %}
+                <!-- Tous les produits -->
+                <i class="bi bi-grid-3x3-gap text-warning"></i> Nos Collections
+            {% endif %}
+        </h1>
+        
+        <!-- Sous-titre -->
+        <p class="fs-5 mb-0">
+            {% if category_name and format_type %}
+                Découvrez nos 
+                {% if format_type == 'collection' %}créations spéciales{% elif format_type == 'complet' %}parfums complets{% else %}décants{% endif %}
+                pour {{ category_name|lower }}
+            {% elif category_name %}
+                Tous les parfums pour {{ category_name|lower }}
+            {% elif format_type %}
+                {% if format_type == 'collection' %}
+                    Nos créations exclusives préparées avec soin
+                {% elif format_type == 'complet' %}
+                    Flacons complets de parfums de luxe
+                {% else %}
+                    Échantillons pour découvrir nos fragrances
+                {% endif %}
+            {% else %}
+                Découvrez notre sélection exclusive de parfums de luxe
+            {% endif %}
+        </p>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <!-- Barre de Filtres Horizontale Premium -->
+    <div class="filters-horizontal-bar mb-4">
+        <div class="container-fluid px-2">
+            <form method="GET" id="horizontalFiltersForm" class="filters-form">
+                <div class="filters-wrapper">
+                    <!-- Icône et Titre -->
+                    <div class="filter-header">
+                        <i class="bi bi-funnel-fill"></i>
+                        <span class="fw-bold">Filtres</span>
+                    </div>
+                    
+                    <!-- Catégories -->
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="bi bi-grid-3x3-gap"></i> Catégorie</label>
+                        <select name="category" class="filter-select">
+                            <option value="">Toutes</option>
+                            {% for category in categories %}
+                            <option value="{{ category.name }}" {% if request.args.get('category') == category.name %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Type de produit -->
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="bi bi-tag-fill"></i> Type</label>
+                        <select name="format" class="filter-select">
+                            <option value="">Tous types</option>
+                            <option value="collection" {% if request.args.get('format') == 'collection' %}selected{% endif %}>Collections</option>
+                            <option value="complet" {% if request.args.get('format') == 'complet' %}selected{% endif %}>Complets</option>
+                            <option value="decant" {% if request.args.get('format') == 'decant' %}selected{% endif %}>Décants</option>
+                        </select>
+                    </div>
+
+                    <!-- Disponibilité -->
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="bi bi-box-seam"></i> Stock</label>
+                        <select name="availability" class="filter-select">
+                            <option value="">Tous</option>
+                            <option value="in_stock" {% if request.args.get('availability') == 'in_stock' %}selected{% endif %}>En stock</option>
+                            <option value="out_of_stock" {% if request.args.get('availability') == 'out_of_stock' %}selected{% endif %}>Rupture</option>
+                        </select>
+                    </div>
+
+                    <!-- Marques -->
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="bi bi-award-fill"></i> Marque</label>
+                        <select name="brand" class="filter-select">
+                            <option value="">Toutes marques</option>
+                            {% for brand in brands %}
+                            <option value="{{ brand }}" {% if request.args.get('brand') == brand %}selected{% endif %}>{{ brand }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Prix -->
+                    <div class="filter-item filter-price">
+                        <label class="filter-label"><i class="bi bi-cash-coin"></i> Prix</label>
+                        <div class="price-inputs">
+                            <input type="number" 
+                                   name="price_min" 
+                                   class="filter-input" 
+                                   placeholder="Min"
+                                   value="{{ request.args.get('price_min', '') }}"
+                                   min="0">
+                            <span class="price-separator">-</span>
+                            <input type="number" 
+                                   name="price_max" 
+                                   class="filter-input" 
+                                   placeholder="Max"
+                                   value="{{ request.args.get('price_max', '') }}"
+                                   min="0">
+                        </div>
+                    </div>
+
+                    <!-- Boutons Actions -->
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-filter btn-apply">
+                            <i class="bi bi-check-circle"></i> Appliquer
+                        </button>
+                        <a href="{{ url_for('collections') }}" class="btn-filter btn-reset">
+                            <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-12 py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Grille de produits -->
+            <div class="row g-3" id="productsGrid">
+                {% if products %}
+                    {% for product in products %}
+                    <div class="col-md-6 col-lg-3 mb-4 product-col fade-in">
+                        {% include 'components/product_card.html' %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                        <h4 class="text-muted">Aucun produit disponible</h4>
+                        <p class="text-muted">Aucun parfum n'est disponible dans cette catégorie pour le moment.</p>
+                        <a href="{{ url_for('decants') }}" class="btn btn-warning mt-3">
+                            <i class="bi bi-droplet"></i> Découvrir nos Décants
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Info Total Produits -->
+            {% if products %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="text-center text-muted">
+                        <small>
+                            <i class="bi bi-info-circle"></i>
+                            {{ products|length }} produit{{ 's' if products|length > 1 else '' }} affiché{{ 's' if products|length > 1 else '' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+}
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== BARRE DE FILTRES HORIZONTALE PREMIUM ========== */
+.filters-horizontal-bar {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 2px solid #C4942F;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+}
+
+.filters-form {
+    width: 100%;
+}
+
+.filters-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #C4942F;
+    font-size: 16px;
+    padding-right: 15px;
+    border-right: 2px solid #C4942F;
+    min-width: 100px;
+}
+
+.filter-header i {
+    font-size: 20px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 150px;
+}
+
+.filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-label i {
+    color: #C4942F;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #C4942F;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.filter-select:hover {
+    border-color: #a67c26;
+    box-shadow: 0 2px 8px rgba(196, 148, 47, 0.15);
+}
+
+.filter-select:focus {
+    border-color: #C4942F;
+    box-shadow: 0 0 0 3px rgba(196, 148, 47, 0.1);
+}
+
+.filter-price {
+    min-width: 200px;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-input {
+    width: 80px;
+    padding: 8px 10px;
+    border: 1px solid #C4942F;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.filter-input:hover {
+    border-color: #a67c26;
+}
+
+.filter-input:focus {
+    border-color: #C4942F;
+    box-shadow: 0 0 0 3px rgba(196, 148, 47, 0.1);
+}
+
+.filter-input::placeholder {
+    color: #999;
+}
+
+.price-separator {
+    color: #C4942F;
+    font-weight: bold;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.btn-filter {
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.btn-apply {
+    background: #C4942F;
+    color: #1a1a1a;
+    border-color: #C4942F;
+}
+
+.btn-apply:hover {
+    background: #a67c26;
+    border-color: #a67c26;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(196, 148, 47, 0.3);
+}
+
+.btn-reset {
+    background: white;
+    color: #666;
+    border-color: #ddd;
+}
+
+.btn-reset:hover {
+    background: #f8f9fa;
+    border-color: #C4942F;
+    color: #C4942F;
+    transform: translateY(-2px);
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .filters-wrapper {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .filter-header {
+        border-right: none;
+        padding-right: 0;
+        min-width: auto;
+    }
+    
+    .filter-item {
+        min-width: 140px;
+        flex-shrink: 0;
+    }
+    
+    .filter-actions {
+        margin-left: 0;
+        flex-shrink: 0;
+    }
+    
+    .filters-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .filters-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .filters-wrapper::-webkit-scrollbar-thumb {
+        background: #C4942F;
+        border-radius: 10px;
+    }
+}
+
+/* Animation d'apparition */
+.filters-horizontal-bar {
+    animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== PRODUCT IMAGE & HOVER OVERLAY ========== */
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+    padding: 15px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.product-image-wrapper:hover .product-image {
+    transform: scale(1.1);
+}
+
+/* Overlay qui apparaît au hover */
+.product-hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-image-wrapper:hover .product-hover-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Boutons d'action dans l'overlay */
+.hover-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-hover-action {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: white;
+    border: 2px solid #C4942F;
+    color: #C4942F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-hover-action:hover {
+    background: #C4942F;
+    color: white;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(196, 148, 47, 0.4);
+}
+
+.btn-hover-action i {
+    pointer-events: none;
+}
+
+/* Animation d'entrée des boutons */
+.product-image-wrapper:hover .btn-hover-action:nth-child(1) {
+    animation: slideInScale 0.3s ease 0.1s both;
+}
+
+.product-image-wrapper:hover .btn-hover-action:nth-child(2) {
+    animation: slideInScale 0.3s ease 0.2s both;
+}
+
+@keyframes slideInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Card clickable */
+.card {
+    cursor: pointer;
+    position: relative;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.card-title {
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-title {
+    color: #C4942F !important;
+}
+
+/* ========== PAGINATION LUXE ========== */
+.pagination-luxury .page-link {
+    color: #C4942F;
+    border: 2px solid #E8E8E8;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.pagination-luxury .page-link:hover {
+    background: #C4942F;
+    color: white;
+    border-color: #C4942F;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(196, 148, 47, 0.3);
+}
+
+.pagination-luxury .page-item.active .page-link {
+    background: #C4942F;
+    color: white;
+    border-color: #C4942F;
+    box-shadow: 0 4px 12px rgba(196, 148, 47, 0.3);
+}
+
+.pagination-luxury .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #E8E8E8;
+    background: transparent;
+}
+
+.pagination-wrapper {
+    margin: 40px 0;
+}
+
+/* ========== MICRO-INTERACTIONS ========== */
+
+/* Animation icône cœur (favoris) */
+.btn-hover-action:active {
+    animation: heartBeat 0.3s ease;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(1.1); }
+    75% { transform: scale(1.2); }
+}
+
+/* Animation badge stock limité */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* Effet ripple sur boutons */
+.btn-filter:active,
+.page-link:active {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-filter:active::after,
+.page-link:active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+    }
+}
+
+/* Animation hover sur badges */
+.badge {
+    transition: all 0.2s ease;
+}
+
+.badge:hover {
+    transform: scale(1.1);
+}
+
+/* Animation smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Hover sur images produits */
+.product-image {
+    transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.product-image-wrapper:hover .product-image {
+    filter: brightness(0.95);
+}
+
+/* Animation boutons filtres */
+.filter-select:focus,
+.filter-input:focus {
+    border-color: #C4942F;
+    box-shadow: 0 0 0 3px rgba(196, 148, 47, 0.1);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Feedback visuel ajout panier */
+.btn-hover-action.adding {
+    animation: successPulse 0.5s ease;
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+    .pagination-luxury .page-link {
+        width: 38px;
+        height: 38px;
+        margin: 0 3px;
+        font-size: 14px;
+    }
+}
+</style>
+
+<script>
+function setGridView(columns) {
+    const productCols = document.querySelectorAll('.product-col');
+    const buttons = document.querySelectorAll('.btn-group button');
+    
+    // Mettre à jour les classes des colonnes
+    productCols.forEach(col => {
+        col.classList.remove('col-lg-3', 'col-lg-4');
+        if (columns === 3) {
+            col.classList.add('col-lg-4');
+        } else {
+            col.classList.add('col-lg-3');
+        }
+    });
+    
+    // Mettre à jour les boutons actifs
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}

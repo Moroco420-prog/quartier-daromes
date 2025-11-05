@@ -1,0 +1,208 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Gestion Blog - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-journal-richtext fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Gestion du Blog</h1>
+                        <p class="mb-0 text-white-50">Créez et gérez vos articles de blog</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('admin_add_blog_post') }}" class="btn btn-lg btn-light shadow-sm">
+                    <i class="bi bi-plus-circle me-2"></i>Nouvel Article
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <!-- Filtres -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-tag text-primary"></i> Catégorie</label>
+                    <select name="category" class="form-select form-select-lg" onchange="this.form.submit()">
+                        <option value="">📚 Toutes les catégories</option>
+                        <option value="nouveautés" {% if request.args.get('category') == 'nouveautés' %}selected{% endif %}>✨ Nouveautés</option>
+                        <option value="conseils" {% if request.args.get('category') == 'conseils' %}selected{% endif %}>💡 Conseils</option>
+                        <option value="tendances" {% if request.args.get('category') == 'tendances' %}selected{% endif %}>🔥 Tendances</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-circle-fill text-success"></i> Statut</label>
+                    <select name="status" class="form-select form-select-lg" onchange="this.form.submit()">
+                        <option value="">Tous les statuts</option>
+                        <option value="published" {% if request.args.get('status') == 'published' %}selected{% endif %}>✅ Publié</option>
+                        <option value="draft" {% if request.args.get('status') == 'draft' %}selected{% endif %}>📝 Brouillon</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold"><i class="bi bi-search"></i> Recherche</label>
+                    <input type="text" name="search" class="form-control form-control-lg" placeholder="Rechercher un article..." value="{{ request.args.get('search', '') }}">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des articles -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-grid-3x3-gap text-primary"></i> Articles du Blog
+                </h5>
+                <span class="badge bg-primary rounded-pill py-2 px-3">{{ posts|length }} articles</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white;">
+                        <tr>
+                            <th class="px-3">ID</th>
+                            <th>Image</th>
+                            <th>Titre</th>
+                            <th>Catégorie</th>
+                            <th>Statut</th>
+                            <th>Vues</th>
+                            <th>Date</th>
+                            <th class="text-end px-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr class="border-bottom" style="transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                            <td class="px-3">
+                                <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.85rem;">
+                                    #{{ post.id }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if post.image_url %}
+                                <div style="width: 60px; height: 60px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <img src="{{ url_for('static', filename=post.image_url) }}" 
+                                         alt="{{ post.title }}" 
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="bi bi-image text-muted fs-3"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="fw-bold mb-1" style="color: #2c3e50;">{{ post.title }}</div>
+                                <small class="text-muted"><i class="bi bi-link-45deg"></i> {{ post.slug }}</small>
+                            </td>
+                            <td>
+                                {% if post.blog_category == 'nouveautés' %}
+                                <span class="badge rounded-pill px-3 py-2" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); color: white;">
+                                    ✨ Nouveautés
+                                </span>
+                                {% elif post.blog_category == 'conseils' %}
+                                <span class="badge rounded-pill px-3 py-2" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); color: white;">
+                                    💡 Conseils
+                                </span>
+                                {% elif post.blog_category == 'tendances' %}
+                                <span class="badge rounded-pill px-3 py-2" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #333;">
+                                    🔥 Tendances
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3 py-2">{{ post.blog_category }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if post.is_published %}
+                                <span class="badge bg-success rounded-pill px-3 py-2"><i class="bi bi-check-circle"></i> Publié</span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3 py-2"><i class="bi bi-pencil"></i> Brouillon</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark px-2 py-1">
+                                    <i class="bi bi-eye"></i> {{ post.views }}
+                                </span>
+                            </td>
+                            <td><small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y') }}</small></td>
+                            <td class="text-end px-3">
+                                <div class="btn-group">
+                                    <a href="/blog/{{ post.slug }}" 
+                                       class="btn btn-sm btn-outline-info rounded-start" 
+                                       target="_blank" 
+                                       title="Voir sur le site"
+                                       style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-globe"></i>
+                                    </a>
+                                    <a href="{{ url_for('edit_blog_post', id=post.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Modifier"
+                                       style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form action="{{ url_for('delete_blog_post', id=post.id) }}" 
+                                          method="POST" 
+                                          style="display: inline;" 
+                                          onsubmit="return confirm('⚠️ Supprimer cet article ?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-end" title="Supprimer" style="padding: 0.5rem 0.75rem;">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <div class="py-5">
+                                    <div class="mb-4">
+                                        <i class="bi bi-journal-richtext" style="font-size: 5rem; color: #dee2e6;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-3">Aucun article de blog</h5>
+                                    <p class="text-muted mb-4">Créez votre premier article</p>
+                                    <a href="{{ url_for('admin_add_blog_post') }}" class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border: none;">
+                                        <i class="bi bi-plus-circle me-2"></i>Nouvel Article
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr {
+    border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+    border-left-color: #007bff;
+}
+
+.btn-group .btn {
+    border-width: 2px;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

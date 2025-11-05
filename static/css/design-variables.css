@@ -1,0 +1,312 @@
+/* ========================================
+   DESIGN SYSTEM - QUARTIER D'ARÔMES
+   Variables CSS centralisées
+   ======================================== */
+
+:root {
+    /* ========================================
+       PALETTE COULEURS
+       ======================================== */
+    
+    /* Couleurs principales */
+    --color-primary: #C4942F;          /* Doré principal */
+    --color-primary-dark: #A67D26;     /* Doré foncé (hover) */
+    --color-primary-light: #D4A848;    /* Doré clair */
+    --color-primary-lighter: #E8C676;  /* Doré très clair */
+    
+    /* Couleurs secondaires */
+    --color-secondary: #6c757d;        /* Gris neutre */
+    --color-secondary-dark: #5a6268;   /* Gris foncé */
+    --color-secondary-light: #adb5bd;  /* Gris clair */
+    
+    /* Couleurs sémantiques */
+    --color-success: #28a745;          /* Vert succès */
+    --color-danger: #dc3545;           /* Rouge danger */
+    --color-warning: #ffc107;          /* Jaune warning */
+    --color-info: #17a2b8;             /* Bleu info */
+    
+    /* Couleurs neutres */
+    --color-black: #1a1a1a;            /* Noir principal */
+    --color-dark: #2d2d2d;             /* Gris très foncé */
+    --color-white: #ffffff;            /* Blanc */
+    --color-light: #f8f9fa;            /* Gris très clair */
+    --color-gray-100: #f8f9fa;
+    --color-gray-200: #e9ecef;
+    --color-gray-300: #dee2e6;
+    --color-gray-400: #ced4da;
+    --color-gray-500: #adb5bd;
+    --color-gray-600: #6c757d;
+    --color-gray-700: #495057;
+    --color-gray-800: #343a40;
+    --color-gray-900: #212529;
+    
+    /* Backgrounds */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-dark: #1a1a1a;
+    --bg-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    --bg-gradient-gold: linear-gradient(135deg, #C4942F 0%, #D4A848 100%);
+    
+    /* ========================================
+       TYPOGRAPHIE
+       ======================================== */
+    
+    /* Font families */
+    --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-secondary: Georgia, "Times New Roman", serif;
+    --font-mono: "Courier New", monospace;
+    
+    /* Font sizes */
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 0.95rem;  /* 15px */
+    --font-size-md: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 1.875rem;  /* 30px */
+    --font-size-4xl: 2.25rem;   /* 36px */
+    --font-size-5xl: 3rem;      /* 48px */
+    
+    /* Font weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* Line heights */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    --line-height-loose: 2;
+    
+    /* Letter spacing */
+    --letter-spacing-tight: -0.05em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+    --letter-spacing-widest: 0.1em;
+    
+    /* ========================================
+       ESPACEMENTS
+       ======================================== */
+    
+    /* Spacing scale (4px base) */
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;   /* 4px */
+    --spacing-2: 0.5rem;    /* 8px */
+    --spacing-3: 0.75rem;   /* 12px */
+    --spacing-4: 1rem;      /* 16px */
+    --spacing-5: 1.25rem;   /* 20px */
+    --spacing-6: 1.5rem;    /* 24px */
+    --spacing-7: 1.75rem;   /* 28px */
+    --spacing-8: 2rem;      /* 32px */
+    --spacing-10: 2.5rem;   /* 40px */
+    --spacing-12: 3rem;     /* 48px */
+    --spacing-16: 4rem;     /* 64px */
+    --spacing-20: 5rem;     /* 80px */
+    --spacing-24: 6rem;     /* 96px */
+    
+    /* Padding presets */
+    --padding-btn: 0.7rem 1.5rem;
+    --padding-btn-sm: 0.5rem 1rem;
+    --padding-btn-lg: 0.9rem 2rem;
+    --padding-card: 1.5rem;
+    --padding-section: 3rem 0;
+    
+    /* ========================================
+       BORDER RADIUS
+       ======================================== */
+    
+    --radius-none: 0;
+    --radius-sm: 0.25rem;   /* 4px */
+    --radius-md: 0.5rem;    /* 8px */
+    --radius-lg: 0.625rem;  /* 10px */
+    --radius-xl: 0.75rem;   /* 12px */
+    --radius-2xl: 1rem;     /* 16px */
+    --radius-3xl: 1.5rem;   /* 24px */
+    --radius-full: 9999px;  /* Circle */
+    
+    /* Border radius presets */
+    --radius-btn: var(--radius-md);
+    --radius-card: var(--radius-lg);
+    --radius-badge: var(--radius-full);
+    --radius-input: var(--radius-md);
+    --radius-modal: var(--radius-xl);
+    
+    /* ========================================
+       SHADOWS
+       ======================================== */
+    
+    /* Shadow presets */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --shadow-2xl: 0 20px 50px rgba(0, 0, 0, 0.20);
+    
+    /* Shadow colors */
+    --shadow-primary: 0 4px 12px rgba(196, 148, 47, 0.25);
+    --shadow-primary-lg: 0 8px 25px rgba(196, 148, 47, 0.3);
+    --shadow-danger: 0 4px 12px rgba(220, 53, 69, 0.25);
+    --shadow-success: 0 4px 12px rgba(40, 167, 69, 0.25);
+    
+    /* Glow effects */
+    --glow-primary-sm: 0 0 15px rgba(196, 148, 47, 0.15);
+    --glow-primary-md: 0 0 25px rgba(196, 148, 47, 0.2);
+    --glow-primary-lg: 0 0 40px rgba(196, 148, 47, 0.25);
+    
+    /* Combined shadows (depth + glow) */
+    --shadow-card: var(--shadow-sm);
+    --shadow-card-hover: var(--shadow-lg), var(--glow-primary-sm);
+    --shadow-btn-hover: var(--shadow-md), var(--glow-primary-md);
+    
+    /* ========================================
+       TRANSITIONS
+       ======================================== */
+    
+    /* Duration */
+    --duration-instant: 0s;
+    --duration-fast: 0.15s;
+    --duration-normal: 0.2s;
+    --duration-slow: 0.3s;
+    --duration-slower: 0.5s;
+    
+    /* Easing */
+    --ease-linear: linear;
+    --ease-in: ease-in;
+    --ease-out: ease-out;
+    --ease-in-out: ease-in-out;
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Transition presets */
+    --transition-fast: all var(--duration-fast) var(--ease-in-out);
+    --transition-normal: all var(--duration-normal) var(--ease-in-out);
+    --transition-slow: all var(--duration-slow) var(--ease-in-out);
+    --transition-transform: transform var(--duration-normal) var(--ease-in-out);
+    --transition-opacity: opacity var(--duration-normal) var(--ease-in-out);
+    --transition-shadow: box-shadow var(--duration-normal) var(--ease-in-out);
+    
+    /* ========================================
+       BORDERS
+       ======================================== */
+    
+    --border-width-thin: 1px;
+    --border-width-normal: 2px;
+    --border-width-thick: 3px;
+    
+    --border-color-light: var(--color-gray-200);
+    --border-color-normal: var(--color-gray-300);
+    --border-color-dark: var(--color-gray-400);
+    --border-color-primary: var(--color-primary);
+    
+    --border-default: var(--border-width-thin) solid var(--border-color-light);
+    --border-primary: var(--border-width-normal) solid var(--border-color-primary);
+    
+    /* ========================================
+       Z-INDEX SCALE
+       ======================================== */
+    
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-notification: 1080;
+    
+    /* ========================================
+       BREAKPOINTS (pour référence)
+       ======================================== */
+    
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+    
+    /* ========================================
+       DIMENSIONS
+       ======================================== */
+    
+    /* Container widths */
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1140px;
+    --container-xxl: 1320px;
+    
+    /* Component sizes */
+    --btn-height-sm: 36px;
+    --btn-height-md: 44px;
+    --btn-height-lg: 52px;
+    
+    --input-height-sm: 36px;
+    --input-height-md: 44px;
+    --input-height-lg: 52px;
+    
+    --navbar-height: 76px;
+    --footer-height: auto;
+    
+    /* Image sizes */
+    --img-product-sm: 280px;
+    --img-product-md: 350px;
+    --img-product-lg: 400px;
+    --img-product-xl: 500px;
+    
+    --img-thumb-sm: 60px;
+    --img-thumb-md: 80px;
+    --img-thumb-lg: 100px;
+    
+    /* ========================================
+       OPACITÉ
+       ======================================== */
+    
+    --opacity-0: 0;
+    --opacity-10: 0.1;
+    --opacity-20: 0.2;
+    --opacity-30: 0.3;
+    --opacity-40: 0.4;
+    --opacity-50: 0.5;
+    --opacity-60: 0.6;
+    --opacity-70: 0.7;
+    --opacity-80: 0.8;
+    --opacity-90: 0.9;
+    --opacity-100: 1;
+    
+    /* Opacity presets */
+    --opacity-disabled: var(--opacity-50);
+    --opacity-hover: var(--opacity-80);
+    --opacity-overlay: var(--opacity-60);
+}
+
+/* ========================================
+   DARK MODE (Optionnel - Futur)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Sera implémenté plus tard si nécessaire */
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+    :root {
+        --shadow-sm: none;
+        --shadow-md: none;
+        --shadow-lg: none;
+        --transition-normal: none;
+    }
+}
+
+/* ========================================
+   FIN DES VARIABLES
+   ======================================== */

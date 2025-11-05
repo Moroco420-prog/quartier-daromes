@@ -1,0 +1,304 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Gestion Produits - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23C4942F%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(196, 148, 47, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-box-seam fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Gestion des Produits</h1>
+                        <p class="mb-0 text-white-50">Gérez votre catalogue de produits</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('admin_add_product') }}" class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #C4942F 0%, #d4a73f 100%); color: white; border: none;">
+                    <i class="bi bi-plus-circle me-2"></i>Ajouter un Produit
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #C4942F !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">TOTAL PRODUITS</p>
+                            <h3 class="mb-0 fw-bold">{{ products|length }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(196, 148, 47, 0.1);">
+                            <i class="bi bi-box-seam fs-4 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #28a745 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">EN STOCK</p>
+                            <h3 class="mb-0 fw-bold">{{ products|selectattr('stock', 'gt', 0)|list|length }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(40, 167, 69, 0.1);">
+                            <i class="bi bi-check-circle fs-4 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #dc3545 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">RUPTURE</p>
+                            <h3 class="mb-0 fw-bold">{{ products|selectattr('stock', 'equalto', 0)|list|length }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(220, 53, 69, 0.1);">
+                            <i class="bi bi-x-circle fs-4 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #17a2b8 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">MARQUES</p>
+                            <h3 class="mb-0 fw-bold">{{ products|map(attribute='brand')|unique|list|length }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(23, 162, 184, 0.1);">
+                            <i class="bi bi-award fs-4 text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold"><i class="bi bi-funnel text-warning"></i> Filtrer par marque</label>
+                    <select name="brand" class="form-select form-select-lg" onchange="this.form.submit()">
+                        <option value="">🏷️ Toutes les marques</option>
+                        {% for brand in products|map(attribute='brand')|unique|sort %}
+                            {% if brand %}
+                            <option value="{{ brand }}" {% if current_brand == brand %}selected{% endif %}>{{ brand }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-7 d-flex align-items-end gap-2">
+                    {% if current_brand %}
+                    <a href="{{ url_for('admin_products') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+                    </a>
+                    <span class="badge bg-warning text-dark py-2 px-3 fs-6">
+                        Filtré: {{ current_brand }}
+                    </span>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau des produits -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-grid-3x3-gap text-warning"></i> Liste des Produits
+                </h5>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-primary rounded-pill py-2 px-3">{{ products|length }} produits</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white;">
+                        <tr>
+                            <th class="px-3">ID</th>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Marque</th>
+                            <th>Prix</th>
+                            <th>Stock</th>
+                            <th>Type</th>
+                            <th>Catégorie</th>
+                            <th class="text-end px-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr class="border-bottom" style="transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                            <td class="px-3">
+                                <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.85rem;">
+                                    #{{ product.id }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if product.image_url %}
+                                <div style="width: 60px; height: 60px; position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <img src="/static/uploads/{{ product.image_url }}" 
+                                         alt="{{ product.name }}" 
+                                         style="width: 100%; height: 100%; object-fit: contain; background: #f8f9fa; padding: 5px;"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="bg-light text-center d-flex align-items-center justify-content-center" 
+                                         style="width: 60px; height: 60px; border-radius: 10px; display: none; position: absolute; top: 0;">
+                                        <i class="bi bi-image text-muted fs-3"></i>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="bg-light text-center d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="bi bi-image text-muted fs-3"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div>
+                                    <strong class="d-block mb-1" style="color: #2c3e50;">{{ product.name }}</strong>
+                                    <small class="text-muted">
+                                        <i class="bi bi-rulers"></i> {{ product.size if product.size else 'Taille non définie' }}
+                                    </small>
+                                </div>
+                            </td>
+                            <td>
+                                {% if product.brand %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-award"></i> {{ product.brand }}
+                                </span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong class="text-warning" style="font-size: 1.1rem;">{{ '{:,.0f}'.format(product.price) }} DH</strong>
+                            </td>
+                            <td>
+                                {% if product.stock == 0 %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                    <i class="bi bi-x-circle"></i> Rupture
+                                </span>
+                                {% elif product.stock < 10 %}
+                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                    <i class="bi bi-exclamation-triangle"></i> {{ product.stock }}
+                                </span>
+                                {% else %}
+                                <span class="badge bg-success rounded-pill px-3 py-2">
+                                    <i class="bi bi-check-circle"></i> {{ product.stock }}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.product_type == 'decant' %}
+                                <span class="badge" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 8px;">
+                                    <i class="bi bi-droplet-fill"></i> Décant
+                                </span>
+                                {% elif product.product_type == 'collection' %}
+                                <span class="badge" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 8px;">
+                                    <i class="bi bi-stars"></i> Collection
+                                </span>
+                                {% else %}
+                                <span class="badge" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 0.5rem 0.75rem; border-radius: 8px;">
+                                    <i class="bi bi-box-seam"></i> Complet
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.category %}
+                                <span class="badge bg-dark rounded-pill px-3 py-2">{{ product.category.name }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end px-3">
+                                <div class="btn-group">
+                                    <a href="{{ url_for('product_detail', product_id=product.id) }}" 
+                                       class="btn btn-sm btn-outline-info rounded-start"
+                                       title="Voir le produit" 
+                                       target="_blank"
+                                       style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Modifier"
+                                       style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form method="POST" 
+                                          action="{{ url_for('admin_delete_product', product_id=product.id) }}" 
+                                          style="display: inline;"
+                                          onsubmit="return confirm('⚠️ Êtes-vous sûr de vouloir supprimer ce produit ?\nCette action est irréversible.');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-end" title="Supprimer" style="padding: 0.5rem 0.75rem;">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <div class="py-5">
+                                    <div class="mb-4">
+                                        <i class="bi bi-inbox" style="font-size: 5rem; color: #dee2e6;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-3">Aucun produit trouvé</h5>
+                                    <p class="text-muted mb-4">Commencez par ajouter votre premier produit</p>
+                                    <a href="{{ url_for('admin_add_product') }}" class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #C4942F 0%, #d4a73f 100%); color: white; border: none;">
+                                        <i class="bi bi-plus-circle me-2"></i>Ajouter un produit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr {
+    border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+    border-left-color: #C4942F;
+}
+
+.btn-group .btn {
+    border-width: 2px;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

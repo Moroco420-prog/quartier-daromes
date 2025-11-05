@@ -1,0 +1,41 @@
+<!-- Menu Sidebar Admin -->
+<div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+    <div class="card-header bg-dark text-white">
+        <h6 class="mb-0 fw-bold text-white"><i class="bi bi-menu-button-wide"></i> Menu Admin</h6>
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action {% if active_page == 'dashboard' %}active{% endif %}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+        <a href="{{ url_for('products') }}" class="list-group-item list-group-item-action {% if active_page == 'products' %}active{% endif %}">
+            <i class="bi bi-box"></i> Produits
+        </a>
+        <a href="{{ url_for('brands') }}" class="list-group-item list-group-item-action {% if active_page == 'brands' %}active{% endif %}">
+            <i class="bi bi-award-fill"></i> Marques
+        </a>
+        <a href="{{ url_for('categories') }}" class="list-group-item list-group-item-action {% if active_page == 'categories' %}active{% endif %}">
+            <i class="bi bi-tags"></i> Catégories
+        </a>
+        <a href="{{ url_for('orders') }}" class="list-group-item list-group-item-action {% if active_page == 'orders' %}active{% endif %}">
+            <i class="bi bi-cart-check"></i> Commandes
+        </a>
+        <a href="{{ url_for('promotions') }}" class="list-group-item list-group-item-action {% if active_page == 'promotions' %}active{% endif %}">
+            <i class="bi bi-percent"></i> Promotions
+        </a>
+        <a href="{{ url_for('users') }}" class="list-group-item list-group-item-action {% if active_page == 'users' %}active{% endif %}">
+            <i class="bi bi-people"></i> Utilisateurs
+        </a>
+        <a href="{{ url_for('messages') }}" class="list-group-item list-group-item-action {% if active_page == 'messages' %}active{% endif %}">
+            <i class="bi bi-envelope"></i> Messages
+        </a>
+        <a href="{{ url_for('newsletter') }}" class="list-group-item list-group-item-action {% if active_page == 'newsletter' %}active{% endif %}">
+            <i class="bi bi-envelope-plus"></i> Newsletter
+        </a>
+        <a href="{{ url_for('security_dashboard') }}" class="list-group-item list-group-item-action {% if active_page == 'security' %}active{% endif %}">
+            <i class="bi bi-shield-lock"></i> Sécurité
+        </a>
+        <a href="{{ url_for('admin_blog_posts') }}" class="list-group-item list-group-item-action {% if active_page == 'blog' %}active{% endif %}">
+            <i class="bi bi-journal-richtext"></i> Blog
+        </a>
+    </div>
+</div>

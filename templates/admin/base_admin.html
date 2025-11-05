@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - Quartier d'Arômes{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #C4942F;
+            --sidebar-bg: #2d2d2d;
+            --sidebar-hover: #1a1a1a;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        /* Sidebar fixe */
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, var(--sidebar-bg) 0%, var(--sidebar-hover) 100%);
+            padding-top: 20px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        /* Logo admin */
+        .admin-logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .admin-logo h3 {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .admin-logo p {
+            color: #999;
+            font-size: 12px;
+            margin: 5px 0 0 0;
+        }
+        
+        /* Menu items */
+        .sidebar-menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 0;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover {
+            background: rgba(196, 148, 47, 0.1);
+            color: var(--primary-color);
+            padding-left: 30px;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(196, 148, 47, 0.2) 0%, transparent 100%);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        /* Main content area */
+        .admin-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        /* Top bar */
+        .admin-topbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .admin-topbar .breadcrumb {
+            margin: 0;
+            background: none;
+            padding: 0;
+        }
+        
+        /* Main content padding */
+        .admin-main {
+            padding: 30px;
+        }
+        
+        /* Cards */
+        .admin-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .admin-sidebar.show {
+                width: 250px;
+            }
+            
+            .admin-content {
+                margin-left: 0;
+            }
+        }
+        
+        /* Bouton déconnexion */
+        .logout-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 25px;
+            right: 25px;
+        }
+        
+        .logout-btn a {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            display: block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn a:hover {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+    
+    <!-- Mode Sombre Admin -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dark-mode.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="admin-sidebar">
+        <div class="admin-logo">
+            <h3>Quartier d'Arômes</h3>
+            <p>Administration</p>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_products') }}" class="{% if 'product' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-box"></i>
+                    <span>Produits</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_brands') }}" class="{% if 'brand' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-award-fill"></i>
+                    <span>Marques</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_orders') }}" class="{% if 'order' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-cart-check"></i>
+                    <span>Commandes</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_users') }}" class="{% if 'user' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-people"></i>
+                    <span>Utilisateurs</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_messages') }}" class="{% if 'message' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-envelope"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_blog_posts') }}" class="{% if 'blog' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-journal-richtext"></i>
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_newsletter') }}" class="{% if 'newsletter' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-envelope-plus"></i>
+                    <span>Newsletter</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_security_dashboard') }}" class="{% if 'security' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>Sécurité</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="logout-btn">
+            <a href="{{ url_for('logout') }}">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="admin-content">
+        <!-- Top Bar -->
+        <div class="admin-topbar">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}" style="color: var(--primary-color);">Admin</a></li>
+                    {% block breadcrumb %}{% endblock %}
+                </ol>
+            </nav>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Notifications -->
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark position-relative p-2" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                              id="notificationCount" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end shadow" style="width: 350px;">
+                        <div class="dropdown-header d-flex justify-content-between align-items-center">
+                            <strong>Notifications</strong>
+                            <button class="btn btn-sm btn-link" onclick="markAllAsRead()">Tout marquer comme lu</button>
+                        </div>
+                        <div id="notificationList" class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Notifications chargées par JS -->
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- User info -->
+                <div class="d-flex align-items-center">
+                    <div class="me-2">
+                        <div class="fw-bold small">{{ current_user.username }}</div>
+                        <div class="text-muted" style="font-size: 12px;">Administrateur</div>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name={{ current_user.username }}&background=C4942F&color=fff" 
+                         alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Area -->
+        <div class="admin-main">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Notifications Script -->
+    <script>
+    // Charger les notifications
+    function loadNotifications() {
+        fetch('/api/notifications')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('notificationList');
+                const count = document.getElementById('notificationCount');
+                
+                if (data.notifications && data.notifications.length > 0) {
+                    count.textContent = data.notifications.length;
+                    count.style.display = 'inline-block';
+                    
+                    list.innerHTML = data.notifications.map(n => `
+                        <a href="${n.link || '#'}" class="list-group-item list-group-item-action" 
+                           onclick="markAsRead(${n.id})">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="bi bi-${n.icon || 'bell'}"></i> ${n.title}
+                                </h6>
+                                <small>${n.created_at}</small>
+                            </div>
+                            <p class="mb-1 small">${n.message}</p>
+                        </a>
+                    `).join('');
+                } else {
+                    count.style.display = 'none';
+                    list.innerHTML = '<div class="text-center py-3 text-muted">Aucune notification</div>';
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+    
+    // Marquer comme lu
+    function markAsRead(id) {
+        fetch(`/api/notifications/${id}/read`, { method: 'POST' })
+            .then(() => loadNotifications());
+    }
+    
+    // Tout marquer comme lu
+    function markAllAsRead() {
+        fetch('/api/notifications/mark-all-read', { method: 'POST' })
+            .then(() => loadNotifications());
+    }
+    
+    // Charger au démarrage
+    if (document.getElementById('notificationList')) {
+        loadNotifications();
+        setInterval(loadNotifications, 30000); // Actualiser toutes les 30s
+    }
+    </script>
+    
+    <!-- Admin Enhancements: Mode sombre, Notifications, Animations -->
+    <script src="{{ url_for('static', filename='js/admin-enhancements.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

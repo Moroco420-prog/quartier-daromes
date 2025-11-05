@@ -1,0 +1,998 @@
+/* ========================================
+   QUARTIER D'ARÔMES - LUXURY DESIGN SYSTEM
+   Palette inspirée du logo doré
+   ======================================== */
+
+/* === PALETTE DE COULEURS === */
+:root {
+    /* === BRAND COLORS === */
+    /* Couleurs principales (Identité) */
+    --primary-gold: #C4942F;
+    --primary-dark: #8B6914;
+    --primary-light: #E5C87C;
+    --primary-hover: #a67c26;
+    
+    /* Couleurs complémentaires */
+    --secondary-charcoal: #2C2C2C;
+    --secondary-pearl: #F8F6F3;
+    --secondary-cream: #FAF7F2;
+    
+    /* Accents */
+    --accent-rose-gold: #B76E79;
+    --accent-sage: #8B9C89;
+    --accent-midnight: #1A1A1A;
+    
+    /* Neutres */
+    --white: #FFFFFF;
+    --light-gray: #E8E8E8;
+    --medium-gray: #9B9B9B;
+    --dark-gray: #4A4A4A;
+    --text-primary: #2C2C2C;
+    --text-secondary: #6c757d;
+    --text-muted: #999999;
+    
+    /* Contextuelles */
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+    
+    /* Ombres luxueuses (contraste amélioré) */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+    --shadow-gold: 0 8px 20px rgba(196, 148, 47, 0.3);
+    
+    /* Dégradés */
+    --gradient-gold: linear-gradient(135deg, #C4942F 0%, #E5C87C 100%);
+    --gradient-dark: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+    
+    /* === ESPACEMENTS UNIFORMES === */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 40px;
+    --spacing-xl: 60px;
+    --spacing-xxl: 80px;
+    --spacing-section: 80px;
+    
+    /* === TRANSITIONS OPTIMISÉES === */
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* === BORDURES === */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-full: 50px;
+}
+
+/* === TYPOGRAPHIE LUXE === */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--secondary-charcoal);
+    background-color: var(--secondary-pearl);
+}
+
+h1, h2, h3, h4, h5, h6,
+.heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--accent-midnight);
+    letter-spacing: 0.5px; /* Espacement amélioré */
+    margin-bottom: var(--spacing-md);
+}
+
+/* Titres dorés */
+h1.text-gold,
+h2.text-gold,
+.heading-gold {
+    color: var(--primary-gold);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(196, 148, 47, 0.2);
+}
+
+h1 { font-size: 3.5rem; font-weight: 900; }
+h2 { font-size: 2.5rem; font-weight: 700; }
+h3 { font-size: 2rem; font-weight: 600; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.1rem; }
+
+.subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    color: var(--medium-gray);
+    letter-spacing: 0.05em;
+}
+
+/* === CARTES PRODUITS LUXE === */
+/* === BRAND SYSTEM - CARD LUXURY === */
+.product-card,
+.card-luxury {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-smooth); /* Optimisé 0.3s */
+    border: 2px solid rgba(196, 148, 47, 0.1);
+    position: relative;
+}
+
+.product-card:hover,
+.card-luxury:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-gold);
+}
+
+.product-card-image {
+    position: relative;
+    overflow: hidden;
+    padding-top: 100%; /* Ratio 1:1 */
+    background: var(--secondary-cream);
+}
+
+.product-card-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .product-card-image img {
+    transform: scale(1.08);
+}
+
+/* Badge luxe sur image */
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--gradient-gold);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-md);
+    z-index: 2;
+}
+
+.product-card-body {
+    padding: 24px;
+}
+
+.product-brand {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+
+.product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent-midnight);
+    margin-bottom: 12px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2; /* Standard property for future compatibility */
+    overflow: hidden;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+}
+
+.product-price small {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--medium-gray);
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+/* === BOUTONS LUXE === */
+.btn-luxury {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 50px;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn-luxury-primary {
+    background: var(--gradient-gold);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-luxury-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--white);
+}
+
+.btn-luxury-outline {
+    background: transparent;
+    color: var(--primary-gold);
+    border: 2px solid var(--primary-gold);
+}
+
+.btn-luxury-outline:hover {
+    background: var(--primary-gold);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.btn-luxury-dark {
+    background: var(--gradient-dark);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-luxury-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--white);
+}
+
+/* Effet shimmer sur boutons */
+.btn-luxury::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-luxury:hover::before {
+    left: 100%;
+}
+
+/* === SECTIONS === */
+.section-luxury {
+    padding: 80px 0;
+    position: relative;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--accent-midnight);
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--gradient-gold);
+    margin: 24px auto 0;
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--medium-gray);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    letter-spacing: 0.03em;
+}
+
+/* === HERO SECTION === */
+.hero-luxury {
+    position: relative;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-dark);
+    overflow: hidden;
+}
+
+.hero-luxury::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(196,148,47,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--white);
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 24px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--primary-light);
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+}
+
+/* === BADGES ET LABELS === */
+.badge-luxury {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.badge-gold {
+    background: var(--gradient-gold);
+    color: var(--white);
+}
+
+.badge-new {
+    background: var(--accent-rose-gold);
+    color: var(--white);
+}
+
+.badge-stock {
+    background: var(--accent-sage);
+    color: var(--white);
+}
+
+/* === ANIMATIONS AOS === */
+[data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+}
+
+[data-aos="fade-up"] {
+    transform: translateY(30px);
+}
+
+[data-aos="fade-up"].aos-animate {
+    transform: translateY(0);
+}
+
+[data-aos="zoom-in"] {
+    transform: scale(0.9);
+}
+
+[data-aos="zoom-in"].aos-animate {
+    transform: scale(1);
+}
+
+[data-aos="fade-left"] {
+    transform: translateX(-30px);
+}
+
+[data-aos="fade-left"].aos-animate {
+    transform: translateX(0);
+}
+
+[data-aos="fade-right"] {
+    transform: translateX(30px);
+}
+
+[data-aos="fade-right"].aos-animate {
+    transform: translateX(0);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.5rem; }
+    
+    .section-luxury { padding: 60px 0; }
+    .section-title { font-size: 2rem; }
+    .hero-luxury { height: 400px; }
+    .hero-title { font-size: 2.8rem; }
+    .product-card-body { padding: 20px; }
+}
+
+/* === OVERLAYS === */
+.overlay-gold {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(196, 148, 47, 0.9) 0%, rgba(139, 105, 20, 0.9) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.product-card:hover .overlay-gold {
+    opacity: 1;
+}
+
+/* === SCROLL SMOOTH === */
+html {
+    scroll-behavior: smooth;
+}
+
+/* === LOADER LUXE === */
+.loader-luxury {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--light-gray);
+    border-top-color: var(--primary-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* === DIVIDERS === */
+.divider-luxury {
+    height: 2px;
+    background: var(--gradient-gold);
+    margin: 48px auto;
+    max-width: 200px;
+    border-radius: 2px;
+}
+
+/* === CARDS HOVER EFFECTS === */
+.card-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-lift:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+}
+
+/* === GLASSMORPHISM === */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* === RATING STARS === */
+.stars-luxury {
+    color: var(--primary-gold);
+    font-size: 1rem;
+}
+
+.stars-luxury i {
+    margin-right: 2px;
+}
+
+/* === INPUTS LUXE === */
+.input-luxury {
+    font-family: 'Poppins', sans-serif;
+    padding: 14px 20px;
+    border: 2px solid var(--light-gray);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.input-luxury:focus {
+    outline: none;
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 4px rgba(196, 148, 47, 0.1);
+}
+
+/* === TESTIMONIALS === */
+.testimonial-card {
+    background: var(--white);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary-gold);
+    transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px);
+}
+
+.testimonial-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--dark-gray);
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.testimonial-author {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+/* === BREADCRUMB LUXE === */
+.breadcrumb-luxury {
+    background: transparent;
+    padding: 16px 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-luxury a {
+    color: var(--medium-gray);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-luxury a:hover {
+    color: var(--primary-gold);
+}
+
+.breadcrumb-luxury .active {
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+/* === NAVBAR LUXE === */
+.navbar-luxury {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar-luxury.scrolled {
+    padding: 12px 0;
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-luxury .nav-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    color: var(--secondary-charcoal);
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.navbar-luxury .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--primary-gold);
+    transition: width 0.3s ease;
+}
+
+.navbar-luxury .nav-link:hover::after,
+.navbar-luxury .nav-link.active::after {
+    width: 100%;
+}
+
+.navbar-luxury .nav-link:hover {
+    color: var(--primary-gold);
+}
+
+/* === FOOTER LUXE === */
+.footer-luxury {
+    background: var(--gradient-dark);
+    color: var(--light-gray);
+    padding: 60px 0 30px;
+}
+
+.footer-luxury h5 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-light);
+    margin-bottom: 20px;
+}
+
+.footer-luxury a {
+    color: var(--light-gray);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-luxury a:hover {
+    color: var(--primary-gold);
+}
+
+/* === UTILITIES === */
+.text-gold { color: var(--primary-gold) !important; }
+.text-dark-gold { color: var(--primary-dark) !important; }
+.bg-gold { background: var(--primary-gold) !important; }
+.bg-gradient-gold { background: var(--gradient-gold) !important; }
+.bg-cream { background: var(--secondary-cream) !important; }
+.bg-pearl { background: var(--secondary-pearl) !important; }
+
+.border-gold { border-color: var(--primary-gold) !important; }
+.shadow-luxury { box-shadow: var(--shadow-lg) !important; }
+.rounded-luxury { border-radius: 20px !important; }
+
+/* ========================================
+   BRAND SYSTEM - BOUTONS STANDARDISÉS
+   ======================================== */
+
+/* Bouton principal doré (CTA) */
+.btn-gold,
+.btn-primary-gold {
+    background: var(--primary-gold);
+    color: white;
+    border: 2px solid var(--primary-gold);
+    padding: 12px 32px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: var(--border-radius-full);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gold:hover,
+.btn-primary-gold:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+    animation: pulse-button 1.5s infinite;
+}
+
+.btn-gold:active {
+    transform: translateY(0);
+}
+
+/* Bouton secondaire (outline) */
+.btn-gold-outline,
+.btn-secondary-gold {
+    background: transparent;
+    color: var(--primary-gold);
+    border: 2px solid var(--primary-gold);
+    padding: 12px 32px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: var(--border-radius-full);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-gold-outline:hover,
+.btn-secondary-gold:hover {
+    background: var(--primary-gold);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+}
+
+/* Bouton subtil (ghost) */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--light-gray);
+    padding: 12px 32px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: var(--border-radius-full);
+    transition: all var(--transition-fast);
+}
+
+.btn-ghost:hover {
+    border-color: var(--primary-gold);
+    color: var(--primary-gold);
+}
+
+/* Bouton petit */
+.btn-sm-gold {
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+/* Bouton large */
+.btn-lg-gold {
+    padding: 16px 48px;
+    font-size: 18px;
+}
+
+/* ========================================
+   ANIMATIONS SCROLL (Intersection Observer)
+   ======================================== */
+
+/* Éléments cachés avant apparition */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Quand visible */
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animation slide up */
+.slide-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animation slide left */
+.slide-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-left.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Animation slide right */
+.slide-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-right.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Animation scale */
+.scale-in {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scale-in.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Délais cascade pour animations multiples */
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; }
+
+/* ========================================
+   ANIMATION PULSE POUR BOUTONS
+   ======================================== */
+
+@keyframes pulse-button {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(196, 148, 47, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(196, 148, 47, 0);
+    }
+}
+
+/* Pulse léger au hover */
+.btn-pulse:hover {
+    animation: pulse-button 1.5s infinite;
+}
+
+/* Pulse continu (CTA important) */
+.btn-pulse-always {
+    animation: pulse-button 2s infinite;
+}
+
+/* ========================================
+   SECTIONS UNIFORMES
+   ======================================== */
+
+.section {
+    padding: var(--spacing-section) 0;
+}
+
+.section-sm {
+    padding: var(--spacing-xl) 0;
+}
+
+.section-lg {
+    padding: var(--spacing-xxl) 0;
+}
+
+/* Titres de section */
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-midnight);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    letter-spacing: 1px;
+}
+
+.section-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Container avec padding uniforme */
+.container-section {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+}
+
+/* ========================================
+   RESPONSIVE - ESPACEMENTS ADAPTATIFS
+   ======================================== */
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-section: 60px;
+        --spacing-xxl: 60px;
+        --spacing-xl: 40px;
+        --spacing-lg: 32px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .theme-switch-wrapper {
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px;
+    }
+    
+    .btn-gold,
+    .btn-primary-gold,
+    .btn-gold-outline {
+        padding: 10px 24px;
+        font-size: 14px;
+    }
+    
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.75rem; }
+}
+
+/* ========================================
+   AMÉLIORATION CONTRASTE (WCAG AA)
+   ======================================== */
+
+/* Texte sur fond clair */
+.text-on-light {
+    color: var(--text-primary);
+}
+
+/* Texte sur fond doré */
+.text-on-gold {
+    color: var(--accent-midnight);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Texte sur fond sombre */
+.text-on-dark {
+    color: var(--white);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Amélioration lisibilité liens */
+a {
+    color: var(--primary-gold);
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Focus visible (accessibilité) */
+*:focus-visible {
+    outline: 3px solid var(--primary-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ========================================
+   UTILITY CLASSES - ESPACEMENT
+   ======================================== */
+
+.mb-section { margin-bottom: var(--spacing-section); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-xs { margin-bottom: var(--spacing-xs); }
+
+.mt-section { margin-top: var(--spacing-section); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-xs { margin-top: var(--spacing-xs); }
+
+.p-section { padding: var(--spacing-section); }
+.p-xl { padding: var(--spacing-xl); }
+.p-lg { padding: var(--spacing-lg); }
+.p-md { padding: var(--spacing-md); }
+.p-sm { padding: var(--spacing-sm); }
+.p-xs { padding: var(--spacing-xs); }

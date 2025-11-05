@@ -1,0 +1,212 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Newsletter - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-envelope-plus fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Newsletter</h1>
+                        <p class="mb-0 text-white-50">Envoi d'emails groupés aux clients</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <div class="row">
+
+        <!-- Main Content -->
+        <div class="col-md-12 col-lg-12">
+            <!-- Stats Cards -->
+            <div class="row mb-4 g-3">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #17a2b8 !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">TOTAL UTILISATEURS</p>
+                                    <h3 class="mb-0 fw-bold text-info">{{ total_users }}</h3>
+                                    <small class="text-muted">Inscrits sur le site</small>
+                                </div>
+                                <div class="text-info"><i class="bi bi-people fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #28a745 !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">CLIENTS ACTIFS</p>
+                                    <h3 class="mb-0 fw-bold text-success">{{ total_customers }}</h3>
+                                    <small class="text-muted">Avec au moins 1 commande</small>
+                                </div>
+                                <div class="text-success"><i class="bi bi-cart-check fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire d'envoi -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header border-bottom" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                    <h5 class="mb-0 fw-bold" style="color: #C4942F;">
+                        <i class="bi bi-send"></i> Envoyer une Newsletter
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="mb-3">
+                            <label for="recipient_type" class="form-label">Destinataires <span class="text-danger">*</span></label>
+                            <select class="form-select" id="recipient_type" name="recipient_type" required>
+                                <option value="all">Tous les utilisateurs ({{ total_users }} personnes)</option>
+                                <option value="customers">Clients actifs uniquement ({{ total_customers }} personnes)</option>
+                            </select>
+                            <small class="text-muted">Sélectionnez à qui envoyer l'email</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Sujet <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="subject" name="subject" required 
+                                   placeholder="Ex: Nouvelle collection été 2024">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message (HTML) <span class="text-danger">*</span></label>
+                            <textarea class="form-control font-monospace" id="message" name="message" rows="15" required 
+                                      placeholder="Entrez votre message HTML ou cliquez sur 'Insérer Template'"></textarea>
+                            <small class="text-muted">Utilisez du HTML pour formater votre email</small>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="insertTemplateBtn">
+                                    <i class="bi bi-file-earmark-code"></i> Insérer Template par défaut
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" id="clearBtn">
+                                    <i class="bi bi-trash"></i> Effacer
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            <strong>Attention :</strong> Assurez-vous que Flask-Mail est correctement configuré avec vos identifiants Gmail.
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn" style="background-color: #C4942F; color: white;">
+                                <i class="bi bi-send"></i> Envoyer la Newsletter
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="previewBtn">
+                                <i class="bi bi-eye"></i> Prévisualiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Prévisualisation -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Prévisualisation de l'email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="previewContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Template HTML par défaut
+const defaultTemplate = `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0;">
+    <div style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); padding: 30px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 28px;">Quartier d'Arômes</h1>
+        <p style="color: #fff; margin: 10px 0 0 0; opacity: 0.9;">Votre destination pour les parfums de luxe</p>
+    </div>
+    
+    <div style="padding: 40px 30px;">
+        <h2 style="color: #C4942F; margin: 0 0 20px 0; font-size: 24px;">Titre de votre newsletter</h2>
+        <p style="color: #333; line-height: 1.8; margin: 0 0 20px 0; font-size: 16px;">
+            Votre message ici...<br><br>
+            Ajoutez votre contenu personnalisé pour informer vos clients de vos nouvelles offres, 
+            collections ou événements spéciaux.
+        </p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="http://127.0.0.1:5000/collections" 
+               style="display: inline-block; background: #C4942F; color: white; padding: 15px 40px; 
+                      text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                Découvrir la collection
+            </a>
+        </div>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0;">
+        <p style="margin: 0 0 10px 0; color: #666; font-size: 13px;">
+            <strong>Quartier d'Arômes</strong><br>
+            Fès, Maroc | +212 708-505157
+        </p>
+        <p style="margin: 0; color: #999; font-size: 12px;">
+            © 2024 Quartier d'Arômes. Tous droits réservés.
+        </p>
+    </div>
+</div>`;
+
+// Bouton insérer template
+document.getElementById('insertTemplateBtn').addEventListener('click', function() {
+    const messageField = document.getElementById('message');
+    messageField.value = defaultTemplate;
+    messageField.focus();
+    
+    // Animation de confirmation
+    this.innerHTML = '<i class="bi bi-check-lg"></i> Template inséré';
+    this.classList.remove('btn-outline-secondary');
+    this.classList.add('btn-success');
+    
+    setTimeout(() => {
+        this.innerHTML = '<i class="bi bi-file-earmark-code"></i> Insérer Template par défaut';
+        this.classList.remove('btn-success');
+        this.classList.add('btn-outline-secondary');
+    }, 2000);
+});
+
+// Bouton effacer
+document.getElementById('clearBtn').addEventListener('click', function() {
+    if(confirm('Êtes-vous sûr de vouloir effacer le contenu ?')) {
+        document.getElementById('message').value = '';
+        document.getElementById('message').focus();
+    }
+});
+
+// Prévisualisation
+document.getElementById('previewBtn').addEventListener('click', function() {
+    const messageContent = document.getElementById('message').value;
+    if(!messageContent.trim()) {
+        alert('Le message est vide. Ajoutez du contenu avant de prévisualiser.');
+        return;
+    }
+    document.getElementById('previewContent').innerHTML = messageContent;
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+});
+</script>
+
+{% endblock %}

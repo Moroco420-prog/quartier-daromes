@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+    
+    <!-- Page d'accueil -->
+    <url>
+        <loc>http://quartierdaromes.com/</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Collections -->
+    <url>
+        <loc>http://quartierdaromes.com/collections</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Décants -->
+    <url>
+        <loc>http://quartierdaromes.com/decants</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Connexion -->
+    <url>
+        <loc>http://quartierdaromes.com/login</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <!-- Inscription -->
+    <url>
+        <loc>http://quartierdaromes.com/register</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <!-- Panier -->
+    <url>
+        <loc>http://quartierdaromes.com/cart</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- Profile -->
+    <url>
+        <loc>http://quartierdaromes.com/profile</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Commandes -->
+    <url>
+        <loc>http://quartierdaromes.com/orders</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Wishlist -->
+    <url>
+        <loc>http://quartierdaromes.com/wishlist</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Pages Produits Dynamiques (exemples) -->
+    <!-- Ces URLs devraient être générées dynamiquement depuis la BDD -->
+    <url>
+        <loc>http://quartierdaromes.com/product/1</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>http://quartierdaromes.com/static/uploads/product1.jpg</image:loc>
+            <image:title>Aventus Creed</image:title>
+        </image:image>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/product/2</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/product/3</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Pages Marques -->
+    <url>
+        <loc>http://quartierdaromes.com/brand/creed</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/brand/dior</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/brand/chanel</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- Pages Catégories -->
+    <url>
+        <loc>http://quartierdaromes.com/category/homme</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/category/femme</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>http://quartierdaromes.com/category/unisexe</loc>
+        <lastmod>2025-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+</urlset>

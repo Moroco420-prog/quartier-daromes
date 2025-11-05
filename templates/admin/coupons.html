@@ -1,0 +1,315 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Codes Promo - Admin{% endblock %}
+
+{% block content %}
+<!-- Sidebar Admin -->
+<div class="d-flex">
+    <nav class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+        <h5 class="text-warning mb-4">
+            <i class="bi bi-speedometer2"></i> Admin Panel
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link text-white">
+                    <i class="bi bi-house"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_products') }}" class="nav-link text-white">
+                    <i class="bi bi-box"></i> Produits
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_brands') }}" class="nav-link text-white">
+                    <i class="bi bi-award"></i> Marques
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_coupons') }}" class="nav-link text-white active" style="background-color: #C4942F;">
+                    <i class="bi bi-ticket-perforated"></i> Codes Promo
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_orders') }}" class="nav-link text-white">
+                    <i class="bi bi-bag"></i> Commandes
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_users') }}" class="nav-link text-white">
+                    <i class="bi bi-people"></i> Utilisateurs
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ url_for('admin_messages') }}" class="nav-link text-white">
+                    <i class="bi bi-envelope"></i> Messages
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a href="{{ url_for('index') }}" class="nav-link text-warning">
+                    <i class="bi bi-arrow-left"></i> Retour au site
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenu Principal -->
+    <div class="flex-grow-1 p-4" style="background-color: #f8f9fa;">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold" style="color: #C4942F;">
+                    <i class="bi bi-ticket-perforated"></i> Codes Promo
+                </h2>
+                <p class="text-muted">Gérez les codes de réduction et promotions</p>
+            </div>
+            <button class="btn" style="background-color: #C4942F; color: white;" data-bs-toggle="modal" data-bs-target="#addCouponModal">
+                <i class="bi bi-plus-circle"></i> Nouveau Code
+            </button>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Total Codes</p>
+                                <h3 class="mb-0">{{ coupons|length }}</h3>
+                            </div>
+                            <i class="bi bi-ticket-perforated fs-1" style="color: #C4942F;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Codes Actifs</p>
+                                <h3 class="mb-0">{{ coupons|selectattr('is_active')|list|length }}</h3>
+                            </div>
+                            <i class="bi bi-check-circle fs-1 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Utilisations</p>
+                                <h3 class="mb-0">{{ coupons|sum(attribute='used_count') }}</h3>
+                            </div>
+                            <i class="bi bi-graph-up fs-1 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Codes Inactifs</p>
+                                <h3 class="mb-0">{{ coupons|rejectattr('is_active')|list|length }}</h3>
+                            </div>
+                            <i class="bi bi-x-circle fs-1 text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des coupons -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                <h5 class="mb-0 fw-bold" style="color: #C4942F;">
+                    <i class="bi bi-list"></i> Liste des Codes Promo
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Réduction</th>
+                                <th>Min. Achat</th>
+                                <th>Utilisations</th>
+                                <th>Valide jusqu'au</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for coupon in coupons %}
+                            <tr>
+                                <td>
+                                    <strong class="text-primary">{{ coupon.code }}</strong>
+                                </td>
+                                <td>
+                                    {% if coupon.discount_type == 'percentage' %}
+                                        <span class="badge bg-info">
+                                            <i class="bi bi-percent"></i> Pourcentage
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-currency-dollar"></i> Fixe
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong style="color: #C4942F;">
+                                        {% if coupon.discount_type == 'percentage' %}
+                                            {{ coupon.discount_value }}%
+                                        {% else %}
+                                            {{ coupon.discount_value }} DH
+                                        {% endif %}
+                                    </strong>
+                                </td>
+                                <td>{{ coupon.min_purchase }} DH</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1" style="height: 20px; max-width: 100px;">
+                                            {% if coupon.max_uses %}
+                                                {% set progress = (coupon.used_count / coupon.max_uses * 100)|round %}
+                                            <div class="progress-bar" style="width: {{ progress }}%; background-color: #C4942F;">
+                                                {{ coupon.used_count }}
+                                            </div>
+                                            {% else %}
+                                            <div class="progress-bar bg-secondary" style="width: 100%;">
+                                                {{ coupon.used_count }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <span class="ms-2 small text-muted">
+                                            {% if coupon.max_uses %}
+                                                / {{ coupon.max_uses }}
+                                            {% else %}
+                                                / ∞
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if coupon.valid_until %}
+                                        <small>{{ coupon.valid_until.strftime('%d/%m/%Y') }}</small>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Illimité</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if coupon.is_active %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Actif
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-x-circle"></i> Inactif
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <form action="{{ url_for('admin_toggle_coupon', coupon_id=coupon.id) }}" method="POST" style="display: inline-block;">
+                                            <button type="submit" class="btn btn-outline-warning" title="Activer/Désactiver">
+                                                <i class="bi bi-power"></i>
+                                            </button>
+                                        </form>
+                                        <form action="{{ url_for('admin_delete_coupon', coupon_id=coupon.id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Supprimer ce code promo ?')">
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <i class="bi bi-inbox fs-1 text-muted"></i>
+                                    <p class="text-muted mt-2">Aucun code promo. Créez-en un !</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajout Coupon -->
+<div class="modal fade" id="addCouponModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin_add_coupon') }}">
+                <div class="modal-header" style="background-color: #C4942F; color: white;">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle"></i> Nouveau Code Promo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Code Promo <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="code" required placeholder="Ex: PROMO10" style="text-transform: uppercase;">
+                        <small class="text-muted">Le code sera automatiquement en majuscules</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type de réduction <span class="text-danger">*</span></label>
+                        <select class="form-select" name="discount_type" required id="discountType">
+                            <option value="percentage">Pourcentage (%)</option>
+                            <option value="fixed">Montant fixe (DH)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Valeur <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" class="form-control" name="discount_value" required placeholder="Ex: 10">
+                        <small class="text-muted" id="valueHint">Exemple: 10 pour 10%</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Achat minimum (DH)</label>
+                        <input type="number" step="0.01" class="form-control" name="min_purchase" value="0" placeholder="0 = pas de minimum">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre d'utilisations maximum</label>
+                        <input type="number" class="form-control" name="max_uses" placeholder="Laisser vide pour illimité">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Valide jusqu'au</label>
+                        <input type="date" class="form-control" name="valid_until">
+                        <small class="text-muted">Laisser vide pour aucune date d'expiration</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn" style="background-color: #C4942F; color: white;">
+                        <i class="bi bi-check-circle"></i> Créer le Code
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Changer le hint selon le type de réduction
+document.getElementById('discountType')?.addEventListener('change', function(e) {
+    const hint = document.getElementById('valueHint');
+    if (e.target.value === 'percentage') {
+        hint.textContent = 'Exemple: 10 pour 10%';
+    } else {
+        hint.textContent = 'Exemple: 50 pour 50 DH de réduction';
+    }
+});
+</script>
+{% endblock %}

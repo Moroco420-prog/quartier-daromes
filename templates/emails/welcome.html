@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue chez Quartier d'Arômes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #C4942F;
+            margin-top: 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #C4942F;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .features {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #C4942F;
+            font-weight: bold;
+        }
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .footer a {
+            color: #C4942F;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Quartier d'Arômes 🌸</h1>
+            <p>Votre destination parfumée</p>
+        </div>
+        
+        <div class="content">
+            <h2>Bienvenue {{ user.first_name }} !</h2>
+            
+            <p>Nous sommes ravis de vous accueillir dans la famille Quartier d'Arômes. Merci de nous avoir rejoint !</p>
+            
+            <p>Votre compte a été créé avec succès. Vous pouvez maintenant profiter de :</p>
+            
+            <div class="features">
+                <ul>
+                    <li>Une sélection exclusive de parfums authentiques</li>
+                    <li>Des décants à partir de 2ml pour découvrir vos fragrances</li>
+                    <li>Un programme de fidélité généreux (1 DH = 1 point)</li>
+                    <li>Des offres personnalisées et promotions exclusives</li>
+                    <li>Un suivi de vos commandes en temps réel</li>
+                </ul>
+            </div>
+            
+            <center>
+                <a href="http://127.0.0.1:5000/collections" class="btn">Découvrir nos Collections</a>
+            </center>
+            
+            <p>Si vous avez des questions, n'hésitez pas à nous contacter. Notre équipe est là pour vous aider !</p>
+            
+            <p>À très bientôt,<br>
+            <strong>L'équipe Quartier d'Arômes</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2024 Quartier d'Arômes - Tous droits réservés</p>
+            <p>
+                <a href="http://127.0.0.1:5000">Visiter notre site</a> | 
+                <a href="http://127.0.0.1:5000/contact">Nous contacter</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

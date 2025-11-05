@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Blog Quartier d'Arômes{% endblock %}
+
+{% block meta_description %}{{ post.excerpt[:155] if post.excerpt else post.content[:155] }}{% endblock %}
+
+{% block meta_keywords %}parfum, parfumerie, {{ post.blog_category }}, blog, {{ post.title }}{% endblock %}
+
+{% block canonical_url %}https://quartierdaromes.com{{ url_for('blog_post', slug=post.slug) }}{% endblock %}
+
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.excerpt[:155] if post.excerpt else post.content[:155] }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% if post.image_url %}
+{% block og_image %}https://quartierdaromes.com{{ url_for('static', filename=post.image_url) }}{% endblock %}
+{% endif %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ post.title }}",
+    "image": "https://quartierdaromes.com{{ url_for('static', filename=post.image_url) if post.image_url else url_for('static', filename='images/logo.png') }}",
+    "author": {
+        "@type": "Person",
+        "name": "{{ post.author }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Quartier d'Arômes",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://quartierdaromes.com{{ url_for('static', filename='images/logo.png') }}"
+        }
+    },
+    "datePublished": "{{ post.created_at.isoformat() }}",
+    "dateModified": "{{ post.updated_at.isoformat() if post.updated_at else post.created_at.isoformat() }}",
+    "description": "{{ post.excerpt[:155] if post.excerpt else post.content[:155] }}",
+    "articleBody": "{{ post.content[:500] }}...",
+    "wordCount": "{{ post.content|length // 5 }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section Article -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-white">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0" style="background: transparent;">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-warning">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('blog') }}" class="text-warning">Blog</a></li>
+                {% if post.blog_category %}
+                <li class="breadcrumb-item"><a href="{{ url_for('blog', category=post.blog_category) }}" class="text-warning">{{ post.blog_category|title }}</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active text-white">{{ post.title }}</li>
+            </ol>
+        </nav>
+        
+        <!-- Catégorie Badge -->
+        {% if post.blog_category %}
+        <div class="mb-2">
+            {% if post.blog_category == 'nouveautés' %}
+            <span class="badge bg-success">
+                <i class="bi bi-stars"></i> Nouveautés
+            </span>
+            {% elif post.blog_category == 'conseils' %}
+            <span class="badge bg-info">
+                <i class="bi bi-lightbulb"></i> Conseils
+            </span>
+            {% elif post.blog_category == 'tendances' %}
+            <span class="badge bg-warning text-dark">
+                <i class="bi bi-graph-up"></i> Tendances
+            </span>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Titre -->
+        <h1 class="display-5 fw-bold mb-3">
+            {{ post.title }}
+        </h1>
+        
+        <!-- Meta -->
+        <div class="d-flex flex-wrap gap-3 text-white-50 small">
+            <span>
+                <i class="bi bi-person-circle"></i> {{ post.author }}
+            </span>
+            <span>
+                <i class="bi bi-calendar3"></i> {{ post.created_at.strftime('%d %B %Y') }}
+            </span>
+            <span>
+                <i class="bi bi-eye"></i> {{ post.views }} vues
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Contenu de l'article -->
+<article class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Contenu principal -->
+            <div class="col-lg-8">
+                <!-- Image principale -->
+                {% if post.image_url %}
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename=post.image_url) }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="{{ post.title }}">
+                </div>
+                {% endif %}
+                
+                <!-- Extrait -->
+                {% if post.excerpt %}
+                <div class="alert alert-light border-start border-warning border-4 mb-4">
+                    <p class="lead mb-0">
+                        {{ post.excerpt }}
+                    </p>
+                </div>
+                {% endif %}
+                
+                <!-- Contenu -->
+                <div class="blog-content">
+                    {{ post.content|safe }}
+                </div>
+                
+                <!-- Partage social -->
+                <div class="mt-5 pt-4 border-top">
+                    <h5 class="mb-3">Partager cet article</h5>
+                    <div class="d-flex gap-2">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
+                           target="_blank" 
+                           class="btn btn-primary btn-sm">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ post.title }}" 
+                           target="_blank" 
+                           class="btn btn-info btn-sm text-white">
+                            <i class="bi bi-twitter"></i> Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}" 
+                           target="_blank" 
+                           class="btn btn-primary btn-sm">
+                            <i class="bi bi-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://wa.me/?text={{ post.title }} {{ request.url }}" 
+                           target="_blank" 
+                           class="btn btn-success btn-sm">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    <!-- Derniers articles -->
+                    {% if related_posts %}
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 fw-bold">
+                                <i class="bi bi-journal-text text-warning"></i> Articles similaires
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            {% for related in related_posts %}
+                            <a href="{{ url_for('blog_post', slug=related.slug) }}" class="d-flex align-items-start text-decoration-none text-dark border-bottom p-3 hover-bg-light">
+                                {% if related.image_url %}
+                                <img src="{{ url_for('static', filename=related.image_url) }}" 
+                                     class="rounded me-3" 
+                                     style="width: 60px; height: 60px; object-fit: cover;" 
+                                     alt="{{ related.title }}">
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 small">{{ related.title }}</h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar3"></i> {{ related.created_at.strftime('%d/%m/%Y') }}
+                                    </small>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- CTA -->
+                    <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%);">
+                        <div class="card-body text-white text-center py-4">
+                            <i class="bi bi-stars fs-1 mb-3"></i>
+                            <h5 class="fw-bold mb-3">Découvrez nos Collections</h5>
+                            <p class="small mb-4">Explorez notre sélection exclusive de parfums de luxe</p>
+                            <a href="{{ url_for('collections') }}" class="btn btn-light btn-sm">
+                                Voir les produits
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<style>
+.blog-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+.blog-content h2 {
+    color: #C4942F;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+.blog-content h3 {
+    color: #2d2d2d;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.blog-content p {
+    margin-bottom: 1.25rem;
+}
+.blog-content ul, .blog-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 2rem;
+}
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+.blog-content blockquote {
+    border-left: 4px solid #C4942F;
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #666;
+}
+.blog-content code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+.hover-bg-light:hover {
+    background-color: #f8f9fa;
+}
+</style>
+
+{% endblock %}
+

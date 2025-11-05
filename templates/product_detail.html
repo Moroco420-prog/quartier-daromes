@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Product -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-white">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0" style="background: transparent;">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-warning">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('collections') }}" class="text-warning">Collections</a></li>
+                <li class="breadcrumb-item active text-white">{{ product.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6 mb-4">
+            <div class="product-gallery position-relative">
+                <!-- Badges produit -->
+                <div class="position-absolute top-0 start-0 m-3" style="z-index: 10;">
+                    {% if product.product_type == 'collection' %}
+                        <span class="badge bg-warning text-dark mb-2 d-block" style="font-size: 0.9rem;">
+                            <i class="bi bi-stars"></i> Collection
+                        </span>
+                    {% elif product.product_type == 'decant' %}
+                        <span class="badge bg-info mb-2 d-block" style="font-size: 0.9rem;">
+                            <i class="bi bi-droplet-fill"></i> Décant
+                        </span>
+                    {% else %}
+                        <span class="badge bg-primary mb-2 d-block" style="font-size: 0.9rem;">
+                            <i class="bi bi-box-seam"></i> Complet
+                        </span>
+                    {% endif %}
+                    
+                    {% if product.created_at %}
+                        {% set days_old = (now - product.created_at).days %}
+                        {% if days_old <= 30 %}
+                            <span class="badge bg-success d-block" style="font-size: 0.9rem;">
+                                <i class="bi bi-sparkles"></i> Nouveau
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
+                    {% if product.is_featured %}
+                        <span class="badge bg-danger">
+                            <i class="bi bi-fire"></i> Best Seller
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="product-image-container">
+                    {% if product.image_url %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ product.image_url) }}" 
+                             class="img-fluid rounded shadow-lg border-gold product-image-main product-image-zoom" 
+                             alt="{{ product.name }}"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/product-placeholder.svg') }}';"
+                             id="mainProductImage">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/product-placeholder.svg') }}" 
+                             class="img-fluid rounded shadow-lg border-gold product-image-main product-image-zoom" 
+                             alt="{{ product.name }}"
+                             id="mainProductImage">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <div class="product-info">
+                {% if product.product_type == 'decant' %}
+                    <span class="badge bg-warning text-dark mb-2">Décant</span>
+                {% endif %}
+                
+                <h1 class="mb-3">{{ product.name }}</h1>
+                
+                {% if product.brand %}
+                    <p class="text-muted fs-5">
+                        <i class="bi bi-award text-warning"></i> {{ product.brand }}
+                    </p>
+                {% endif %}
+
+                <div class="mb-4">
+                    <span class="h2 text-warning fw-bold">{{ product.price }} DH</span>
+                    {% if product.size %}
+                        <span class="text-muted ms-2">/ {{ product.size }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Stock Status -->
+                <div class="mb-4">
+                    {% if product.stock > 10 %}
+                        <span class="badge bg-success fs-6">
+                            <i class="bi bi-check-circle"></i> En stock ({{ product.stock }} disponibles)
+                        </span>
+                    {% elif product.stock > 0 %}
+                        <span class="badge bg-warning text-dark fs-6">
+                            <i class="bi bi-exclamation-triangle"></i> Stock limité ({{ product.stock }} restants)
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger fs-6">
+                            <i class="bi bi-x-circle"></i> Rupture de stock
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Note moyenne avec étoiles -->
+                <div class="mb-4 p-3 rounded" style="background-color: #fff3cd;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div>
+                            {% if reviews %}
+                            <div class="d-flex align-items-center">
+                                {% for i in range(5) %}
+                                    {% if i < avg_rating|round %}
+                                        <i class="bi bi-star-fill" style="color: #C4942F; font-size: 1.5rem;"></i>
+                                    {% else %}
+                                        <i class="bi bi-star" style="color: #C4942F; font-size: 1.5rem;"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">{{ "%.1f"|format(avg_rating) }}/5 ({{ reviews|length }} avis)</small>
+                            {% else %}
+                            <div class="d-flex align-items-center">
+                                {% for i in range(5) %}
+                                    <i class="bi bi-star" style="color: #C4942F; font-size: 1.5rem;"></i>
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">Aucun avis pour le moment</small>
+                            {% endif %}
+                        </div>
+                        {% if user_purchased %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-shield-check"></i> Vous avez acheté ce produit
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <h5><i class="bi bi-text-paragraph"></i> Description</h5>
+                    <p>{{ product.description or "Un parfum exceptionnel qui saura vous séduire par ses notes raffinées et sa tenue exceptionnelle." }}</p>
+                </div>
+
+                <!-- Notes de parfum (si disponible) -->
+                {% if product.notes_top or product.notes_heart or product.notes_base %}
+                <div class="mb-4 card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="mb-3"><i class="bi bi-palette"></i> Notes Olfactives</h5>
+                        <div class="row g-3">
+                            {% if product.notes_top %}
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded" style="background-color: #fff8e1;">
+                                    <i class="bi bi-cloud fs-2 text-warning mb-2"></i>
+                                    <h6 class="fw-bold">Notes de Tête</h6>
+                                    <p class="small mb-0">{{ product.notes_top }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if product.notes_heart %}
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded" style="background-color: #fce4ec;">
+                                    <i class="bi bi-heart-fill fs-2 text-danger mb-2"></i>
+                                    <h6 class="fw-bold">Notes de Cœur</h6>
+                                    <p class="small mb-0">{{ product.notes_heart }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if product.notes_base %}
+                            <div class="col-md-4">
+                                <div class="text-center p-3 rounded" style="background-color: #e8f5e9;">
+                                    <i class="bi bi-tree-fill fs-2 text-success mb-2"></i>
+                                    <h6 class="fw-bold">Notes de Fond</h6>
+                                    <p class="small mb-0">{{ product.notes_base }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Informations détaillées -->
+                <div class="mb-4">
+                    <h5><i class="bi bi-info-circle"></i> Informations</h5>
+                    <ul class="list-group list-group-flush">
+                        {% if product.category %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-tag-fill text-warning"></i> Catégorie</span>
+                            <strong>{{ product.category.name }}</strong>
+                        </li>
+                        {% endif %}
+                        {% if product.brand %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-award text-warning"></i> Marque</span>
+                            <strong>{{ product.brand }}</strong>
+                        </li>
+                        {% endif %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-rulers text-info"></i> Contenance</span>
+                            <strong>{{ product.size or '100ml' }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-clock-history text-secondary"></i> Concentration</span>
+                            <strong>{{ product.concentration or 'Eau de Parfum' }}</strong>
+                        </li>
+                        {% if product.gender %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-person text-primary"></i> Pour</span>
+                            <strong>{{ product.gender }}</strong>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Add to Cart Form -->
+                {% if product.stock > 0 %}
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="quantity" class="form-label">Quantité</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" onclick="decrementQty()">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" class="form-control text-center" id="quantity" name="quantity" 
+                                   value="1" min="1" max="{{ product.stock }}">
+                            <button class="btn btn-outline-secondary" type="button" onclick="incrementQty()">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-8">
+                        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="hidden" name="quantity" id="hidden-quantity" value="1">
+                            <button type="submit" class="btn btn-warning btn-lg w-100 btn-fixed-size">
+                                <i class="bi bi-cart-plus me-2"></i> AJOUTER AU PANIER
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        {% if current_user.is_authenticated %}
+                        <form action="{{ url_for('add_to_wishlist', product_id=product.id) }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-outline-danger btn-lg w-100 btn-fixed-size">
+                                <i class="bi bi-heart me-2"></i> FAVORIS
+                            </button>
+                        </form>
+                        {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg w-100 btn-fixed-size" title="Connectez-vous pour ajouter aux favoris">
+                            <i class="bi bi-heart me-2"></i> FAVORIS
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> Ce produit est actuellement en rupture de stock.
+                </div>
+                {% endif %}
+
+                <!-- Product Features -->
+                <div class="mt-4">
+                    <h6>Avantages</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success"></i> Authenticité garantie</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Livraison rapide et soignée</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Emballage cadeau disponible</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Retour sous 14 jours</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avis & Évaluations -->
+    <div class="mt-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                <h4 class="mb-0 fw-bold" style="color: #C4942F;">
+                    <i class="bi bi-star-fill"></i> Avis Clients
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Note Moyenne -->
+                {% if reviews %}
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center border-end">
+                        <div class="display-4 fw-bold" style="color: #C4942F;">{{ "%.1f"|format(avg_rating) }}</div>
+                        <div class="mb-2">
+                            {% for i in range(5) %}
+                                {% if i < avg_rating|round %}
+                                    <i class="bi bi-star-fill" style="color: #ffc107; font-size: 1.5rem;"></i>
+                                {% else %}
+                                    <i class="bi bi-star" style="color: #ffc107; font-size: 1.5rem;"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p class="text-muted mb-0">{{ reviews|length }} avis</p>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="mb-3">Répartition des notes</h6>
+                        {% for rating in [5, 4, 3, 2, 1] %}
+                        {% set count = reviews|selectattr('rating', 'equalto', rating)|list|length %}
+                        {% set percentage = (count / reviews|length * 100)|round %}
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="me-2" style="min-width: 50px;">{{ rating }} <i class="bi bi-star-fill text-warning"></i></span>
+                            <div class="progress flex-grow-1" style="height: 20px;">
+                                <div class="progress-bar" style="width: {{ percentage }}%; background-color: #C4942F;">
+                                    {{ count }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-chat-quote fs-1 text-muted"></i>
+                    <p class="text-muted mt-2">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
+                </div>
+                {% endif %}
+
+                <!-- Formulaire d'avis (si connecté et pas déjà avisé) -->
+                {% if current_user.is_authenticated %}
+                    {% if not user_reviewed %}
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-pencil-square"></i> Donnez votre avis
+                                {% if user_purchased %}
+                                    <span class="badge bg-success ms-2">
+                                        <i class="bi bi-shield-check"></i> Achat vérifié
+                                    </span>
+                                {% endif %}
+                            </h5>
+                            <form action="{{ url_for('add_review', product_id=product.id) }}" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Note <span class="text-danger">*</span></label>
+                                    <div class="rating-input">
+                                        <div class="btn-group" role="group">
+                                            {% for i in range(1, 6) %}
+                                            <input type="radio" class="btn-check" name="rating" id="rating{{ i }}" value="{{ i }}" required>
+                                            <label class="btn btn-outline-warning" for="rating{{ i }}">
+                                                {{ i }} <i class="bi bi-star-fill"></i>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label">Votre commentaire</label>
+                                    <textarea class="form-control" id="comment" name="comment" rows="4" 
+                                              placeholder="Partagez votre expérience avec ce parfum..."></textarea>
+                                </div>
+                                <button type="submit" class="btn" style="background-color: #C4942F; color: white;">
+                                    <i class="bi bi-send"></i> Publier mon avis
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-check-circle"></i> Vous avez déjà laissé un avis pour ce produit. Merci !
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle"></i> 
+                    <a href="{{ url_for('login') }}" class="alert-link">Connectez-vous</a> 
+                    pour laisser un avis sur ce produit.
+                </div>
+                {% endif %}
+
+                <!-- Liste des avis -->
+                {% if reviews %}
+                <hr class="my-4">
+                <h5 class="mb-4">Tous les avis ({{ reviews|length }})</h5>
+                {% for review in reviews %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <strong>{{ review.user.username }}</strong>
+                                {% if review.is_verified %}
+                                    <span class="badge bg-success ms-2">
+                                        <i class="bi bi-shield-check"></i> Achat vérifié
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="text-end">
+                                {% for i in range(review.rating) %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% endfor %}
+                                {% for i in range(5 - review.rating) %}
+                                    <i class="bi bi-star text-warning"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if review.comment %}
+                        <p class="card-text">{{ review.comment }}</p>
+                        {% endif %}
+                        <small class="text-muted">
+                            <i class="bi bi-clock"></i> {{ review.created_at.strftime('%d/%m/%Y') }}
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="mt-5">
+        <h3 class="mb-4">Produits Similaires</h3>
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm product-card">
+                    {% if related.image_url %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ related.image_url) }}" 
+                             class="card-img-top" 
+                             alt="{{ related.name }}"
+                             style="height: 250px; object-fit: contain; background: #f8f9fa; padding: 10px;"
+                             onerror="this.src='{{ url_for('static', filename='images/product-placeholder.svg') }}'">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/product-placeholder.svg') }}" 
+                             class="card-img-top" 
+                             alt="{{ related.name }}"
+                             style="height: 250px; object-fit: contain; background: #f8f9fa; padding: 10px;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title">{{ related.name }}</h6>
+                        <p class="text-warning mb-0 fw-bold">{{ related.price }} DH</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ url_for('product_detail', product_id=related.id) }}" class="btn btn-outline-dark btn-sm w-100">
+                            Voir
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.product-image-container {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image-main {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 450px !important;
+    max-height: 800px !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+.product-image-zoom {
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+}
+
+.product-image-zoom:hover {
+    transform: scale(1.03);
+}
+
+.border-gold {
+    border: 3px solid #C4942F !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-image-container {
+        padding: 20px;
+        min-height: 400px;
+    }
+    
+    .product-image-main {
+        min-height: 350px !important;
+        max-height: 600px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-image-container {
+        padding: 15px;
+        min-height: 300px;
+    }
+    
+    .product-image-main {
+        min-height: 280px !important;
+        max-height: 500px !important;
+    }
+}
+</style>
+
+<script>
+// Gestion quantité
+function updateHiddenQuantity() {
+    const input = document.getElementById('quantity');
+    const hidden = document.getElementById('hidden-quantity');
+    if (hidden) {
+        hidden.value = input.value;
+    }
+}
+
+function incrementQty() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.max);
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+        updateHiddenQuantity();
+    }
+}
+
+function decrementQty() {
+    const input = document.getElementById('quantity');
+    const min = parseInt(input.min);
+    const current = parseInt(input.value);
+    if (current > min) {
+        input.value = current - 1;
+        updateHiddenQuantity();
+    }
+}
+
+// Synchroniser la quantité quand l'input change
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('quantity');
+    if (quantityInput) {
+        quantityInput.addEventListener('input', updateHiddenQuantity);
+        quantityInput.addEventListener('change', updateHiddenQuantity);
+    }
+});
+</script>
+
+<!-- Script Zoom Interactif -->
+<script src="{{ url_for('static', filename='js/image-zoom.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Gestion Messages - Admin{% endblock %}
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-envelope fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Messages des Visiteurs</h1>
+                        <p class="mb-0 text-white-50">Consultez et répondez aux messages clients</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="card border-0 shadow-sm mb-3" style="{% if not message.is_read %}border-left: 4px solid #ffc107 !important;{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="mb-1" style="color: #2c3e50;">
+                            <i class="bi bi-chat-dots text-info"></i> {{ message.subject or 'Sans sujet' }}
+                        </h5>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-person-circle"></i> <strong>{{ message.name }}</strong> 
+                            <small class="ms-2"><i class="bi bi-envelope"></i> {{ message.email }}</small>
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block"><i class="bi bi-clock"></i> {{ message.created_at.strftime('%d/%m/%Y') }}</small>
+                        <small class="text-muted">{{ message.created_at.strftime('%H:%M') }}</small>
+                        {% if not message.is_read %}
+                        <br><span class="badge bg-warning text-dark mt-2"><i class="bi bi-exclamation-circle"></i> Nouveau</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="p-3 rounded" style="background: #f8f9fa;">
+                    <p class="mb-0">{{ message.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <div class="py-5">
+                <div class="mb-4">
+                    <i class="bi bi-envelope-open" style="font-size: 5rem; color: #dee2e6;"></i>
+                </div>
+                <h5 class="text-muted mb-3">Aucun message</h5>
+                <p class="text-muted mb-4">Les messages des visiteurs apparaîtront ici</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

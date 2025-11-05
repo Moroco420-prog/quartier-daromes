@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Ma Liste de Souhaits - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Wishlist -->
+<section class="py-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-center text-white">
+        <h1 class="h3 fw-bold mb-2">
+            <i class="bi bi-heart-fill text-danger"></i> Ma Liste de Souhaits
+        </h1>
+        <p class="small">Vos parfums préférés sauvegardés</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    
+    {% if not current_user.is_authenticated %}
+    <!-- Message pour utilisateurs non connectés -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-heart fs-1 text-muted mb-3 d-block"></i>
+            <i class="bi bi-lock-fill fs-3 text-warning"></i>
+        </div>
+        <h4 class="text-muted mb-3">Connectez-vous pour voir vos favoris</h4>
+        <p class="text-muted mb-4">Créez un compte pour sauvegarder vos parfums préférés et y accéder partout</p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{{ url_for('login') }}" class="btn btn-warning">
+                <i class="bi bi-box-arrow-in-right"></i> Se connecter
+            </a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-person-plus"></i> Créer un compte
+            </a>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('collections') }}" class="btn btn-link text-muted">
+                <i class="bi bi-grid"></i> Découvrir nos produits
+            </a>
+        </div>
+    </div>
+    {% elif wishlist_items %}
+    <div class="row g-4">
+        {% for item in wishlist_items %}
+        <div class="col-md-6 col-lg-4 col-xl-3 fade-in">
+            <div class="card h-100 border-0 shadow-sm wishlist-card" data-item-id="{{ item.id }}">
+                <!-- Badge coin supérieur gauche -->
+                <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;">
+                    <span class="badge bg-danger">
+                        <i class="bi bi-heart-fill"></i> Favori
+                    </span>
+                </div>
+                
+                <!-- Image produit -->
+                <div class="position-relative" style="height: 300px; overflow: hidden;">
+                    <a href="{{ url_for('product_detail', product_id=item.product.id) }}">
+                        {% if item.product.image_url %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ item.product.image_url) }}" 
+                                 class="card-img-top" 
+                                 alt="{{ item.product.name }}"
+                                 loading="lazy"
+                                 style="height: 100%; object-fit: cover;"
+                                 onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/product-placeholder.svg') }}';">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/product-placeholder.svg') }}" 
+                                 class="card-img-top" 
+                                 alt="{{ item.product.name }}"
+                                 style="height: 100%; object-fit: cover;">
+                        {% endif %}
+                    </a>
+                </div>
+                
+                <!-- Corps de la carte -->
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title fw-bold mb-2" style="height: 2.4em; overflow: hidden;">
+                        <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="text-decoration-none text-dark">
+                            {{ item.product.name }}
+                        </a>
+                    </h6>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-award text-warning"></i> {{ item.product.brand if item.product.brand else 'Marque Premium' }}
+                    </p>
+                    
+                    <!-- Prix et stock -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="h5 mb-0 fw-bold" style="color: #C4942F;">{{ item.product.price }} DH</span>
+                        {% if item.product.stock > 0 %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Dispo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Rupture</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-grid gap-2 mt-auto">
+                        <!-- Ajouter au panier -->
+                        <form action="{{ url_for('add_to_cart', product_id=item.product.id) }}" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-warning btn-sm w-100" {% if item.product.stock <= 0 %}disabled{% endif %}>
+                                <i class="bi bi-cart-plus"></i> Ajouter au panier
+                            </button>
+                        </form>
+                        
+                        <!-- Voir détails -->
+                        <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye"></i> Voir détails
+                        </a>
+                        
+                        <!-- Retirer des favoris -->
+                        <button class="btn btn-outline-danger btn-sm remove-wishlist" data-item-id="{{ item.product_id }}">
+                            <i class="bi bi-trash"></i> Retirer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-heart fs-1 text-muted mb-3 d-block"></i>
+        <h4 class="text-muted">Votre liste de souhaits est vide</h4>
+        <p class="text-muted mb-4">Ajoutez vos parfums préférés pour les retrouver facilement</p>
+        <a href="{{ url_for('collections') }}" class="btn btn-warning">
+            <i class="bi bi-grid"></i> Découvrir nos produits
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Gestion de la wishlist avec feedback visuel
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = '{{ csrf_token() }}';
+    
+    // Fonction de notification
+    function showNotification(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideInRight 0.3s;';
+        toast.innerHTML = `<i class="bi bi-${type === 'success' ? 'check-circle' : 'x-circle'}"></i> ${message}`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOutRight 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // Retirer des favoris avec animation
+    document.querySelectorAll('.remove-wishlist').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.dataset.itemId; // product_id du produit
+            const card = this.closest('.wishlist-card');
+            
+            if (confirm('Retirer ce produit de vos favoris ?')) {
+                // Animation de sortie
+                card.style.transition = 'all 0.3s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.8)';
+                
+                // Envoi de la requête
+                fetch(`/remove_from_wishlist/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        setTimeout(() => {
+                            card.closest('.col-md-6, .col-lg-4').remove();
+                            showNotification('Produit retiré de vos favoris', 'success');
+                            
+                            // Vérifier si la liste est vide
+                            if (document.querySelectorAll('.wishlist-card').length === 0) {
+                                location.reload();
+                            }
+                        }, 300);
+                    } else {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                        showNotification('Erreur lors de la suppression', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                    showNotification('Erreur lors de la suppression', 'danger');
+                });
+            }
+        });
+    });
+    
+    // Animation d'ajout au panier
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('button');
+            button.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Ajout...';
+            button.disabled = true;
+        });
+    });
+});
+
+// Animation CSS pour les toasts
+const style = document.createElement('style');
+style.textContent = `
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+.wishlist-card {
+    transition: all 0.3s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+`;
+document.head.appendChild(style);
+</script>
+
+{% endblock %}

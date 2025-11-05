@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Accès Interdit - Admin - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
+        <i class="bi bi-shield-exclamation text-danger" style="font-size: 5rem;"></i>
+        <h1 class="display-1 text-danger fw-bold">403</h1>
+        <h2 class="mb-4">Accès Interdit</h2>
+        <p class="lead mb-4 text-muted">
+            Vous n'avez pas l'autorisation d'accéder à cette ressource.<br>
+            Cette zone est réservée aux administrateurs.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-warning btn-lg">
+                <i class="bi bi-speedometer2"></i> Retour au Dashboard
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-dark btn-lg">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

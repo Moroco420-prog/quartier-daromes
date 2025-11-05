@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Contact -->
+<section class="py-5" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+    <div class="container text-center text-white">
+        <h1 class="display-5 fw-bold mb-3">
+            <i class="bi bi-envelope-fill text-warning"></i> Contactez-nous
+        </h1>
+        <p class="fs-5">Nous sommes là pour répondre à toutes vos questions</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            
+            <div class="row mb-5">
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="bi bi-geo-alt-fill text-warning fs-1 mb-3"></i>
+                        <h5>Adresse</h5>
+                        <p>Fès, Maroc<br><strong>oued Fès</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="bi bi-telephone-fill text-warning fs-1 mb-3"></i>
+                        <h5>Téléphone</h5>
+                        <p><a href="tel:+212708505157" class="text-decoration-none">+212 708-505157</a></p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="bi bi-envelope-fill text-warning fs-1 mb-3"></i>
+                        <h5>Email</h5>
+                        <p>contact@quartierdaromes.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Envoyez-nous un message</h3>
+                    
+                    <form method="POST" action="{{ url_for('contact') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Nom complet</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Sujet</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="bi bi-send"></i> Envoyer le message
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-5">
+                <h4 class="mb-3">Heures d'ouverture</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Lundi - Vendredi</td>
+                            <td class="text-end">10h00 - 19h00</td>
+                        </tr>
+                        <tr>
+                            <td>Samedi</td>
+                            <td class="text-end">10h00 - 18h00</td>
+                        </tr>
+                        <tr>
+                            <td>Dimanche</td>
+                            <td class="text-end">Fermé</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="https://www.instagram.com/quartier_daromes/" target="_blank" class="btn btn-dark">
+                    <i class="bi bi-instagram"></i> Suivez-nous @quartier_daromes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mini CTA Instagram / Collections -->
+<section class="py-5">
+    <div class="container">
+        <div class="p-5 cta-dark text-center shadow-lg">
+            <h2 class="mb-3">Rejoignez-nous</h2>
+            <p class="mb-4 text-white-50">Suivez nos nouveautés sur Instagram ou découvrez nos collections.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="https://www.instagram.com/quartier_daromes/" target="_blank" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-instagram"></i> Instagram
+                </a>
+                <a href="{{ url_for('collections') }}" class="btn btn-warning btn-lg">Voir les Collections</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

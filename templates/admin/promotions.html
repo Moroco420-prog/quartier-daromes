@@ -1,0 +1,246 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Promotions - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin -->
+<section class="py-4" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); border-bottom: 3px solid #1a1a1a;">
+    <div class="container-fluid text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-percent"></i> Codes Promo & Réductions
+                </h2>
+                <p class="mb-0 opacity-75">Gestion des promotions</p>
+            </div>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addPromoModal">
+                <i class="bi bi-plus-circle"></i> Nouveau Code Promo
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <div class="row">
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header border-bottom" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                    <h5 class="mb-0 fw-bold" style="color: #28a745;">
+                        <i class="bi bi-list-task"></i> Liste des Promotions
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Valeur</th>
+                                    <th>Min. Achat</th>
+                                    <th>Utilisations</th>
+                                    <th>Validité</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for promo in promos.items %}
+                                <tr {% if not promo.is_valid() %}class="table-secondary"{% endif %}>
+                                    <td>
+                                        <strong><code>{{ promo.code }}</code></strong>
+                                        {% if promo.description %}
+                                        <br><small class="text-muted">{{ promo.description[:40] }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if promo.discount_type == 'percentage' %}
+                                        <span class="badge bg-info"><i class="bi bi-percent"></i> Pourcentage</span>
+                                        {% else %}
+                                        <span class="badge bg-warning"><i class="bi bi-cash"></i> Fixe</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong style="color: #28a745;">
+                                            {% if promo.discount_type == 'percentage' %}
+                                            {{ promo.discount_value }}%
+                                            {% else %}
+                                            {{ promo.discount_value }} DH
+                                            {% endif %}
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        {% if promo.min_purchase > 0 %}
+                                        {{ promo.min_purchase }} DH
+                                        {% else %}
+                                        <span class="text-muted">Aucun</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            {{ promo.current_uses }}{% if promo.max_uses %} / {{ promo.max_uses }}{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small>
+                                            {% if promo.start_date %}Du {{ promo.start_date.strftime('%d/%m/%Y') }}{% endif %}
+                                            {% if promo.end_date %}<br>Au {{ promo.end_date.strftime('%d/%m/%Y') }}{% endif %}
+                                            {% if not promo.start_date and not promo.end_date %}<span class="text-muted">Illimitée</span>{% endif %}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% if promo.is_valid() %}
+                                        <span class="badge bg-success">Valide</span>
+                                        {% elif not promo.is_active %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">Expirée</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('edit_promotion', id=promo.id) }}" class="btn btn-outline-primary" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" action="{{ url_for('toggle_promotion', id=promo.id) }}" style="display:inline;">
+                                                <button type="submit" class="btn btn-outline-warning" title="Activer/Désactiver">
+                                                    <i class="bi bi-toggle-on"></i>
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('delete_promotion', id=promo.id) }}" style="display:inline;" onsubmit="return confirm('Supprimer ce code promo ?');">
+                                                <button type="submit" class="btn btn-outline-danger" title="Supprimer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                                        <p class="text-muted mt-2">Aucune promotion</p>
+                                        <button class="btn btn-sm" style="background-color: #28a745; color: white;" data-bs-toggle="modal" data-bs-target="#addPromoModal">
+                                            <i class="bi bi-plus-circle"></i> Créer une promotion
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                {% if promos.pages > 1 %}
+                <div class="card-footer">
+                    <nav>
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if promos.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('promotions', page=promos.prev_num) }}">Précédent</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for page in promos.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                                {% if page %}
+                                <li class="page-item {% if page == promos.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('promotions', page=page) }}">{{ page }}</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if promos.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('promotions', page=promos.next_num) }}">Suivant</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Promotion -->
+<div class="modal fade" id="addPromoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle"></i> Nouvelle Promotion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_promotion') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Code Promo <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="code" required placeholder="Ex: BIENVENUE20" style="text-transform: uppercase;">
+                            <small class="text-muted">En majuscules, sans espaces</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Type de réduction <span class="text-danger">*</span></label>
+                            <select class="form-select" name="discount_type" required>
+                                <option value="percentage">Pourcentage (%)</option>
+                                <option value="fixed">Montant fixe (DH)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Valeur <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control" name="discount_value" required placeholder="Ex: 20">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Achat minimum (DH)</label>
+                            <input type="number" step="0.01" class="form-control" name="min_purchase" placeholder="Ex: 200">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="2" placeholder="Description de l'offre..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Date début</label>
+                            <input type="date" class="form-control" name="start_date">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Date fin</label>
+                            <input type="date" class="form-control" name="end_date">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Utilisations max</label>
+                            <input type="number" class="form-control" name="max_uses" placeholder="Illimité si vide">
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="is_active" id="is_active_add" checked>
+                        <label class="form-check-label" for="is_active_add">
+                            Promotion active
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn" style="background-color: #28a745; color: white;">
+                        <i class="bi bi-check-circle"></i> Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

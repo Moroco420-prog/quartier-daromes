@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Mes Commandes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar Profil -->
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%); color: white;">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="bi bi-person-circle"></i> Mon Compte
+                    </h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-person"></i> Mon Profil
+                    </a>
+                    <a href="{{ url_for('my_orders') }}" class="list-group-item list-group-item-action active">
+                        <i class="bi bi-bag"></i> Mes Commandes
+                    </a>
+                    <a href="{{ url_for('wishlist') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-heart"></i> Ma Wishlist
+                    </a>
+                    <a href="{{ url_for('cart') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-cart"></i> Mon Panier
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="bi bi-box-arrow-right"></i> Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenu Principal -->
+        <div class="col-md-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                    <h5 class="mb-0 fw-bold" style="color: #C4942F;">
+                        <i class="bi bi-bag-check"></i> Mes Commandes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if orders %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>N° Commande</th>
+                                        <th>Date</th>
+                                        <th>Produits</th>
+                                        <th>Total</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ order.order_number or 'N/A' }}</strong>
+                                        </td>
+                                        <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') if order.created_at else '-' }}</td>
+                                        <td>
+                                            <small>
+                                                {% for item in order.order_items[:2] %}
+                                                    {{ item.product.name }}<br>
+                                                {% endfor %}
+                                                {% if order.order_items|length > 2 %}
+                                                    <span class="text-muted">+{{ order.order_items|length - 2 }} autres...</span>
+                                                {% endif %}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold" style="color: #C4942F;">{{ order.total_amount }} DH</span>
+                                        </td>
+                                        <td>
+                                            {% if order.status == 'pending' %}
+                                                <span class="badge bg-warning">En attente</span>
+                                            {% elif order.status == 'processing' %}
+                                                <span class="badge bg-info">En cours</span>
+                                            {% elif order.status == 'shipped' %}
+                                                <span class="badge bg-primary">Expédiée</span>
+                                            {% elif order.status == 'delivered' %}
+                                                <span class="badge bg-success">Livrée</span>
+                                            {% elif order.status == 'cancelled' %}
+                                                <span class="badge bg-danger">Annulée</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ order.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('order_confirmation', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Détails
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-bag-x fs-1 text-muted"></i>
+                            <h4 class="text-muted mt-3">Aucune commande</h4>
+                            <p class="text-muted">Vous n'avez pas encore passé de commande.</p>
+                            <a href="{{ url_for('collections') }}" class="btn mt-3" style="background-color: #C4942F; color: white;">
+                                <i class="bi bi-shop"></i> Commencer vos achats
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

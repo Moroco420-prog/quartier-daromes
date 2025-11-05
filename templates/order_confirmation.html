@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Commande Confirmée - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section Success -->
+<section class="py-5" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+    <div class="container text-center text-white">
+        <div class="mb-3">
+            <i class="bi bi-check-circle-fill" style="font-size: 4rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));"></i>
+        </div>
+        <h1 class="display-5 fw-bold mb-3">Commande Confirmée !</h1>
+        <p class="fs-5 mb-0">Merci pour votre achat, {{ current_user.username }} 🎉</p>
+        <p class="small">Votre commande #{{ order.id }} a été enregistrée avec succès</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- Alert selon méthode de paiement -->
+            {% if order.payment_method == 'whatsapp' %}
+            <div class="alert alert-success border-0 shadow-lg mb-4" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="text-white mb-2">
+                            <i class="bi bi-whatsapp"></i> Finalisez votre commande sur WhatsApp
+                        </h4>
+                        <p class="text-white mb-0">
+                            Cliquez sur le bouton pour nous envoyer votre commande sur WhatsApp et confirmer les détails avec notre équipe.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="https://wa.me/212708505157?text=🛍️%20*Commande%20{{ order.order_number }}*%0A%0A👤%20Nom%3A%20{{ current_user.username }}%0A📧%20Email%3A%20{{ current_user.email }}%0A📞%20Tél%3A%20{{ order.phone }}%0A📍%20Adresse%3A%20{{ order.shipping_address }}%0A%0A💰%20Total%3A%20{{ order.total_amount }}%20DH%0A%0AJe%20confirme%20ma%20commande%20!" 
+                           class="btn btn-light btn-lg px-5 shadow" target="_blank">
+                            <i class="bi bi-whatsapp fs-4"></i> Ouvrir WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% elif order.payment_method == 'delivery' %}
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <h5 class="mb-2"><i class="bi bi-truck"></i> Paiement à la livraison</h5>
+                <p class="mb-0">Vous paierez lors de la réception de votre commande. Notre livreur vous contactera avant la livraison.</p>
+            </div>
+            {% elif order.payment_method == 'transfer' %}
+            <div class="alert alert-warning border-0 shadow-sm mb-4">
+                <h5 class="mb-2"><i class="bi bi-bank"></i> Virement Bancaire</h5>
+                <p class="mb-2">Veuillez effectuer le virement sur:</p>
+                <p class="mb-1"><strong>Banque:</strong> [Nom de la banque]</p>
+                <p class="mb-1"><strong>RIB:</strong> XXXX XXXX XXXX XXXX XXXX XX</p>
+                <p class="mb-0"><strong>Référence:</strong> {{ order.order_number }}</p>
+            </div>
+            {% elif order.payment_method == 'cash' %}
+            <div class="alert alert-secondary border-0 shadow-sm mb-4">
+                <h5 class="mb-2"><i class="bi bi-cash-coin"></i> Paiement en Espèces</h5>
+                <p class="mb-0">Vous pouvez payer en espèces lors du retrait en magasin. Nous vous contacterons pour confirmer.</p>
+            </div>
+            {% endif %}
+
+            <!-- Order Details Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-receipt text-warning"></i> Détails de la Commande #{{ order.id }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Numéro de commande:</strong><br>
+                            <span class="text-warning fs-5">{{ order.order_number }}</span>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <strong>Date:</strong><br>
+                            {{ order.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Order Items -->
+                    <h6 class="mb-3 fw-bold">
+                        <i class="bi bi-box-seam text-warning"></i> Articles Commandés
+                    </h6>
+                    {% for item in order.order_items %}
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                        {% if item.product.image_url %}
+                            <img src="{{ url_for('static', filename=item.product.image_url) }}" 
+                                 class="rounded" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ item.product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/60x60?text=Parfum" 
+                                 class="rounded" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ item.product.name }}">
+                        {% endif %}
+                        
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="mb-1 fw-bold">{{ item.product.name }}</h6>
+                            <p class="text-muted small mb-1">
+                                <i class="bi bi-award text-warning"></i> {{ item.product.brand or 'Marque Premium' }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Quantité: {{ item.quantity }}</span>
+                                <span class="fw-bold text-warning">{{ item.price * item.quantity }} DH</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="mt-3 pt-3 border-top">
+                        <div class="d-flex justify-content-between">
+                            <strong>Total de la commande:</strong>
+                            <strong class="text-warning fs-4">{{ order.total_amount }} DH</strong>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Shipping Info -->
+                    <h6 class="mb-3">Informations de Livraison</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Adresse:</strong><br>
+                            {{ order.shipping_address }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Téléphone:</strong><br>
+                            {{ order.phone }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Order Status -->
+                    <div class="alert alert-info mb-0">
+                        <h6><i class="bi bi-info-circle"></i> Statut de la Commande</h6>
+                        <p class="mb-0">
+                            Statut actuel: 
+                            <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                        </p>
+                        <small class="text-muted">
+                            Vous recevrez un email de confirmation à {{ current_user.email }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-clock-history text-warning"></i> Prochaines Étapes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                                        <i class="bi bi-envelope-fill text-success"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Email de confirmation</h6>
+                                    <p class="text-muted small mb-0">Vous allez recevoir un email à {{ current_user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-warning bg-opacity-10 p-2">
+                                        <i class="bi bi-box-seam text-warning"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Préparation</h6>
+                                    <p class="text-muted small mb-0">Votre commande sera préparée dans les 24h</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                                        <i class="bi bi-truck text-primary"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Livraison</h6>
+                                    <p class="text-muted small mb-0">Livraison estimée: 2-3 jours ouvrés</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-info bg-opacity-10 p-2">
+                                        <i class="bi bi-telephone text-info"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Suivi</h6>
+                                    <p class="text-muted small mb-0">Vous recevrez un numéro de suivi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-dark btn-lg w-100">
+                        <i class="bi bi-house"></i> Retour à l'Accueil
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('collections') }}" class="btn btn-warning btn-lg w-100">
+                        <i class="bi bi-bag"></i> Continuer mes Achats
+                    </a>
+                </div>
+            </div>
+            
+            <!-- WhatsApp Support -->
+            <div class="text-center mt-3">
+                <button class="btn btn-success" onclick="window.open('https://wa.me/212708505157?text=Bonjour, j\'ai une question sur ma commande #{{ order.id }}')">
+                    <i class="bi bi-whatsapp"></i> Contacter le Support WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

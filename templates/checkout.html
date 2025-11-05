@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Paiement - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex align-items-center mb-4">
+        <i class="bi bi-credit-card fs-2 text-warning me-3"></i>
+        <h1 class="mb-0">Finaliser la Commande</h1>
+    </div>
+    
+    <!-- Étapes de commande -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-center flex-fill">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-check"></i>
+                    </div>
+                    <p class="small mt-2 mb-0">Panier</p>
+                </div>
+                <div class="flex-fill" style="height: 2px; background: #ddd;"></div>
+                <div class="text-center flex-fill">
+                    <div class="rounded-circle bg-warning text-dark d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        2
+                    </div>
+                    <p class="small mt-2 mb-0 fw-bold">Paiement</p>
+                </div>
+                <div class="flex-fill" style="height: 2px; background: #ddd;"></div>
+                <div class="text-center flex-fill">
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        3
+                    </div>
+                    <p class="small mt-2 mb-0">Confirmation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Checkout Form -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Informations de Livraison</h4>
+                    
+                    <form method="POST" action="{{ url_for('checkout') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" 
+                                       value="{{ current_user.first_name or '' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" 
+                                       value="{{ current_user.last_name or '' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{{ current_user.email }}" readonly>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="{{ current_user.phone or '' }}" 
+                                       placeholder="0612345678" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="whatsapp" class="form-label">
+                                    <i class="bi bi-whatsapp text-success"></i> WhatsApp
+                                </label>
+                                <input type="tel" class="form-control" id="whatsapp" name="whatsapp" 
+                                       value="{{ current_user.phone or '' }}" 
+                                       placeholder="212612345678" required>
+                                <small class="text-muted">Format international: 212...</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="shipping_address" class="form-label">Adresse de Livraison</label>
+                            <textarea class="form-control" id="shipping_address" name="shipping_address" 
+                                      rows="3" required>{{ current_user.address or '' }}</textarea>
+                            <small class="text-muted">Incluez le numéro de rue, code postal et ville</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="payment_method" class="form-label">Mode de Paiement</label>
+                            <select class="form-select" id="payment_method" name="payment_method" required>
+                                <option value="">Choisir...</option>
+                                <option value="whatsapp" selected>📱 Commander via WhatsApp (Recommandé)</option>
+                                <option value="delivery">🚚 Paiement à la livraison</option>
+                                <option value="transfer">🏦 Virement Bancaire</option>
+                                <option value="cash">💵 Paiement en Espèces</option>
+                            </select>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> Nous vous contacterons pour confirmer votre commande
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes (optionnel)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="2" 
+                                      placeholder="Instructions de livraison, message cadeau, etc."></textarea>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                J'accepte les <a href="#" target="_blank">conditions générales de vente</a>
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <!-- Bouton WhatsApp (Prioritaire) -->
+                            <button type="submit" name="action" value="whatsapp" class="btn btn-success btn-lg shadow">
+                                <i class="bi bi-whatsapp fs-5"></i> Envoyer sur WhatsApp
+                                <br><small>Recommandé - Contact direct avec notre équipe</small>
+                            </button>
+                            
+                            <!-- OU Séparateur -->
+                            <div class="text-center">
+                                <span class="badge bg-light text-dark">OU</span>
+                            </div>
+                            
+                            <!-- Bouton Confirmation Simple -->
+                            <button type="submit" name="action" value="standard" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-check-circle"></i> Confirmer sans WhatsApp
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Récapitulatif</h5>
+                    
+                    <!-- Cart Items -->
+                    <div class="mb-3">
+                        {% for item in cart_items %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <div>
+                                <small>{{ item.product.name }}</small>
+                                <br>
+                                <small class="text-muted">Qté: {{ item.quantity }}</small>
+                            </div>
+                            <small>{{ (item.product.price * item.quantity) }} DH</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr>
+
+                    <!-- Pricing -->
+                    {% set shipping_fee = 30 if total < 200 else 0 %}
+                    {% set final_total = total + shipping_fee %}
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total produits:</span>
+                        <span>{{ total }} DH</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Livraison:</span>
+                        <div class="text-end">
+                            {% if shipping_fee == 0 %}
+                            <span class="text-success fw-bold">
+                                <i class="bi bi-truck"></i> Gratuite
+                            </span>
+                            <br><small class="text-success">✓ Commande ≥ 200 DH</small>
+                            {% else %}
+                            <span class="fw-semibold">{{ shipping_fee }} DH</span>
+                            <br><small class="text-muted">Gratuit à partir de 200 DH</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total TTC:</strong>
+                        <strong class="text-warning fs-4">{{ final_total }} DH</strong>
+                    </div>
+
+                    <hr>
+
+                    <!-- Programme Fidélité -->
+                    <div class="card bg-light border-0 mb-3">
+                        <div class="card-body p-3">
+                            <h6 class="mb-3">
+                                <i class="bi bi-gift-fill text-warning"></i> Points Fidélité
+                            </h6>
+                            {% if current_user.is_authenticated %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Points actuels:</span>
+                                <span class="badge" style="background-color: #C4942F;">
+                                    {% if loyalty_points %}
+                                        {{ loyalty_points.points }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                    points
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small text-success">
+                                    <i class="bi bi-plus-circle"></i> Vous gagnerez:
+                                </span>
+                                <strong class="text-success">+{{ total|int }} points</strong>
+                            </div>
+                            <p class="small text-muted mt-2 mb-0">
+                                <i class="bi bi-info-circle"></i> 1 DH = 1 point
+                            </p>
+                            {% else %}
+                            <p class="small text-muted mb-0">
+                                Connectez-vous pour gagner des points fidélité !
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Security Icons -->
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check text-success"></i> Paiement sécurisé
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

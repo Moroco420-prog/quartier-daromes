@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Programme Fidélité - Quartier d'Arômes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); border-bottom: 3px solid #C4942F;">
+    <div class="container text-white text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-gift-fill text-warning"></i> Programme Fidélité
+        </h1>
+        <p class="fs-5 mb-0">Gagnez des points à chaque achat et profitez de récompenses exclusives</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    {% if current_user.is_authenticated %}
+    
+    <!-- Statut Fidélité -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%);">
+                <div class="card-body text-white text-center py-5">
+                    <h2 class="mb-3">
+                        <i class="bi bi-person-badge-fill"></i> 
+                        {{ loyalty_points.tier|upper if loyalty_points else 'BRONZE' }}
+                    </h2>
+                    <div class="display-3 fw-bold mb-3">
+                        {{ loyalty_points.points if loyalty_points else 0 }} Points
+                    </div>
+                    <p class="mb-4">{{ current_user.username }}</p>
+                    
+                    <!-- Barre de progression vers niveau suivant -->
+                    <div class="progress mb-3" style="height: 30px; background-color: rgba(255,255,255,0.3);">
+                        {% set current_points = loyalty_points.points if loyalty_points else 0 %}
+                        {% if current_points < 500 %}
+                            {% set next_tier = 'SILVER' %}
+                            {% set points_needed = 500 %}
+                            {% set progress = (current_points / 500 * 100)|round %}
+                        {% elif current_points < 1000 %}
+                            {% set next_tier = 'GOLD' %}
+                            {% set points_needed = 1000 %}
+                            {% set progress = ((current_points - 500) / 500 * 100)|round %}
+                        {% elif current_points < 2000 %}
+                            {% set next_tier = 'PLATINUM' %}
+                            {% set points_needed = 2000 %}
+                            {% set progress = ((current_points - 1000) / 1000 * 100)|round %}
+                        {% else %}
+                            {% set next_tier = 'PLATINUM' %}
+                            {% set points_needed = 2000 %}
+                            {% set progress = 100 %}
+                        {% endif %}
+                        
+                        <div class="progress-bar bg-light text-dark fw-bold" role="progressbar" 
+                             style="width: {{ progress }}%;" 
+                             aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ progress }}%
+                        </div>
+                    </div>
+                    
+                    {% if current_points < 2000 %}
+                    <p class="mb-0">
+                        <i class="bi bi-arrow-up-circle"></i> 
+                        {{ points_needed - current_points }} points pour atteindre {{ next_tier }}
+                    </p>
+                    {% else %}
+                    <p class="mb-0">
+                        <i class="bi bi-trophy-fill"></i> Vous êtes au niveau maximum !
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Récompenses Disponibles -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4 fw-bold text-center" style="color: #C4942F;">
+                <i class="bi bi-star-fill"></i> Récompenses Disponibles
+            </h3>
+            <div class="row">
+                {% for reward in rewards %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-header text-white text-center py-3" 
+                             style="background: linear-gradient(135deg, #C4942F 0%, #a67c26 100%);">
+                            <h5 class="mb-0 fw-bold">{{ reward.display_name }}</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="display-4 fw-bold mb-3" style="color: #C4942F;">
+                                {{ reward.points_required }}
+                            </div>
+                            <p class="text-muted small mb-0">{% if current_lang == 'en' %}Required Points{% else %}Points requis{% endif %}</p>
+                            <hr>
+                            <p class="mb-4">{{ reward.display_description }}</p>
+                            
+                            {% if loyalty_points and loyalty_points.points >= reward.points_required %}
+                            <form action="{{ url_for('redeem_reward', reward_id=reward.id) }}" method="POST">
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="bi bi-gift"></i> Échanger
+                                </button>
+                            </form>
+                            {% else %}
+                            <button class="btn btn-outline-secondary w-100" disabled>
+                                <i class="bi bi-lock"></i> Points insuffisants
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-inbox fs-1 text-muted"></i>
+                    <p class="text-muted mt-2">Aucune récompense disponible pour le moment</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Historique des Transactions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4 fw-bold text-center" style="color: #C4942F;">
+                <i class="bi bi-clock-history"></i> Historique des Points
+            </h3>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    {% if transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Points</th>
+                                    <th>Solde</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                <tr>
+                                    <td>{{ transaction.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td>
+                                        {% if transaction.points > 0 %}
+                                        <span class="badge bg-success">
+                                            +{{ transaction.points }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-danger">
+                                            {{ transaction.points }}
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-bold">{{ transaction.balance_after }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="text-muted mt-2">Aucune transaction pour le moment</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comment gagner des points -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h4 class="mb-0 fw-bold" style="color: #C4942F;">
+                        <i class="bi bi-question-circle-fill"></i> Comment Gagner des Points ?
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-cart-check-fill fs-3 text-warning me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold">Achat de Produits</h6>
+                                    <p class="text-muted mb-0">1 point = 1 DH dépensé</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-person-plus-fill fs-3 text-warning me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold">Inscription</h6>
+                                    <p class="text-muted mb-0">100 points de bienvenue</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-star-fill fs-3 text-warning me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold">Avis Produit</h6>
+                                    <p class="text-muted mb-0">10 points par avis</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-calendar-check-fill fs-3 text-warning me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold">Anniversaire</h6>
+                                    <p class="text-muted mb-0">50 points bonus</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- Message pour utilisateur non connecté -->
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card border-0 shadow-lg text-center">
+                <div class="card-body py-5">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-4"></i>
+                    <h3 class="mb-3">Rejoignez Notre Programme Fidélité</h3>
+                    <p class="text-muted mb-4">Connectez-vous pour accéder à vos récompenses et gagner des points</p>
+                    <div class="d-grid gap-2 col-md-8 mx-auto">
+                        <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Se Connecter
+                        </a>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-dark btn-lg">
+                            <i class="bi bi-person-plus"></i> S'inscrire
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+}
+</style>
+
+{% endblock %}

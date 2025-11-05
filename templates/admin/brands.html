@@ -1,0 +1,331 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Gestion Marques - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-award fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Gestion des Marques</h1>
+                        <p class="mb-0 text-white-50">Gérez les marques de votre catalogue</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <button type="button" class="btn btn-lg btn-light shadow-sm" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                    <i class="bi bi-plus-circle me-2"></i>Ajouter une Marque
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #6f42c1 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">TOTAL MARQUES</p>
+                            <h3 class="mb-0 fw-bold">{{ brands|length }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(111, 66, 193, 0.1);">
+                            <i class="bi bi-award fs-4" style="color: #6f42c1;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #C4942F !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">TOTAL PRODUITS</p>
+                            <h3 class="mb-0 fw-bold">{{ total_products }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(196, 148, 47, 0.1);">
+                            <i class="bi bi-box-seam fs-4 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #28a745 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">MOYENNE</p>
+                            <h3 class="mb-0 fw-bold">{{ (total_products / brands|length)|round(1) if brands|length > 0 else 0 }}</h3>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(40, 167, 69, 0.1);">
+                            <i class="bi bi-bar-chart fs-4 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des Marques -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-grid-3x3-gap" style="color: #6f42c1;"></i> Liste des Marques
+                </h5>
+                <span class="badge bg-primary rounded-pill py-2 px-3">{{ brands|length }} marques</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); color: white;">
+                        <tr>
+                            <th class="px-3">ID</th>
+                            <th>Logo</th>
+                            <th>Nom de la Marque</th>
+                            <th>Nombre de Produits</th>
+                            <th>Pays d'Origine</th>
+                            <th>Description</th>
+                            <th class="text-end px-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for brand in brands %}
+                        <tr class="border-bottom" style="transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                            <td class="px-3">
+                                <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.85rem;">
+                                    #{{ brand.id }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if brand.logo_url %}
+                                <div style="width: 60px; height: 60px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <img src="/static/uploads/{{ brand.logo_url }}" 
+                                         alt="{{ brand.name }}" 
+                                         style="width: 100%; height: 100%; object-fit: contain; background: #f8f9fa; padding: 5px;"
+                                         onerror="this.parentElement.innerHTML='<div class=\"bg-light text-center d-flex align-items-center justify-content-center\" style=\"width: 60px; height: 60px; border-radius: 10px;\"><i class=\"bi bi-award text-muted fs-3\"></i></div>';">
+                                </div>
+                                {% else %}
+                                <div class="bg-light text-center d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="bi bi-award text-muted fs-3"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div>
+                                    <strong class="d-block mb-1" style="color: #2c3e50; font-size: 1.05rem;">{{ brand.name }}</strong>
+                                    {% if brand.website %}
+                                    <a href="{{ brand.website }}" target="_blank" class="small text-decoration-none">
+                                        <i class="bi bi-link-45deg"></i> <span class="text-muted">Site web</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill px-3 py-2" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white;">
+                                    <i class="bi bi-box-seam"></i> {{ brand.products|length }} produit{{ 's' if brand.products|length > 1 else '' }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if brand.country %}
+                                <span class="badge bg-dark rounded-pill px-3 py-2">
+                                    <i class="bi bi-globe"></i> {{ brand.country }}
+                                </span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {% if brand.description %}
+                                    {{ brand.description[:60] }}{% if brand.description|length > 60 %}...{% endif %}
+                                    {% else %}
+                                    <span class="text-muted fst-italic">Aucune description</span>
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td class="text-end px-3">
+                                <div class="btn-group">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-primary rounded-start" 
+                                            onclick="editBrand({{ brand.id }}, '{{ brand.name }}', '{{ brand.description or '' }}', '{{ brand.country or '' }}', '{{ brand.website or '' }}')"
+                                            title="Modifier"
+                                            style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-danger rounded-end" 
+                                            onclick="deleteBrand({{ brand.id }}, '{{ brand.name }}')"
+                                            title="Supprimer"
+                                            style="padding: 0.5rem 0.75rem;">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="py-5">
+                                    <div class="mb-4">
+                                        <i class="bi bi-award" style="font-size: 5rem; color: #dee2e6;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-3">Aucune marque enregistrée</h5>
+                                    <p class="text-muted mb-4">Commencez par ajouter votre première marque</p>
+                                    <button type="button" class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); color: white; border: none;" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                                        <i class="bi bi-plus-circle me-2"></i>Ajouter une marque
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr {
+    border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+    border-left-color: #6f42c1;
+}
+
+.btn-group .btn {
+    border-width: 2px;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+
+<!-- Modal Ajouter Marque -->
+<div class="modal fade" id="addBrandModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin_add_brand') }}" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="modal-header" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);">
+                    <h5 class="modal-title text-white">
+                        <i class="bi bi-plus-circle"></i> Ajouter une Marque
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="brand_name" class="form-label">Nom de la Marque *</label>
+                        <input type="text" class="form-control" id="brand_name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="brand_description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_country" class="form-label">Pays d'Origine</label>
+                        <input type="text" class="form-control" id="brand_country" name="country" placeholder="Ex: France, Italie...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_website" class="form-label">Site Web</label>
+                        <input type="url" class="form-control" id="brand_website" name="website" placeholder="https://...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_logo" class="form-label">Logo (optionnel)</label>
+                        <input type="file" class="form-control" id="brand_logo" name="logo" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Modifier Marque -->
+<div class="modal fade" id="editBrandModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id="editBrandForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil"></i> Modifier la Marque
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit_brand_name" class="form-label">Nom de la Marque *</label>
+                        <input type="text" class="form-control" id="edit_brand_name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_brand_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="edit_brand_description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_brand_country" class="form-label">Pays d'Origine</label>
+                        <input type="text" class="form-control" id="edit_brand_country" name="country">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_brand_website" class="form-label">Site Web</label>
+                        <input type="url" class="form-control" id="edit_brand_website" name="website">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editBrand(id, name, description, country, website) {
+    document.getElementById('edit_brand_name').value = name;
+    document.getElementById('edit_brand_description').value = description;
+    document.getElementById('edit_brand_country').value = country;
+    document.getElementById('edit_brand_website').value = website;
+    document.getElementById('editBrandForm').action = `/admin/brands/edit/${id}`;
+    
+    new bootstrap.Modal(document.getElementById('editBrandModal')).show();
+}
+
+function deleteBrand(id, name) {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer la marque "${name}" ?\n\nCela n'affectera pas les produits existants.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/brands/delete/${id}`;
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

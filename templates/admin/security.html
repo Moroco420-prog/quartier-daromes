@@ -1,0 +1,254 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Dashboard Sécurité - Admin{% endblock %}
+
+{% block content %}
+<!-- Hero Admin Moderne -->
+<section class="py-5" style="background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 320%22><path fill=%22%23ffffff%22 fill-opacity=%220.1%22 d=%22M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z%22></path></svg>'); background-size: cover; opacity: 0.3;"></div>
+    <div class="container-fluid text-white" style="position: relative; z-index: 1;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
+                        <i class="bi bi-shield-lock fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-1 display-6">Dashboard Sécurité</h1>
+                        <p class="mb-0 text-white-50">Monitoring des tentatives de connexion</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <form method="POST" action="{{ url_for('clear_old_attempts', days=30) }}" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn btn-lg btn-light shadow-sm" onclick="return confirm('Supprimer les tentatives de plus de 30 jours ?');">
+                        <i class="bi bi-trash me-2"></i>Nettoyer (30j+)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-12">
+            <!-- Stats Cards -->
+            <div class="row mb-4 g-3">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #6c757d !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">TOTAL TENTATIVES</p>
+                                    <h3 class="mb-0 fw-bold">{{ total_attempts }}</h3>
+                                    <small class="text-muted">Toutes</small>
+                                </div>
+                                <div class="text-secondary"><i class="bi bi-activity fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #dc3545 !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">ÉCHECS</p>
+                                    <h3 class="mb-0 fw-bold text-danger">{{ failed_attempts }}</h3>
+                                    <small class="text-muted">Tentatives échouées</small>
+                                </div>
+                                <div class="text-danger"><i class="bi bi-x-circle fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #28a745 !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">RÉUSSIES</p>
+                                    <h3 class="mb-0 fw-bold text-success">{{ successful_attempts }}</h3>
+                                    <small class="text-muted">Connexions valides</small>
+                                </div>
+                                <div class="text-success"><i class="bi bi-check-circle fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm" style="border-left: 4px solid #ffc107 !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-muted mb-1 small">TOP IPs SUSPECTS</p>
+                                    <h3 class="mb-0 fw-bold text-warning">{{ top_ips|length }}</h3>
+                                    <small class="text-muted">Plus d'échecs</small>
+                                </div>
+                                <div class="text-warning"><i class="bi bi-shield-exclamation fs-1"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Aujourd'hui -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="mb-1 fw-bold text-info">{{ today_attempts }}</h5>
+                            <p class="text-muted small mb-0"><i class="bi bi-calendar-day"></i> Tentatives aujourd'hui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphique -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header border-bottom" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+                    <h5 class="mb-0 fw-bold" style="color: #dc3545;">
+                        <i class="bi bi-graph-up"></i> Tentatives des 7 derniers jours
+                    </h5>
+                </div>
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-graph-up fs-1 text-muted"></i>
+                    <p class="text-muted mt-3 mb-0">Graphique temporairement désactivé</p>
+                    <small class="text-muted">Les statistiques sont disponibles ci-dessous</small>
+                </div>
+            </div>
+
+            <!-- Top IPs Suspects -->
+            {% if top_ips %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header border-bottom bg-warning text-dark">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-shield-exclamation"></i> Top 10 IPs Suspectes ({{ top_ips|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Adresse IP</th>
+                                <th>Tentatives Échouées</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ip, count in top_ips %}
+                            <tr>
+                                <td><code>{{ ip }}</code></td>
+                                <td><span class="badge bg-danger">{{ count }} tentatives</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <!-- Dernières Tentatives -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e9ecef;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-clock-history text-danger"></i> Dernières Tentatives de Connexion
+                        </h5>
+                        <span class="badge bg-secondary rounded-pill py-2 px-3">50 dernières</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                            <thead style="background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); color: white;">
+                                <tr>
+                                    <th class="px-3">Date/Heure</th>
+                                    <th>Adresse IP</th>
+                                    <th>Email/Username</th>
+                                    <th>Statut</th>
+                                    <th>User Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for attempt in recent_attempts %}
+                                <tr class="border-bottom" style="transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                                    <td class="px-3">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar3"></i> {{ attempt.attempt_time.strftime('%d/%m/%Y') }}<br>
+                                            <i class="bi bi-clock"></i> {{ attempt.attempt_time.strftime('%H:%M:%S') }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <code style="background: #f1f3f5; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">
+                                            {{ attempt.ip_address }}
+                                        </code>
+                                    </td>
+                                    <td>
+                                        <strong style="color: #2c3e50;">{{ attempt.username or '-' }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if attempt.success %}
+                                        <span class="badge bg-success rounded-pill px-3 py-2">
+                                            <i class="bi bi-check-circle"></i> Réussie
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                                            <i class="bi bi-x-circle"></i> Échouée
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small class="text-muted">{{ attempt.user_agent[:60] if attempt.user_agent else '-' }}...</small></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="py-5">
+                                            <div class="mb-4">
+                                                <i class="bi bi-shield-check" style="font-size: 5rem; color: #dee2e6;"></i>
+                                            </div>
+                                            <h5 class="text-muted mb-3">Aucune tentative enregistrée</h5>
+                                            <p class="text-muted mb-0">Les tentatives de connexion apparaîtront ici</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr {
+    border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+    border-left-color: #dc3545;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
+</style>
+
+<!-- Chart.js - Graphique désactivé temporairement -->
+<!-- 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// TODO: Ajouter les données du graphique dans la route
+</script>
+-->
+
+{% endblock %}
